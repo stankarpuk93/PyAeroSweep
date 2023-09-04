@@ -30,13 +30,15 @@ Prerequiseites:
 import os
 import subprocess
 import numpy as np
-import pointwise
+import pointwise as pw
 from create_airfoil_and_flap import create_airfoil_and_flap 
 from Fluent_sweeps           import main as Run_fluent
 from SU2_sweeps              import main as Run_SU2
-
-
-
+from pointwise import GlyphClient
+from pointwise.glyphapi import *
+glf = GlyphClient(port=0)
+pw = glf.get_glyphapi()
+glf.connect()
 
 
 def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag, droop_nose_set):
@@ -152,17 +154,123 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
             # Run the airfoil generation script
             create_airfoil_and_flap(airfoil_data, flap_setting, flap_flag, droop_nose_flag, droop_nose_set)
     
-        if meshing_flag is True:
-            # Run Pointwise glyph script to gnerate the mesh
-            if system == "Unix":
-                full_glyph_path = working_dir + "\\" + glyph_file 
-                os.chdir(tclsh_dir)
-                subprocess.call(['tclsh ',full_glyph_path], stderr= None, stdin=subprocess.PIPE)    
-            else:
-                full_glyph_path = working_dir + "/" + glyph_file 
-                os.chdir(tclsh_dir)
-                subprocess.run('./pointwise ' + '-b ' + full_glyph_path, shell = True, stdin=subprocess.PIPE)          
 
+        if meshing_flag is True:
+
+                os.chdir(working_dir)
+
+                # Import the necessary modules
+                with glf.get_glyphapi().Application.begin("DatabaseImport") as mode_1:
+                    mode_1.initialize(strict=True, type="Automatic", file=r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_upper.dat")
+                    mode_1.read()
+                    mode_1.convert()
+
+                with glf.get_glyphapi().Application.begin("DatabaseImport") as mode_2:
+                    mode_2.initialize(strict=True, type="Automatic", file=r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_lower.dat")
+                    mode_2.read()
+                    mode_2.convert()
+
+                # Create connectors
+                with glf.get_glyphapi().Application.begin("Create") as mode_3:
+                    curve1 = glf.get_glyphapi().DatabaseEntity.getByName("curve-1")
+                    curve2 = glf.get_glyphapi().DatabaseEntity.getByName("curve-2")
+                    connectors = [curve1, curve2]
+                    mode_3.createConnectors(parametricConnectors="Aligned", merge=0, reject="unused", connectors=connectors)
+
+                # Close trailing edge
+                with glf.get_glyphapi().Application.begin("Create") as mode_4:
+                    pw_segment_spline = glf.get_glyphapi().SegmentSpline.create()
+                    con1 = glf.get_glyphapi().GridEntity.getByName("con-1")
+                    curve1 = glf.get_glyphapi().DatabaseEntity.getByName("curve-1")
+                    con2 = glf.get_glyphapi().GridEntity.getByName("con-2")
+                    curve2 = glf.get_glyphapi().DatabaseEntity.getByName("curve-2")
+                    pw_segment_spline.addPoint(con1.getPosition(arc=1))
+                    pw_segment_spline.addPoint(con2.getPosition(arc=0))
+                    connector3 = glf.get_glyphapi().Connector.create()
+                    connector3.addSegment(pw_segment_spline)
+                    connector3.calculateDimension()
+
+                # Assign dimensions
+                connectors = [glf.get_glyphapi().GridEntity.getByName(f"con-{i}") for i in range(1, 4)]
+                for connector in connectors:
+                    connector.setDimension(200)
+
+                connector3 = glf.get_glyphapi().GridEntity.getByName("con-3")
+                connector3.setDimension(8)
+
+                # Cluster points
+                with glf.get_glyphapi().Application.begin("Modify", connectors) as mode_5:
+                    for connector in connectors:
+                        distribution = connector.getDistribution(1)
+                        distribution.setBeginSpacing(0.001)
+                        distribution.setEndSpacing(0.001)
+
+                with glf.get_glyphapi().Application.begin("Modify", connectors) as mode_6:
+                    for connector in connectors:
+                        distribution = connector.getDistribution(1)
+                        distribution.setEndSpacing(0.0005)
+
+                    connector2 = glf.get_glyphapi().GridEntity.getByName("con-2")
+                    distribution2 = connector2.getDistribution(1)
+                    distribution2.setBeginSpacing(0.0005)
+
+                # Scale the domain
+                connectors.extend([glf.get_glyphapi().GridEntity.getByName("con-4"), glf.get_glyphapi().GridEntity.getByName("con-5")])
+                with glf.get_glyphapi().Application.begin("Modify", connectors) as mode_7:
+                    entities_to_scale = mode_7.getEntities()
+                    glf.get_glyphapi().Entity.transform(glf.get_glyphapi().Transform.scaling(anchor=[0, 0, 0], scale=[2.62, 2.62, 2.62]), entities_to_scale)
+
+                # Extrude structured mesh
+                with glf.get_glyphapi().Application.begin("Create") as mode_8:
+                    edge = glf.get_glyphapi().Edge.createFromConnectors(connectors)
+                    dm1 = glf.get_glyphapi().DomainStructured.create()
+                    dm1.addEdge(edge)
+
+                with glf.get_glyphapi().Application.begin("ExtrusionSolver", [dm1]) as mode_9:
+                    dm1.setExtrusionSolverAttribute("NormalMarchingVector", [-0, -0, -1])
+                    dm1.setExtrusionSolverAttribute("NormalInitialStepSize", 0.000004321153531829642)
+                    dm1.setExtrusionSolverAttribute("StopAtHeight", "Off")
+                    dm1.setExtrusionSolverAttribute("StopAtHeight", 529)
+                    mode_9.setKeepFailingStep(True)
+                    mode_9.run(254)
+                    mode_9.run(-1)
+
+                # Assign boundary conditions
+                glf.get_glyphapi().Application.setCAESolver("SU2", 2)
+
+                with glf.get_glyphapi().BoundaryCondition.create() as pw_1:
+                    pass
+
+                bc2 = glf.get_glyphapi().BoundaryCondition.getByName("bc-2")
+                bc2.setName("wall")
+
+                with glf.get_glyphapi().BoundaryCondition.create() as pw_2:
+                    pass
+
+                bc3 = glf.get_glyphapi().BoundaryCondition.getByName("bc-3")
+                bc3.setName("far-field")
+
+                con4 = glf.get_glyphapi().GridEntity.getByName("con-5")
+                dm2 = glf.get_glyphapi().GridEntity.getByName("dom-1")
+                bc3.apply([[dm2, con4]])
+
+                con1 = glf.get_glyphapi().GridEntity.getByName("con-1")
+                con2 = glf.get_glyphapi().GridEntity.getByName("con-2")
+                con3 = glf.get_glyphapi().GridEntity.getByName("con-3")
+                con4 = glf.get_glyphapi().GridEntity.getByName("con-4")
+                con5 = glf.get_glyphapi().GridEntity.getByName("con-5")
+
+                entities = [dm2, con1, con2, con3, con4, con5]
+                with glf.get_glyphapi().Application.begin("Modify", entities) as mode_10:
+                    dm2.setOrientation("IMaximum JMinimum")
+
+                # Export CAE
+                with glf.get_glyphapi().Application.begin("CaeExport", [dm2]) as mode_11:
+                    mode_11.initialize(strict=True, type="CAE", file=r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\su2meshEx.su2")
+                    mode_11.setAttribute("FilePrecision", "Double")
+                    mode_11.verify()
+                    mode_11.write()
+        
         # Run CFD solution
         if Solver == 'Fluent':
             Run_fluent(Alt_range,Mach_range,AoA_range,Fluent_settings,Ref_values,working_dir,casefile)
@@ -226,77 +334,7 @@ if __name__ == '__main__':
 
         run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag, droop_nose_set)
 
+        glf.disconnect()
 ##################################################################################
 
-# Initialize Pointwise
-pw = pointwise.Application()
 
-# Import airfoil components
-def import_airfoil(path):
-    database_import = pw.Application.begin("DatabaseImport")
-    database_import.initialize(strict=True, type="Automatic", path=path)
-    database_import.read()
-    database_import.convert()
-    database_import.end()
-
-import_airfoil("G:\\TUBS\\HiWi\\Dr Karpuk\\Version\\AF_CFD_V1\\main_airfoil_upper.dat")
-import_airfoil("G:\\TUBS\\HiWi\\Dr Karpuk\\Version\\AF_CFD_V1\\main_airfoil_lower.dat")
-
-# Create connectors
-connector_upper = pw.Connector.createOnDatabase("PW_1", parametricConnectors="Aligned", merge=0, reject="_TMP(unused)")
-connector_upper.addEntities([pw.DatabaseEntity.getByName("curve-1"), pw.DatabaseEntity.getByName("curve-2")])
-
-# Assign nodes to each connector
-for i in range(1, 4):
-    connector_name = "con-" + str(i)
-    connector = pw.GridEntity.getByName(connector_name)
-    connector.setDimension(200 if i != 3 else 8)
-
-# Cluster points at each connector
-for i in range(1, 3):
-    connector_name = "con-" + str(i)
-    connector = pw.GridEntity.getByName(connector_name)
-    distribution = connector.getDistribution(1)
-    distribution.setBeginSpacing(0.001)
-    if i == 1:
-        distribution.setEndSpacing(0.0005)
-
-# Scale the domain according to the physical dimension
-for i in range(1, 4):
-    connector_name = "con-" + str(i)
-    connector = pw.GridEntity.getByName(connector_name)
-    pw.Entity.transform(pw.Transform.scaling([0, 0, 0], [2.62, 2.62, 2.62]), [connector])
-
-# Extrude a structured mesh
-dm1 = pw.DomainStructured.create()
-edge1 = pw.Edge.createFromConnectors(["con-3", "con-2", "con-1"])
-dm1.addEdge(edge1)
-
-extrusion_solver = pw.Application.begin("ExtrusionSolver", dm1)
-extrusion_solver.setKeepFailingStep(True)
-dm1.setExtrusionSolverAttribute("NormalMarchingVector", [0, 0, -1])
-dm1.setExtrusionSolverAttribute("NormalInitialStepSize", 0.000004321153531829642)
-dm1.setExtrusionSolverAttribute("StopAtHeight", "Off")
-dm1.setExtrusionSolverAttribute("StopAtHeight", 529)
-extrusion_solver.run(254)
-extrusion_solver.run(-1)
-extrusion_solver.end()
-
-# Export the mesh
-dm1 = pw.GridEntity.getByName("dom-1")
-cae_export = pw.Application.begin("CaeExport", pw.Entity.sort([dm1]))
-cae_export.initialize(strict=True, type="CAE", path="G:\\TUBS\\HiWi\\Dr Karpuk\\Version\\AF_CFD_V1\\su2meshEx.su2")
-cae_export.setAttribute("FilePrecision", "Double")
-cae_export.verify()
-cae_export.write()
-cae_export.end()
-
-# Save the modified project
-pw.save()
-
-# Close the Pointwise session
-pw.quit()
-
-
-
-#####################################################################################
