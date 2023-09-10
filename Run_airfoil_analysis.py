@@ -33,6 +33,7 @@ import numpy as np
 from create_airfoil_and_flap import create_airfoil_and_flap 
 from Fluent_sweeps           import main as Run_fluent
 from SU2_sweeps              import main as Run_SU2
+from glyph_updater           import update_glyph_script
 
 
 
@@ -78,14 +79,14 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
 
     # Important directories and file names
     PARSEC_flag   = True
-    meshing_flag  = True                                                         # flag to mesh or skip the meshing part
+    meshing_flag  = True                                                          # flag to mesh or skip the meshing part
     system        = "WINDOWS"
     tclsh_dir     = r"C:\Program Files\Cadence\PointwiseV18.6R1\win64\bin"        # tclsh (UNIX) of Pointwise (Windows) directory (runs glyph on the background)
-    working_dir   = r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1"            # working directory
-    glyph_file    = 'mesh_clean_airfoil_SU2.glf'                                            # Glyph script file
-    casefile      = 'airfoil_mesh.cas'                                                # Case file for Fluent (the name that will be created for Fluent)
-    SU2_conf_file = 'Run_airfoil_template.cfg'#'Run_airfoil_template.cfg'                                  # SU2 config file which is used as a reference file
-    SU2_mesh      = 'su2meshEx.su2'#'su2meshEx.su2'                                             # SU2 mesh file
+    working_dir   = r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1"                   # working directory
+    glyph_file    = 'mesh_clean_airfoil_SU2.glf'                                  # Glyph script file
+    casefile      = 'airfoil_mesh.cas'                                            # Case file for Fluent (the name that will be created for Fluent)
+    SU2_conf_file = 'Run_airfoil_template.cfg'#'Run_airfoil_template.cfg'         # SU2 config file which is used as a reference file
+    SU2_mesh      = 'su2meshEx.su2'#'su2meshEx.su2'                               # SU2 mesh file
     #upper_airfoil_path = r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_upper.dat"
     #lower_airfoil_path = r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_lower.dat"
 
@@ -130,15 +131,15 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
         SU2_settings = [turbulence_model, num_proc, save_freq, conv_criteria, iterations, warmstart, system, symmetric]
  
     # Input sweeep data
-    Alt_range   = np.array([0])                                                 # Altitude range in meters
+    Alt_range   = np.array([0])                                                  # Altitude range in meters
     Mach_range  = np.array([0.21])                                               # Mach number range  0.4,0.5,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95
-    AoA_range   = np.array([0,3.0,6.0,8.0,10.0,12.0,13.0,14.0,15.0])                                    # AoA range in degrees  ,1.0,2.0,3.0
+    AoA_range   = np.array([0,3.0,6.0,8.0,10.0,12.0,13.0,14.0,15.0])             # AoA range in degrees  ,1.0,2.0,3.0
     # 0.0,3.0,6.0,8.0,9.0,10.0,11.0
     # Input airfoil reference values (make sure the glyph values are changed manually)
-    Area            = np.array([2.62])                                                         # Reference Area in sq m
-    Length          = np.array([2.62])                                                         # Reference length in m   
-    Depth           = 1                                                         # Reference depth (span) in m
-    ref_point       = [0.25*Length,0,0]                                                # Reference coordinate
+    Area            = np.array([2.62])                                           # Reference Area in sq m
+    Length          = np.array([2.62])                                           # Reference length in m   
+    Depth           = 1                                                          # Reference depth (span) in m
+    ref_point       = [0.25*Length,0,0]                                          # Reference coordinate
 
 
     #-------------------------------------------------------------------------------------------------------------------------
@@ -153,40 +154,8 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
                 # Run the airfoil generation script
                 create_airfoil_and_flap(airfoil_data, flap_setting, flap_flag, droop_nose_flag, droop_nose_set)
                 
-                # Modify specific lines in the Glyph script with new values
-                lines_to_update = [14, 20, 46, 49, 52, 59, 62, 68, 71, 80, 97, 98, 99, 100, 101, 102, 139]
-                new_values = [
-                    "  $_TMP(mode_1) initialize -strict -type Automatic G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_upper.dat",
-                    "  $_TMP(mode_1) initialize -strict -type Automatic G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_lower.dat",
-                    "$_CN(1) setDimension 200",
-                    "$_CN(2) setDimension 200",
-                    "$_CN(3) setDimension 8",
-                    "  $_TMP(PW_1) setBeginSpacing 0.001",
-                    "  $_TMP(PW_1) setEndSpacing 0.001",
-                    "  $_TMP(PW_1) setEndSpacing 0.0005",
-                    "  pw::Entity transform [pwu::Transform scaling -anchor {0 0 0} {2.62 2.62 2.62}] [$_TMP(mode_1) getEntities]",
-                    "  $_DM(1) setExtrusionSolverAttribute NormalMarchingVector {-0 -0 -1}",
-                    "  $_DM(1) setExtrusionSolverAttribute NormalInitialStepSize 0.000004321153531829642",
-                    "  $_DM(1) setExtrusionSolverAttribute StopAtHeight Off",
-                    "  $_DM(1) setExtrusionSolverAttribute StopAtHeight 529",
-                    "  $_TMP(mode_1) run 254",
-                    "  $_TMP(mode_1) run -1",
-                    "  $_TMP(mode_1) initialize -strict -type CAE G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\su2meshEx.su2",
-                ]
-
-                # Read the entire content of the Glyph script
-                with open(glyph_file, 'r') as glyph_script:
-                    glyph_lines = glyph_script.readlines()
-
-                # Update specific lines in the Glyph script with new values
-                for i in range(len(lines_to_update)):
-                    line_number = lines_to_update[i]
-                    if 0 < line_number <= len(glyph_lines) and i < len(new_values):
-                        glyph_lines[line_number - 1] = new_values[i] + '\n'  # Line numbers are 1-based
-
-                # Write the updated content back to the Glyph script file
-                with open(glyph_file, 'w') as updated_glyph_script:
-                    updated_glyph_script.writelines(glyph_lines)
+                # Update the Glyph script
+                update_glyph_script(glyph_file)
 
 
         if meshing_flag is True:
@@ -220,24 +189,24 @@ if __name__ == '__main__':
     #--------------------------------------------------------------------------------------------------------------
 
     # Analysis flags
-    droop_nose_flag = False          #  A flag to include or exclude a droop nose
-    flap_flag       = False          # A flag to include or exclude a flap
+    droop_nose_flag = False         #  A flag to include or exclude a droop nose
+    flap_flag       = False         # A flag to include or exclude a flap
                                     # True  - airfoil has a flap
                                     # False - draws a clean airfoil
     # Airfoil inputs
-    rle         = [0.0084] #0.005785            # Main airfoil LE radius
-    x_pre       = [0.458080577545180]                # x-location of the crest on the pressure side
-    y_pre       = [-0.04553160030118]             # y-location of the crest on the pressure side  
-    d2ydx2_pre  = [0.554845554794938]                # curvature of the crest on the pressure side  0.4793
-    th_pre      = [-9.649803736]                 # trailing edge angle on the pressure side [deg]
+    rle         = [0.0084] #0.005785          # Main airfoil LE radius
+    x_pre       = [0.458080577545180]         # x-location of the crest on the pressure side
+    y_pre       = [-0.04553160030118]         # y-location of the crest on the pressure side  
+    d2ydx2_pre  = [0.554845554794938]         # curvature of the crest on the pressure side  0.4793
+    th_pre      = [-9.649803736]              # trailing edge angle on the pressure side [deg]
     x_suc       = [0.46036604]                # x-location of the crest on the suction side        
-    y_suc       = [0.06302395539]              # y-location of the crest on the suction side    
+    y_suc       = [0.06302395539]             # y-location of the crest on the suction side    
     d2ydx2_suc  = [-0.361421420]              # curvature of the crest on the suction side
-    th_suc      = [-12.391677695858]# trailing edge angle on the suction side [deg]
+    th_suc      = [-12.391677695858]          # trailing edge angle on the suction side [deg]
 
     cf_c        = 0.3               # flap chord ratio
     ce_c        = 0.3               # conical curve extent ratio wrt the flap chord length
-    csr_c       = 0.85               # shroud chord ratio
+    csr_c       = 0.85              # shroud chord ratio
     clip_ext    = 0.05              # shroud lip extent ratio wrt the flap 
     r_le_flap   = 0.01              # flap leading edge radius
     tc_shr_tip  = 0.003             # shroud tip thickness
@@ -245,12 +214,12 @@ if __name__ == '__main__':
 
     delta_f     = 25                # flap deflection [deg]
     x_gap       = 0.01              # x-length gap from the shroud TE (positive value is moving the flap left)
-    y_gap       = 0.005              # y-length gap from the shroud TE (positive value is moving the flap down)    
+    y_gap       = 0.005             # y-length gap from the shroud TE (positive value is moving the flap down)    
 
-    delta_s     = 2                # droop nose deflection [deg]
-    cs_c        = 0.4            # droop nose chord ratio
-    d_cs_up     = 0.15               # droop nose offset from the hinge on the upper surface
-    d_cs_low    = 0.38               # droop nose offset from the hinge on the lower surface
+    delta_s     = 2                 # droop nose deflection [deg]
+    cs_c        = 0.4               # droop nose chord ratio
+    d_cs_up     = 0.15              # droop nose offset from the hinge on the upper surface
+    d_cs_low    = 0.38              # droop nose offset from the hinge on the lower surface
     k_Bez1      = 0.2
     k_Bez2      = 0.5
 
