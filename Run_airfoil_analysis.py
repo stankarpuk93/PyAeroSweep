@@ -93,20 +93,23 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
     #--------------------------------------------------------------------------------------------------------------
 
     # Data required for mesh_clean_airfoil_SU2.glf
-    upper_surface_filename = r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_upper.dat"     # Define the respective file directories
-    lower_surface_filename = r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_lower.dat"
-    connector_dimensions = [200, 200, 8]                                                            # Define the connector dimensions as needed
-    begin_spacing = "0.001"
-    end_spacing_1 = "0.001"
-    end_spacing_2 = "0.0005"
-    su2meshed_file = r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\su2meshEx.su2"
-    run_iterations_1 = "230"
-    run_iterations_2 = "-1"
-    stop_at_height_1 = "Off"
-    stop_at_height_2 = "529"
-    normal_marching_vector = "{-0 -0 -1}"
-    scaling_anchor = "{0 0 0}"
-    scaling_factors = "{2.62 2.62 2.62}"
+    update_glyph_data = {
+        "upper_surface_filename": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_upper.dat",
+        "lower_surface_filename": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_lower.dat",
+        "connector_dimensions": [200, 200, 8],
+        "begin_spacing": "0.001",
+        "end_spacing_1": "0.001",
+        "end_spacing_2": "0.0005",
+        "su2meshed_file": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\su2meshEx.su2",
+        "run_iterations_1": "230",
+        "run_iterations_2": "-1",
+        "stop_at_height_1": "Off",
+        "stop_at_height_2": "529",
+        "normal_marching_vector": "{-0 -0 -1}",
+        "scaling_anchor": "{0 0 0}",
+        "scaling_factors": "{2.62 2.62 2.62}"
+    }
+
     
     #--------------------------------------------------------------------------------------------------------------
 
@@ -154,7 +157,7 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
     # Input sweeep data
     Alt_range   = np.array([0])                                                  # Altitude range in meters
     Mach_range  = np.array([0.21])                                               # Mach number range  0.4,0.5,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95
-    AoA_range   = np.array([0.0,3.0,6.0,8.0,9.0,10.0,11.0])                      # AoA range in degrees 0.0,1.0,2.0,3.0....
+    AoA_range   = np.array([0.0])                      # AoA range in degrees 0.0,1.0,2.0,3.0....
     # 0.0,3.0,6.0,8.0,9.0,10.0,11.0
 
     # Input airfoil reference values (make sure the glyph values are changed manually)
@@ -177,10 +180,7 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
                 create_airfoil_and_flap(airfoil_data, flap_setting, flap_flag, droop_nose_flag, droop_nose_set)
                 
                 # Update the Glyph script
-                update_glyph_script( glyph_file, upper_surface_filename, lower_surface_filename, connector_dimensions,begin_spacing,  
-                                     end_spacing_1, end_spacing_2, su2meshed_file, run_iterations_1, run_iterations_2, 
-                                     stop_at_height_1, stop_at_height_2, normal_marching_vector, scaling_anchor,scaling_factors )
-
+                update_glyph_script(glyph_file, *update_glyph_data)
 
         if meshing_flag is True:
             
