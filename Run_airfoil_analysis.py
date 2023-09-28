@@ -34,7 +34,7 @@ from create_airfoil_and_flap import create_airfoil_and_flap
 from Fluent_sweeps           import main as Run_fluent
 from SU2_sweeps              import main as Run_SU2
 from glyph_updater           import update_glyph_script
-
+from Mach_and_Alt            import Alt_range, Mach_range
 
 
 def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag, droop_nose_set):
@@ -91,8 +91,9 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
     #lower_airfoil_path = r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_lower.dat"
     
     #--------------------------------------------------------------------------------------------------------------
-
+    
     # Data required for mesh_clean_airfoil_SU2.glf
+    scaling_factors = np.array([Length[0], Length[0], Length[0]])
     update_glyph_data = {
         "upper_surface_filename": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_upper.dat",
         "lower_surface_filename": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_lower.dat",
@@ -104,12 +105,11 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
         "run_iterations_1": "230",
         "run_iterations_2": "-1",
         "stop_at_height_1": "Off",
-        "stop_at_height_2": "529",
+        "stop_at_height_2": "545",
         "normal_marching_vector": "{-0 -0 -1}",
         "scaling_anchor": "{0 0 0}",
-        "scaling_factors": "{2.62 2.62 2.62}"
+        "scaling_factors": scaling_factors  # Include the calculated scaling factors here
     }
-
     
     #--------------------------------------------------------------------------------------------------------------
 
@@ -155,16 +155,10 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
         SU2_settings = [turbulence_model, num_proc, save_freq, conv_criteria, iterations, warmstart, system, symmetric]
  
     # Input sweeep data
-    Alt_range   = np.array([0])                                                  # Altitude range in meters
-    Mach_range  = np.array([0.21])                                               # Mach number range  0.4,0.5,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95
     AoA_range   = np.array([0.0])                      # AoA range in degrees 0.0,1.0,2.0,3.0....
-    # 0.0,3.0,6.0,8.0,9.0,10.0,11.0
+    # 0,3.0,6.0,8.0,10.0,12.0,13.0,14.0,15.0
 
-    # Input airfoil reference values (make sure the glyph values are changed manually)
-    Area            = np.array([2.62])                                           # Reference Area in sq m
-    Length          = np.array([2.62])                                           # Reference length in m   
-    Depth           = 1                                                          # Reference depth (span) in m
-    ref_point       = [0.25*Length,0,0]                                          # Reference coordinate
+    
 
 
     #-------------------------------------------------------------------------------------------------------------------------
@@ -249,6 +243,14 @@ if __name__ == '__main__':
 
 
     w_con_seal  = 0.5               # conical parameter for the droop nose seal
+
+
+    # Input airfoil reference values 
+    Area            = np.array([2.62])                                           # Reference Area in sq m
+    Length          = np.array([2.62])                                           # Reference length in m   
+    Depth           = 1                                                          # Reference depth (span) in m
+    ref_point       = [0.25*Length,0,0]                                          # Reference coordinate
+
 
     for i in range(len(rle)):
         airfoil_data   = [rle[i], x_pre[i], y_pre[i], d2ydx2_pre[i], th_pre[i], x_suc[i], y_suc[i], d2ydx2_suc[i], th_suc[i], cf_c, ce_c, csr_c, clip_ext, r_le_flap, tc_shr_tip, w_conic, w_con_seal]
