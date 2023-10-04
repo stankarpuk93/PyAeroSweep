@@ -91,7 +91,7 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
     #lower_airfoil_path = r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_lower.dat"
     
     #--------------------------------------------------------------------------------------------------------------
-    
+      
     # Data required for mesh_clean_airfoil_SU2.glf
     scaling_factors = np.array([Length[0], Length[0], Length[0]])
     update_glyph_data = {
@@ -111,6 +111,24 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
         "scaling_factors": scaling_factors  # Include the calculated scaling factors here
     }
     
+
+    '''
+    # Data required for mesh_clean_airfoil_SU2.glf
+    upper_surface_filename = r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_upper.dat"     # Define the respective file directories
+    lower_surface_filename = r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_lower.dat"
+    connector_dimensions = [200, 200, 8]                                                            # Define the connector dimensions as needed
+    begin_spacing = "0.001"
+    end_spacing_1 = "0.001"
+    end_spacing_2 = "0.0005"
+    su2meshed_file = r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\su2meshEx.su2"
+    run_iterations_1 = "220"
+    run_iterations_2 = "-1"
+    stop_at_height_1 = "Off"
+    stop_at_height_2 = "529"
+    normal_marching_vector = "{-0 -0 -1}"
+    scaling_anchor = "{0 0 0}"
+    scaling_factors = "{2.62 2.62 2.62}"
+    '''
     #--------------------------------------------------------------------------------------------------------------
 
     # CFD solver inputs
