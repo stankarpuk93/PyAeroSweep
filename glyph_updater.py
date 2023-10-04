@@ -78,7 +78,7 @@ for altitude in Alt_range:
 def update_glyph_script( glyph_file, upper_surface_filename, lower_surface_filename, connector_dimensions,begin_spacing,  
                          end_spacing_1, end_spacing_2, su2meshed_file, run_iterations_1, run_iterations_2, 
                          stop_at_height_1, stop_at_height_2, normal_marching_vector, scaling_anchor,scaling_factors ):
-    lines_to_update = [14, 20, 46, 49, 52, 59, 62, 68, 71, 80, 98, 99, 100, 101, 102, 139]             # 15 updates in total
+    lines_to_update = [14, 20, 46, 49, 52, 59, 62, 68, 71, 80, 98, 99, 100, 101, 102, 139]             # 15 updates in total (16th update is written below, for line 96)
     new_values = [
         f"  $_TMP(mode_1) initialize -strict -type Automatic {upper_surface_filename}",
         f"  $_TMP(mode_1) initialize -strict -type Automatic {lower_surface_filename}",

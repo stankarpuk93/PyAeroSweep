@@ -105,7 +105,7 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
         "run_iterations_1": "230",
         "run_iterations_2": "-1",
         "stop_at_height_1": "Off",
-        "stop_at_height_2": "545",
+        "stop_at_height_2": "529",
         "normal_marching_vector": "{-0 -0 -1}",
         "scaling_anchor": "{0 0 0}",
         "scaling_factors": scaling_factors  # Include the calculated scaling factors here
@@ -174,7 +174,7 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
                 create_airfoil_and_flap(airfoil_data, flap_setting, flap_flag, droop_nose_flag, droop_nose_set)
                 
                 # Update the Glyph script
-                update_glyph_script(glyph_file, *update_glyph_data)
+                update_glyph_script(glyph_file, **update_glyph_data)
 
         if meshing_flag is True:
             
