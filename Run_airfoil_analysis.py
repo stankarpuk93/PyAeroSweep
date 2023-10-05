@@ -33,7 +33,8 @@ import numpy as np
 from create_airfoil_and_flap import create_airfoil_and_flap 
 from Fluent_sweeps           import main as Run_fluent
 from SU2_sweeps              import main as Run_SU2
-from glyph_updater           import update_glyph_script
+from glyph_updater_clean     import update_glyph_script_cl
+from glyph_updater_flapped   import update_glyph_script_fl
 from Mach_and_Alt            import Alt_range, Mach_range
 
 
@@ -83,7 +84,8 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
     system        = "WINDOWS"
     tclsh_dir     = r"C:\Program Files\Cadence\PointwiseV18.6R1\win64\bin"        # tclsh (UNIX) of Pointwise (Windows) directory (runs glyph on the background)
     working_dir   = r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1"                   # working directory
-    glyph_file    = 'mesh_clean_airfoil_SU2.glf'                                  # Glyph script file
+    glyph_file_cl = 'mesh_clean_airfoil_SU2.glf'                                  # Glyph script file - clean airfoil
+    glyph_file_fl = 'mesh_flapped_airfoil_SU2.glf'                                # Glyph script file - flapped airfoil
     casefile      = 'airfoil_mesh.cas'                                            # Case file for Fluent (the name that will be created for Fluent)
     SU2_conf_file = 'Run_airfoil_template.cfg'#'Run_airfoil_template.cfg'         # SU2 config file which is used as a reference file
     SU2_mesh      = 'su2meshEx.su2'#'su2meshEx.su2'                               # SU2 mesh file
@@ -94,7 +96,7 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
       
     # Data required for mesh_clean_airfoil_SU2.glf
     scaling_factors = np.array([Length[0], Length[0], Length[0]])
-    update_glyph_data = {
+    update_glyph_clean_data = {
         "upper_surface_filename": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_upper.dat",
         "lower_surface_filename": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_lower.dat",
         "connector_dimensions": [200, 200, 8],
@@ -110,30 +112,69 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
         "scaling_anchor": "{0 0 0}",
         "scaling_factors": scaling_factors  # Include the calculated scaling factors here
     }
-    
 
-    '''
-    # Data required for mesh_clean_airfoil_SU2.glf
-    upper_surface_filename = r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_upper.dat"     # Define the respective file directories
-    lower_surface_filename = r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_lower.dat"
-    connector_dimensions = [200, 200, 8]                                                            # Define the connector dimensions as needed
-    begin_spacing = "0.001"
-    end_spacing_1 = "0.001"
-    end_spacing_2 = "0.0005"
-    su2meshed_file = r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\su2meshEx.su2"
-    run_iterations_1 = "220"
-    run_iterations_2 = "-1"
-    stop_at_height_1 = "Off"
-    stop_at_height_2 = "529"
-    normal_marching_vector = "{-0 -0 -1}"
-    scaling_anchor = "{0 0 0}"
-    scaling_factors = "{2.62 2.62 2.62}"
-    '''
+    #--------------------------------------------------------------------------------------------------------------
+    
+    # Data required for mesh_flapped_airfoil_SU2.glf
+    scaling_factors = np.array([Length[0], Length[0], Length[0]])
+    update_glyph_flapped_data = {
+        "upper_surface_filename": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_upper.dat",
+        "lower_surface_filename": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_lower.dat",
+        "cut1_filename": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_cut1.dat",
+        "cut2_filename": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_cut2.dat",
+        "flap_airfoil_lower_filename": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\flap_airfoil_lower.dat",
+        "flap_airfoil_upper_filename": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\flap_airfoil_upper.dat",
+        "connector_dimensions": [200, 120, 150, 150, 70, 25, 8, 8],
+        "begin_spacing_127": "0.001",
+        "end_spacing_130": "0.001",
+        "end_spacing_137": "0.001",
+        "begin_spacing_140": "0.001",
+        "end_spacing_146": "0.00050000000000000001",
+        "begin_spacing_149": "0.00050000000000000001",
+        "begin_spacing_156": "0.00050000000000000001",
+        "end_spacing_159": "0.00050000000000000001",  
+        "begin_spacing_165": "0.001",  
+        "end_spacing_172": "0.001",
+        "end_spacing_178": "0.005",
+        "begin_spacing_184": "0.005",  
+        "end_spacing_192": "0.001",
+        "begin_spacing_195": "0.001", 
+        "begin_spacing_201": "0.00050000000000000001",
+        "end_spacing_204": "0.00050000000000000001",
+        "begin_spacing_211": "0.00050000000000000001",
+        "end_spacing_214": "0.00050000000000000001",
+        "addPoint228": "{60 60 0}",
+        "addPoint229": "{60 -60 0}",
+        "addPoint245": "{-60 -60 0}",
+        "addPoint255": "{-60 60 0}",
+        "far_field_connector_dim": "20", 
+        "addPoint_287": "{0.5 3 0}",
+        "addPoint_288": "{0.5 0 0}",
+        "EndAngle_289": "360 {0 0 1}",
+        "addPoint_298": "{0.5 15 0}",
+        "addPoint_299": "{0.5 0 0}",
+        "EndAngle_300": "360 {0 0 1}",
+        "node_to_connector_313": "100", 
+        "scaling_anchor": "{0 0 0}",
+        "scaling_factors": scaling_factors,  # Include the calculated scaling factors here
+        "BoundaryDecay_359": "0.75",
+        "BoundaryDecay_384": "0.85",
+        "value_429": "4.5854730054609229e-06", 
+        "maxlayers_430": "100", 
+        "fulllayers_431": "60",
+        "growthrate_432": "1.2", 
+        "growthrate_433": "1.1", 
+        "BoundaryDecay_435": "0.85",
+        "su2meshed_file": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\su2meshEx.su2",   
+    }
+
+
     #--------------------------------------------------------------------------------------------------------------
 
     # CFD solver inputs
     
     #--------------------------------------------------------------------------------------------------------------
+   
     '''
     Two Solver options are available:
         1. Fluent
@@ -191,18 +232,21 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
                 # Run the airfoil generation script
                 create_airfoil_and_flap(airfoil_data, flap_setting, flap_flag, droop_nose_flag, droop_nose_set)
                 
-                # Update the Glyph script
-                update_glyph_script(glyph_file, **update_glyph_data)
+                # Update the Glyph script - Clean Airfoil
+                #update_glyph_script_cl(glyph_file_cl, **update_glyph_clean_data)
+                
+                # Update the Glyph script - Flapped Airfoil
+                update_glyph_script_fl(glyph_file_fl, **update_glyph_flapped_data)
 
         if meshing_flag is True:
             
             # Run Pointwise glyph script to gnerate the mesh
                 if system == "Unix":
-                    full_glyph_path = working_dir + "\\" + glyph_file 
+                    full_glyph_path = working_dir + "\\" + glyph_file_fl 
                     os.chdir(tclsh_dir)
                     subprocess.call(['tclsh ',full_glyph_path], stderr= None, stdin=subprocess.PIPE)    
                 else:
-                    full_glyph_path = working_dir + "/" + glyph_file 
+                    full_glyph_path = working_dir + "/" + glyph_file_fl
                     os.chdir(tclsh_dir)
                     subprocess.run('./pointwise ' + '-b ' + full_glyph_path, shell = True, stdin=subprocess.PIPE)
 
@@ -226,7 +270,7 @@ if __name__ == '__main__':
 
     # Analysis flags
     droop_nose_flag = False         #  A flag to include or exclude a droop nose
-    flap_flag       = False         # A flag to include or exclude a flap
+    flap_flag       = True         # A flag to include or exclude a flap
                                     # True  - airfoil has a flap
                                     # False - draws a clean airfoil
     # Airfoil inputs

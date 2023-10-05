@@ -68,7 +68,7 @@ set _TMP(mode_1) [pw::Application begin Modify [list $_CN(1) $_CN(2)]]
   $_TMP(PW_1) setEndSpacing 0.0005
   unset _TMP(PW_1)
   set _TMP(PW_1) [$_CN(2) getDistribution 1]
-  pw::Entity transform [pwu::Transform scaling -anchor {0 0 0} [2.62 2.62 2.62]] [$_TMP(mode_1) getEntities]
+  pw::Entity transform [pwu::Transform scaling -anchor {0 0 0} {2.62 2.62 2.62}] [$_TMP(mode_1) getEntities]
   unset _TMP(PW_1)
 $_TMP(mode_1) end
 
@@ -96,10 +96,10 @@ set _TMP(mode_1) [pw::Application begin ExtrusionSolver [list $_DM(1)]]
   $_TMP(mode_1) setKeepFailingStep true
   $_DM(1) setExtrusionSolverAttribute NormalInitialStepSize 5.770548344287181e-06
   $_DM(1) setExtrusionSolverAttribute StopAtHeight Off
-  $_DM(1) setExtrusionSolverAttribute StopAtHeight 525
+  $_DM(1) setExtrusionSolverAttribute StopAtHeight 529
   $_TMP(mode_1) run 230
   $_TMP(mode_1) run -1
-  $_TMP(mode_1) initialize -strict -type CAE G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\su2meshEx.su2  $_TMP(mode_1) initialize -strict -type CAE G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\su2meshEx.su2
+  $_TMP(mode_1) initialize -strict -type CAE G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\su2meshEx.su2
 $_TMP(mode_1) end
 
 # Assign boundary conditions
