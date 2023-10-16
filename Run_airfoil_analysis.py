@@ -33,8 +33,6 @@ import numpy as np
 from create_airfoil_and_flap import create_airfoil_and_flap 
 from Fluent_sweeps           import main as Run_fluent
 from SU2_sweeps              import main as Run_SU2
-from glyph_updater_clean     import update_glyph_script_cl
-from glyph_updater_flapped   import update_glyph_script_fl
 from Mach_and_Alt            import Alt_range, Mach_range
 
 
@@ -82,8 +80,8 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
     PARSEC_flag   = True
     meshing_flag  = True                                                          # flag to mesh or skip the meshing part
     system        = "WINDOWS"
-    tclsh_dir     = r"C:\Program Files\Cadence\PointwiseV18.6R1\win64\bin"        # tclsh (UNIX) of Pointwise (Windows) directory (runs glyph on the background)
-    working_dir   = r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1"                   # working directory
+    tclsh_dir     = r"C:\Program Files (x86)\Pointwise\PointwiseV18.3R1\win64\bin"        # tclsh (UNIX) of Pointwise (Windows) directory (runs glyph on the background)
+    working_dir   = r"D:\AE_software\PyAeroSweep\PyAeroSweep-main"                   # working directory
     glyph_file_cl = 'mesh_clean_airfoil_SU2.glf'                                  # Glyph script file - clean airfoil
     glyph_file_fl = 'mesh_flapped_airfoil_SU2.glf'                                # Glyph script file - flapped airfoil
     casefile      = 'airfoil_mesh.cas'                                            # Case file for Fluent (the name that will be created for Fluent)
@@ -94,80 +92,7 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
     
     #--------------------------------------------------------------------------------------------------------------
       
-    # Data required for mesh_clean_airfoil_SU2.glf
-    scaling_factors = np.array([Length[0], Length[0], Length[0]])
-    update_glyph_clean_data = {
-        "upper_surface_filename": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_upper.dat",
-        "lower_surface_filename": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_lower.dat",
-        "connector_dimensions": [200, 200, 8],
-        "begin_spacing": "0.001",
-        "end_spacing_1": "0.001",
-        "end_spacing_2": "0.0005",
-        "su2meshed_file": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\su2meshEx.su2",
-        "run_iterations_1": "230",
-        "run_iterations_2": "-1",
-        "stop_at_height_1": "Off",
-        "stop_at_height_2": "529",
-        "normal_marching_vector": "{-0 -0 -1}",
-        "scaling_anchor": "{0 0 0}",
-        "scaling_factors": scaling_factors  # Include the calculated scaling factors here
-    }
-
-    #--------------------------------------------------------------------------------------------------------------
     
-    # Data required for mesh_flapped_airfoil_SU2.glf
-    scaling_factors = np.array([Length[0], Length[0], Length[0]])
-    update_glyph_flapped_data = {
-        "upper_surface_filename": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_upper.dat",
-        "lower_surface_filename": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_lower.dat",
-        "cut1_filename": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_cut1.dat",
-        "cut2_filename": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_cut2.dat",
-        "flap_airfoil_lower_filename": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\flap_airfoil_lower.dat",
-        "flap_airfoil_upper_filename": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\flap_airfoil_upper.dat",
-        "connector_dimensions": [200, 120, 150, 150, 70, 25, 8, 8],
-        "begin_spacing_127": "0.001",
-        "end_spacing_130": "0.001",
-        "end_spacing_137": "0.001",
-        "begin_spacing_140": "0.001",
-        "end_spacing_146": "0.00050000000000000001",
-        "begin_spacing_149": "0.00050000000000000001",
-        "begin_spacing_156": "0.00050000000000000001",
-        "end_spacing_159": "0.00050000000000000001",  
-        "begin_spacing_165": "0.001",  
-        "end_spacing_172": "0.001",
-        "end_spacing_178": "0.005",
-        "begin_spacing_184": "0.005",  
-        "end_spacing_192": "0.001",
-        "begin_spacing_195": "0.001", 
-        "begin_spacing_201": "0.00050000000000000001",
-        "end_spacing_204": "0.00050000000000000001",
-        "begin_spacing_211": "0.00050000000000000001",
-        "end_spacing_214": "0.00050000000000000001",
-        "addPoint228": "{60 60 0}",
-        "addPoint229": "{60 -60 0}",
-        "addPoint245": "{-60 -60 0}",
-        "addPoint255": "{-60 60 0}",
-        "far_field_connector_dim": "20", 
-        "addPoint_287": "{0.5 3 0}",
-        "addPoint_288": "{0.5 0 0}",
-        "EndAngle_289": "360 {0 0 1}",
-        "addPoint_298": "{0.5 15 0}",
-        "addPoint_299": "{0.5 0 0}",
-        "EndAngle_300": "360 {0 0 1}",
-        "node_to_connector_313": "100", 
-        "scaling_anchor": "{0 0 0}",
-        "scaling_factors": scaling_factors,  # Include the calculated scaling factors here
-        "BoundaryDecay_359": "0.75",
-        "BoundaryDecay_384": "0.85",
-        "value_429": "4.5854730054609229e-06", 
-        "maxlayers_430": "100", 
-        "fulllayers_431": "60",
-        "growthrate_432": "1.2", 
-        "growthrate_433": "1.1", 
-        "BoundaryDecay_435": "0.85",
-        "su2meshed_file": r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\su2meshEx.su2",   
-    }
-
 
     #--------------------------------------------------------------------------------------------------------------
 
@@ -217,36 +142,48 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
     AoA_range   = np.array([0.0])                      # AoA range in degrees 0.0,1.0,2.0,3.0....
     # 0,3.0,6.0,8.0,10.0,12.0,13.0,14.0,15.0
 
-    
-
 
     #-------------------------------------------------------------------------------------------------------------------------
+
+
     for i in range(len(Area)):
         Ref_values = [Area[i], Length[i], Depth, ref_point[0], ref_point[1], ref_point[2]]    
-
-        if PARSEC_flag is True:
-            # Run the airfoil generation script
-            create_airfoil_and_flap(airfoil_data, flap_setting, flap_flag, droop_nose_flag, droop_nose_set)
     
+        # Run the airfoil generation script
         if PARSEC_flag is True:
-                # Run the airfoil generation script
                 create_airfoil_and_flap(airfoil_data, flap_setting, flap_flag, droop_nose_flag, droop_nose_set)
-                
-                # Update the Glyph script - Clean Airfoil
-                #update_glyph_script_cl(glyph_file_cl, **update_glyph_clean_data)
-                
-                # Update the Glyph script - Flapped Airfoil
-                update_glyph_script_fl(glyph_file_fl, **update_glyph_flapped_data)
 
+                
+        # Mesh the geometry
         if meshing_flag is True:
-            
+
+            if flap_flag is True: 
+
+                # Update the Glyph script - Flapped Airfoil
+                from glyph_updater_flapped  import update_glyph_script_fl   
+                from mesh_pre_process       import update_glyph_flapped_data
+                update_glyph_script_fl(glyph_file_fl, **update_glyph_flapped_data) 
+
+            else:
+
+                # Update the Glyph script - Clean Airfoil   
+                from glyph_updater_clean    import update_glyph_script_cl
+                from mesh_pre_process       import update_glyph_clean_data
+                update_glyph_script_cl(glyph_file_cl, **update_glyph_clean_data)
+
             # Run Pointwise glyph script to gnerate the mesh
-                if system == "Unix":
-                    full_glyph_path = working_dir + "\\" + glyph_file_fl 
+                if system == "WINDOWS":
+                    if flap_flag is True:
+                        full_glyph_path = working_dir + "\\" + glyph_file_fl 
+                    else:
+                        full_glyph_path = working_dir + "\\" + glyph_file_cl 
                     os.chdir(tclsh_dir)
                     subprocess.call(['tclsh ',full_glyph_path], stderr= None, stdin=subprocess.PIPE)    
                 else:
-                    full_glyph_path = working_dir + "/" + glyph_file_fl
+                    if flap_flag is True:
+                        full_glyph_path = working_dir + "/" + glyph_file_fl 
+                    else:
+                        full_glyph_path = working_dir + "/" + glyph_file_cl 
                     os.chdir(tclsh_dir)
                     subprocess.run('./pointwise ' + '-b ' + full_glyph_path, shell = True, stdin=subprocess.PIPE)
 
@@ -270,7 +207,7 @@ if __name__ == '__main__':
 
     # Analysis flags
     droop_nose_flag = False         #  A flag to include or exclude a droop nose
-    flap_flag       = True         # A flag to include or exclude a flap
+    flap_flag       = False         # A flag to include or exclude a flap
                                     # True  - airfoil has a flap
                                     # False - draws a clean airfoil
     # Airfoil inputs
@@ -309,7 +246,7 @@ if __name__ == '__main__':
 
     # Input airfoil reference values 
     Area            = np.array([2.62])                                           # Reference Area in sq m
-    Length          = np.array([2.62])                                           # Reference length in m   
+    Length          = np.array([2.62])                                           # Reference length in m  (To be changed maunally inside mesh_pre_process.py))  
     Depth           = 1                                                          # Reference depth (span) in m
     ref_point       = [0.25*Length,0,0]                                          # Reference coordinate
 
@@ -322,6 +259,6 @@ if __name__ == '__main__':
         run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag, droop_nose_set)
 
 
-##################################################################################
+#######################################################################################################
 
 
