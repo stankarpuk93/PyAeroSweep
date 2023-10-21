@@ -1,8 +1,8 @@
 # Run_airfoil_analysis.py
 # 
 # Created:  Dec 2022, S. Karpuk
-# Modified:
-
+# Modified: Oct 2023, S. Holenarsipura
+#
 
 """
 The code runs the generation of an airfoil using the PARSEC method,
@@ -27,13 +27,14 @@ Prerequiseites:
 # ----------------------------------------------------------------------
 #   Imports
 # ----------------------------------------------------------------------
+
 import os
 import subprocess
 import numpy as np
 from create_airfoil_and_flap import create_airfoil_and_flap 
 from Fluent_sweeps           import main as Run_fluent
 from SU2_sweeps              import main as Run_SU2
-from Mach_and_Alt            import Alt_range, Mach_range
+from mesh_pre_process        import Alt_range, Mach_range, Length
 
 
 def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag, droop_nose_set):
@@ -79,26 +80,22 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
     # Important directories and file names
     PARSEC_flag   = True
     meshing_flag  = True                                                          # flag to mesh or skip the meshing part
-    system        = "WINDOWS"
-    tclsh_dir     = r"C:\Program Files (x86)\Pointwise\PointwiseV18.3R1\win64\bin"        # tclsh (UNIX) of Pointwise (Windows) directory (runs glyph on the background)
-    working_dir   = r"D:\AE_software\PyAeroSweep\PyAeroSweep-main"                   # working directory
+    system        = "WINDOWS"                                                     # 'UNIX' for Linux and 'WINDOWS' for Windows OS
+    tclsh_dir     = r"C:\Program Files\Cadence\PointwiseV18.6R1\win64\bin"        # tclsh (UNIX) of Pointwise (Windows) directory (runs glyph on the background)
+    working_dir   = r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1"                   # working directory
     glyph_file_cl = 'mesh_clean_airfoil_SU2.glf'                                  # Glyph script file - clean airfoil
     glyph_file_fl = 'mesh_flapped_airfoil_SU2.glf'                                # Glyph script file - flapped airfoil
     casefile      = 'airfoil_mesh.cas'                                            # Case file for Fluent (the name that will be created for Fluent)
-    SU2_conf_file = 'Run_airfoil_template.cfg'#'Run_airfoil_template.cfg'         # SU2 config file which is used as a reference file
-    SU2_mesh      = 'su2meshEx.su2'#'su2meshEx.su2'                               # SU2 mesh file
-    #upper_airfoil_path = r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_upper.dat"
-    #lower_airfoil_path = r"G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_lower.dat"
-    
-    #--------------------------------------------------------------------------------------------------------------
-      
-    
-
+    SU2_conf_file = 'Run_airfoil_template.cfg'                                    # SU2 config file which is used as a reference file
+    SU2_mesh      = 'su2meshEx.su2'                                               # SU2 mesh file
+   
+   
     #--------------------------------------------------------------------------------------------------------------
 
     # CFD solver inputs
     
     #--------------------------------------------------------------------------------------------------------------
+   
    
     '''
     Two Solver options are available:
@@ -139,7 +136,7 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
         SU2_settings = [turbulence_model, num_proc, save_freq, conv_criteria, iterations, warmstart, system, symmetric]
  
     # Input sweeep data
-    AoA_range   = np.array([0.0])                      # AoA range in degrees 0.0,1.0,2.0,3.0....
+    AoA_range   = np.array([3.0])                      # AoA range in degrees 0.0,1.0,2.0,3.0....
     # 0,3.0,6.0,8.0,10.0,12.0,13.0,14.0,15.0
 
 
@@ -149,41 +146,46 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
     for i in range(len(Area)):
         Ref_values = [Area[i], Length[i], Depth, ref_point[0], ref_point[1], ref_point[2]]    
     
-        # Run the airfoil generation script
         if PARSEC_flag is True:
+                # Run the airfoil generation script
                 create_airfoil_and_flap(airfoil_data, flap_setting, flap_flag, droop_nose_flag, droop_nose_set)
 
-                
-        # Mesh the geometry
+                from glyph_updater_clean     import update_glyph_script_cl
+                from glyph_updater_flapped   import update_glyph_script_fl
+
+                if flap_flag is True:    
+                    # Update the Glyph script - Flapped Airfoil
+                    from mesh_pre_process import update_glyph_flapped_data
+                    update_glyph_script_fl(glyph_file_fl, **update_glyph_flapped_data)    
+
+                else:
+                    # Update the Glyph script - Clean Airfoil
+                    from mesh_pre_process import update_glyph_clean_data
+                    update_glyph_script_cl(glyph_file_cl, **update_glyph_clean_data)
+            
+
         if meshing_flag is True:
-
-            if flap_flag is True: 
-
-                # Update the Glyph script - Flapped Airfoil
-                from glyph_updater_flapped  import update_glyph_script_fl   
-                from mesh_pre_process       import update_glyph_flapped_data
-                update_glyph_script_fl(glyph_file_fl, **update_glyph_flapped_data) 
-
-            else:
-
-                # Update the Glyph script - Clean Airfoil   
-                from glyph_updater_clean    import update_glyph_script_cl
-                from mesh_pre_process       import update_glyph_clean_data
-                update_glyph_script_cl(glyph_file_cl, **update_glyph_clean_data)
-
+            
             # Run Pointwise glyph script to gnerate the mesh
-                if system == "WINDOWS":
-                    if flap_flag is True:
-                        full_glyph_path = working_dir + "\\" + glyph_file_fl 
-                    else:
-                        full_glyph_path = working_dir + "\\" + glyph_file_cl 
+            if flap_flag is True: 
+                        
+                if system == "Unix":
+                    full_glyph_path = working_dir + "\\" + glyph_file_fl 
                     os.chdir(tclsh_dir)
                     subprocess.call(['tclsh ',full_glyph_path], stderr= None, stdin=subprocess.PIPE)    
                 else:
-                    if flap_flag is True:
-                        full_glyph_path = working_dir + "/" + glyph_file_fl 
-                    else:
-                        full_glyph_path = working_dir + "/" + glyph_file_cl 
+                    full_glyph_path = working_dir + "/" + glyph_file_fl
+                    os.chdir(tclsh_dir)
+                    subprocess.run('./pointwise ' + '-b ' + full_glyph_path, shell = True, stdin=subprocess.PIPE)
+
+            else:
+                        
+                if system == "Unix":
+                    full_glyph_path = working_dir + "\\" + glyph_file_cl 
+                    os.chdir(tclsh_dir)
+                    subprocess.call(['tclsh ',full_glyph_path], stderr= None, stdin=subprocess.PIPE)    
+                else:
+                    full_glyph_path = working_dir + "/" + glyph_file_cl
                     os.chdir(tclsh_dir)
                     subprocess.run('./pointwise ' + '-b ' + full_glyph_path, shell = True, stdin=subprocess.PIPE)
 
@@ -206,10 +208,10 @@ if __name__ == '__main__':
     #--------------------------------------------------------------------------------------------------------------
 
     # Analysis flags
-    droop_nose_flag = False         #  A flag to include or exclude a droop nose
-    flap_flag       = False         # A flag to include or exclude a flap
-                                    # True  - airfoil has a flap
-                                    # False - draws a clean airfoil
+    droop_nose_flag = False                   #  A flag to include or exclude a droop nose
+    flap_flag       = True                    # A flag to include or exclude a flap
+                                              # True  - airfoil has a flap
+                                              # False - draws a clean airfoil
     # Airfoil inputs
     rle         = [0.0084] #0.005785          # Main airfoil LE radius
     x_pre       = [0.458080577545180]         # x-location of the crest on the pressure side
@@ -246,7 +248,11 @@ if __name__ == '__main__':
 
     # Input airfoil reference values 
     Area            = np.array([2.62])                                           # Reference Area in sq m
-    Length          = np.array([2.62])                                           # Reference length in m  (To be changed maunally inside mesh_pre_process.py))  
+
+    '''
+    Length          = np.array([2.62])   NOTE: Reference length in m (To be changed maunally inside mesh_pre_process.py)  
+   
+    '''
     Depth           = 1                                                          # Reference depth (span) in m
     ref_point       = [0.25*Length,0,0]                                          # Reference coordinate
 

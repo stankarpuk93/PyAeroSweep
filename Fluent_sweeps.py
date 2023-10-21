@@ -2,16 +2,18 @@
 # 
 # Created:  Aug 2022, S. Karpuk
 # Modified:
+#
+# Runs the Fluent aerodynamic analysis sweep for airfoils, wings, and aircraft
 
 # ----------------------------------------------------------------------
 #   Imports
 # ----------------------------------------------------------------------
+
 import numpy as np
 import os
 import subprocess
 import shutil
 import xlsxwriter
-
 
 # ----------------------------------------------------------------------
 #   Main
@@ -19,7 +21,7 @@ import xlsxwriter
 
 
 def main(Alt_range,Mach_range,AoA_range,Fluent_settings,Ref_values,Ref_dir,casefile):
-    ''' Runs the Fluent aerodynamic analysis sweep for airfoils, wings, and aircraft
+    ''' 
         Available sweeps:
             Altitude
             Mach
@@ -102,7 +104,7 @@ def main(Alt_range,Mach_range,AoA_range,Fluent_settings,Ref_values,Ref_dir,casef
                     # Create a Journal file
                     filename = run_2d_Fluent_journal(Alt_range[i],Mach_range[j],AoA_range[k],\
                                                             Fluent_settings,Ref_values,Ref_dir,casefile)
-
+                
                     # Run Fluent
                     new_direct  = 'Case_alt' + str("{:.2f}".format(Alt_range[i])) + '_Mach' + str("{:.2f}".format(Mach_range[j])) + '_AoA' + str("{:.2f}".format(AoA_range[k]))
                     file_direct = os.path.join(Ref_dir, new_direct)

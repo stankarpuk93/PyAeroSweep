@@ -1,4 +1,13 @@
 # glyph_updater_flapped.py
+#
+# Created: Oct 2023, S.Holenarsipura
+# Modified: Oct 2023, S.Holenarsipura
+#
+# This script provides the ability to automatically update Glyph script of Flapped Airfoil.
+
+# ----------------------------------------------------------------------
+# Imports
+# ----------------------------------------------------------------------
 
 from Delta_S import delta_s
 
@@ -11,10 +20,39 @@ def update_glyph_script_fl( glyph_file_fl, upper_surface_filename, lower_surface
                            BoundaryDecay_384, maxlayers_430, fulllayers_431, growthrate_432, growthrate_433, BoundaryDecay_435,
                            su2meshed_file ):
     
+    ''' Update specific lines in a Glyph script with new values for generating structured grids with flaps.
+    
+        Inputs:
+            glyph_file_fl                : Path to the Flapped Airfoil Glyph script to update.
+            upper_surface_filename       : Path to the upper surface file.
+            lower_surface_filename       : Path to the lower surface file.
+            cut1_filename                : Path to the first cut file.
+            cut2_filename                : Path to the second cut file.
+            flap_airfoil_lower_filename  : Path to the lower flap airfoil file.
+            flap_airfoil_upper_filename  : Path to the upper flap airfoil file.
+            connector_dimensions         : List of connector dimensions.
+            spacing_XXX                  : Spacing values for various lines.
+            addPointXXX                  : Coordinates of points to add.
+            far_field_connector_dim      : Dimensions of the far-field connector.
+            EndAngle_XXX                : End angles for specific lines.
+            node_to_connector_313        : Node-to-connector dimension.
+            scaling_anchor               : Scaling anchor for entity transformation.
+            scaling_factors              : Scaling factors for entity transformation.
+            BoundaryDecay_XXX           : Boundary decay values for specific lines.
+            maxlayers_430                : TRex maximum layers attribute value.
+            fulllayers_431               : TRex full layers attribute value.
+            growthrate_432               : TRex growth rate attribute value.
+            growthrate_433               : TRex growth rate attribute value.
+            su2meshed_file               : Path to the SU2 meshed file.
+
+        Assumptions:
+            1. The Glyph script contains specific lines to be updated with new values.
+    '''
+
     lines_to_update = [ 14, 20, 26, 32, 38, 44, 98, 101, 104, 107, 110, 113, 116, 119, 127, 130, 137, 140, 146, 149, 156, 159,
                        165, 172, 178, 184, 192, 195, 201, 204, 211, 214, 228, 229, 245, 255, 280, 287, 288, 289, 298, 299,
                        300, 313, 332, 359, 384, 430, 431, 432, 433, 435, 512 ]             
-                    # 52 updates in total 
+                       # 52 updates in total 
    
     new_values = [
         f"  $_TMP(mode_1) initialize -strict -type Automatic {upper_surface_filename}",

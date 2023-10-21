@@ -1,17 +1,19 @@
 # SU2_sweeps.py
 # 
 # Created:  Aug 2022, S. Karpuk
-# Modified:
+# Modified: Oct 20223, S. Karpuk
+#
+# Runs the SU2 aerodynamic analysis sweep for airfoils, wings, and aircraft
 
 # ----------------------------------------------------------------------
 #   Imports
 # ----------------------------------------------------------------------
+
 import numpy as np
 import os
 import subprocess
 import shutil
 import xlsxwriter
-
 
 # ----------------------------------------------------------------------
 #   Main
@@ -19,7 +21,7 @@ import xlsxwriter
 
 
 def main(Solver_dim,Alt_range,Mach_range,AoA_range,SU2_settings,Ref_values,Ref_dir,SU2_conf_file,SU2_mesh):
-    ''' Runs the SU2 aerodynamic analysis sweep for airfoils, wings, and aircraft
+    ''' 
         So far, the file uses a .cfg template and sets reference values and methods up
         The .cfg file needs to be established beforehand
 
@@ -82,6 +84,7 @@ def main(Solver_dim,Alt_range,Mach_range,AoA_range,SU2_settings,Ref_values,Ref_d
     Cd = np.zeros((len_Alt,len_Mach,len_AoA))                               # Array of Cd
     Cm = np.zeros((len_Alt,len_Mach,len_AoA))                               # Array of Cm
 
+
     wartsatrt_set = SU2_settings[5]
     for i in range(len_Alt):
         for j in range(len_Mach):
@@ -97,8 +100,8 @@ def main(Solver_dim,Alt_range,Mach_range,AoA_range,SU2_settings,Ref_values,Ref_d
                         SU2_settings[5] = 'YES'
                     filename = run_SU2_config(Solver_dim,Alt_range[i],Mach_range[j],AoA_range,\
                                                             SU2_settings,Ref_values,Ref_dir,SU2_conf_file,SU2_mesh,k)
-
-                    # Run Fluent
+                    
+                    # Run SU2
                     new_direct  = 'Case_alt' + str("{:.2f}".format(Alt_range[i])) + '_Mach' + str("{:.2f}".format(Mach_range[j])) + '_AoA' + str("{:.2f}".format(AoA_range[k]))
                     file_direct = os.path.join(Ref_dir, new_direct)
                     filename = os.path.join(file_direct, filename)
@@ -312,8 +315,7 @@ def read_results(output_file):
 
     # Read results 
     with open(output_file, 'r') as f:
-        last_line = f.readlines()[-35]
-
+        last_line = f.readlines()[-36]
     results_array = last_line.split('|')
 
     Cl = float(results_array[-4])
@@ -321,9 +323,7 @@ def read_results(output_file):
     Cm = float(results_array[-3])
 
 
-
     return Cl, Cd, Cm
-
 
 
 

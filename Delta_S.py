@@ -1,13 +1,32 @@
 #Delta_S.py
+#
+# Created: Oct 2023, S.Holenarsipura
+# Modified: Oct 2023, S.Holenarsipura
+#
+# This script calculates the value of Delta S
+
+# ----------------------------------------------------------------------
+# Imports
+# ----------------------------------------------------------------------
 
 import math
-import numpy as np
-from mesh_pre_process import desired_Yplus
-from Mach_and_Alt import Alt_range, Mach_range
-from mesh_pre_process import Length as L           #chord length - Scaling factor from Run_airfoil_analysis
+from mesh_pre_process import desired_Yplus, Alt_range, Mach_range, Length as L  #chord length - Scaling factor from Run_airfoil_analysis         
 
 # Calculate initial step size using the provided values
 def calculate_initstepsize(M, altitude, Yplus):
+
+    """Calculates the initial step size (delta_s) for a given Mach number,
+  altitude, and desired Yplus value.
+
+  Args:
+    M: Mach number
+    altitude: Altitude in meters
+    Yplus: Desired Yplus value
+
+  Returns:
+    Initial step size (delta_s) in meters
+  """
+    
     # Constants for standard atmosphere model
     TSL = 288.16  # Sea-level temperature (K)
     Tiso = 216.65  # Isothermal temperature (K)
@@ -67,7 +86,7 @@ def calculate_initstepsize(M, altitude, Yplus):
     return delta_s
 
 
-# Loop over altitude and Mach number ranges      NOTE: Mach_range & Alt_range are under the file Mach_and_Alt.py (circular import error)
+# Loop over altitude and Mach number ranges      NOTE: Mach_range & Alt_range are under the file mesh_pre_process.py (circular import error)
 for altitude in Alt_range:
     for Mach_number in Mach_range:
         # Calculate initial step size
