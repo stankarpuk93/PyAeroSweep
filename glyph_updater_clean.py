@@ -13,8 +13,8 @@ from Delta_S import delta_s
 
 
 def update_glyph_script_cl( glyph_file_cl, upper_surface_filename, lower_surface_filename, connector_dimensions,  
-                         spacing_59_63, spacing_68_71, su2meshed_file, run_iterations_1, run_iterations_2, 
-                         stop_at_height_1, stop_at_height_2, normal_marching_vector, scaling_anchor,scaling_factors ):
+                         spacing_59_62, spacing_68_71, su2meshed_file, run_iterations_1, run_iterations_2, 
+                         stop_at_height_1, stop_at_height_2, scaling_factors ):
     
 
     ''' Update specific lines in a Glyph script with new values for generating structured grids.
@@ -40,8 +40,8 @@ def update_glyph_script_cl( glyph_file_cl, upper_surface_filename, lower_surface
     '''
 
 
-    lines_to_update = [14, 20, 46, 49, 52, 59, 62, 68, 71, 80, 98, 99, 100, 101, 102, 139]            
-                      # 16 updates in total (17th update is written below, for line 96)
+    lines_to_update = [14, 20, 46, 49, 52, 59, 62, 68, 71, 80, 99, 100, 101, 102, 139]            
+                      # 15 updates in total (16th update is written below, for line 96)
     
     
     new_values = [
@@ -50,18 +50,16 @@ def update_glyph_script_cl( glyph_file_cl, upper_surface_filename, lower_surface
         f"$_CN(1) setDimension {connector_dimensions[0]}",
         f"$_CN(2) setDimension {connector_dimensions[1]}",
         f"$_CN(3) setDimension {connector_dimensions[2]}",
-        f"  $_TMP(PW_1) setBeginSpacing {spacing_59_63}",
-        f"  $_TMP(PW_1) setEndSpacing {spacing_59_63}",
+        f"  $_TMP(PW_1) setBeginSpacing {spacing_59_62}",
+        f"  $_TMP(PW_1) setEndSpacing {spacing_59_62}",
         f"  $_TMP(PW_1) setEndSpacing {spacing_68_71}",
         f"  $_TMP(PW_1) setBeginSpacing {spacing_68_71}",
-        f"  pw::Entity transform [pwu::Transform scaling -anchor {scaling_anchor} {scaling_factors}] [$_TMP(mode_1) getEntities]",
-        f"  $_DM(1) setExtrusionSolverAttribute NormalMarchingVector {normal_marching_vector}",
+        f"  pw::Entity transform [pwu::Transform scaling -anchor " + "{0 0 0}" + f" {scaling_factors}] [$_TMP(mode_1) getEntities]",
         f"  $_DM(1) setExtrusionSolverAttribute StopAtHeight {stop_at_height_1}",
         f"  $_DM(1) setExtrusionSolverAttribute StopAtHeight {stop_at_height_2}",
         f"  $_TMP(mode_1) run {run_iterations_1}",
         f"  $_TMP(mode_1) run {run_iterations_2}",
         f"  $_TMP(mode_1) initialize -strict -type CAE {su2meshed_file}",
-        f"  $_TMP(mode_1) initialize -strict -type CAE {su2meshed_file}"
     ]
 
     # Read the entire content of the Glyph script

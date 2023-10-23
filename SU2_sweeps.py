@@ -315,7 +315,7 @@ def read_results(output_file):
 
     # Read results 
     with open(output_file, 'r') as f:
-        last_line = f.readlines()[-36]
+        last_line = f.readlines()[-35]
     results_array = last_line.split('|')
 
     Cl = float(results_array[-4])

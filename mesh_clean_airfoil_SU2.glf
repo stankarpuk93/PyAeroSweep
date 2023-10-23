@@ -11,13 +11,13 @@ pw::Application clearModified
 
 # import airfoil components
 set _TMP(mode_1) [pw::Application begin DatabaseImport]
-  $_TMP(mode_1) initialize -strict -type Automatic G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_upper.dat
+  $_TMP(mode_1) initialize -strict -type Automatic "G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/main_airfoil_upper.dat"
   $_TMP(mode_1) read
   $_TMP(mode_1) convert
 $_TMP(mode_1) end
 
 set _TMP(mode_1) [pw::Application begin DatabaseImport]
-  $_TMP(mode_1) initialize -strict -type Automatic G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\main_airfoil_lower.dat
+  $_TMP(mode_1) initialize -strict -type Automatic "G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/main_airfoil_lower.dat"
   $_TMP(mode_1) read
   $_TMP(mode_1) convert
 $_TMP(mode_1) end
@@ -68,7 +68,7 @@ set _TMP(mode_1) [pw::Application begin Modify [list $_CN(1) $_CN(2)]]
   $_TMP(PW_1) setEndSpacing 0.0005
   unset _TMP(PW_1)
   set _TMP(PW_1) [$_CN(2) getDistribution 1]
-  pw::Entity transform [pwu::Transform scaling -anchor {0 0 0} {2.62 2.62 2.62}] [$_TMP(mode_1) getEntities]
+  $_TMP(PW_1) setBeginSpacing 0.0005
   unset _TMP(PW_1)
 $_TMP(mode_1) end
 
@@ -77,7 +77,7 @@ set _CN(1) [pw::GridEntity getByName con-1]
 set _CN(2) [pw::GridEntity getByName con-2]
 set _CN(3) [pw::GridEntity getByName con-3]
 set _TMP(mode_1) [pw::Application begin Modify [list $_CN(1) $_CN(2) $_CN(3) ]]
-  $_DM(1) setExtrusionSolverAttribute NormalMarchingVector {-0 -0 -1}
+  pw::Entity transform [pwu::Transform scaling -anchor {0 0 0} {2.62 2.62 2.62}] [$_TMP(mode_1) getEntities]
 $_TMP(mode_1) end
 
 # Extrude a structured mesh
@@ -94,12 +94,12 @@ $_TMP(mode_1) end
 unset _TMP(mode_1)
 set _TMP(mode_1) [pw::Application begin ExtrusionSolver [list $_DM(1)]]
   $_TMP(mode_1) setKeepFailingStep true
-  $_DM(1) setExtrusionSolverAttribute NormalInitialStepSize 5.770548344287181e-06
+  $_DM(1) setExtrusionSolverAttribute NormalMarchingVector {-0 -0 -1}
+  $_DM(1) setExtrusionSolverAttribute NormalInitialStepSize 3.303928055000552e-06
   $_DM(1) setExtrusionSolverAttribute StopAtHeight Off
   $_DM(1) setExtrusionSolverAttribute StopAtHeight 529
   $_TMP(mode_1) run 230
   $_TMP(mode_1) run -1
-  $_TMP(mode_1) initialize -strict -type CAE G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\su2meshEx.su2
 $_TMP(mode_1) end
 
 # Assign boundary conditions
@@ -136,7 +136,7 @@ $_TMP(mode_1) end
 
 set _DM(1) [pw::GridEntity getByName dom-1]
 set _TMP(mode_1) [pw::Application begin CaeExport [pw::Entity sort [list $_DM(1)]]]
-  $_TMP(mode_1) initialize -strict -type CAE G:\TUBS\HiWi\Dr Karpuk\Version\AF_CFD_V1\su2meshEx.su2
+  $_TMP(mode_1) initialize -strict -type CAE "G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/su2meshEx.su2"
   $_TMP(mode_1) setAttribute FilePrecision Double
   $_TMP(mode_1) verify
   $_TMP(mode_1) write

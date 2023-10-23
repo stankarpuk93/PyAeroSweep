@@ -16,7 +16,7 @@ def update_glyph_script_fl( glyph_file_fl, upper_surface_filename, lower_surface
                            spacing_127_130, spacing_137_140, spacing_146_149, spacing_156_159, spacing_165_172, 
                            spacing_178_184, spacing_192_195, spacing_201_204, spacing_211_214, addPoint228, addPoint229, addPoint245,
                            addPoint255, far_field_connector_dim, addPoint_287, addPoint_288, EndAngle_289, addPoint_298,
-                           addPoint_299, EndAngle_300, node_to_connector_313, scaling_anchor,scaling_factors, BoundaryDecay_359,
+                           addPoint_299, EndAngle_300, node_to_connector_313, scaling_factors, BoundaryDecay_359,
                            BoundaryDecay_384, maxlayers_430, fulllayers_431, growthrate_432, growthrate_433, BoundaryDecay_435,
                            su2meshed_file ):
     
@@ -99,7 +99,7 @@ def update_glyph_script_fl( glyph_file_fl, upper_surface_filename, lower_surface
         f"  $_TMP(PW_1) addPoint {addPoint_299}",
         f"  $_TMP(PW_1) setEndAngle {EndAngle_300}",
         f"  $_TMP(PW_1) do setDimension {node_to_connector_313}",
-        f"  pw::Entity transform [pwu::Transform scaling -anchor {scaling_anchor} {scaling_factors}] [$_TMP(mode_1) getEntities]",
+        f"  pw::Entity transform [pwu::Transform scaling -anchor " + "{0 0 0}" + f" {scaling_factors}] [$_TMP(mode_1) getEntities]",
         f"  $_DM(1) setUnstructuredSolverAttribute BoundaryDecay {BoundaryDecay_359}",
         f"  $_DM(1) setUnstructuredSolverAttribute BoundaryDecay {BoundaryDecay_384}",
         f"  $_DM(1) setUnstructuredSolverAttribute TRexMaximumLayers {maxlayers_430}",

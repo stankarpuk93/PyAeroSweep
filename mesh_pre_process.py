@@ -37,8 +37,16 @@ Length = np.array([get_length()])
 # Define the altitude and Mach number ranges for analysis.
 
 # Mach_and_Alt
-Alt_range   = np.array([0])             # Altitude range in meters
-Mach_range  = np.array([0.21])          # Mach number range  0.4,0.5,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95
+Alt_range   = np.array([10])             # Altitude range in meters
+Mach_range  = np.array([0.5])          # Mach number range  0.4,0.5,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95
+
+# ----------------------------------------------------------------------
+# Far-Field Vertices
+# ----------------------------------------------------------------------
+
+# Calculate the 'x' and 'y' values based on 'Length'
+x_value = float(50 * Length[0])
+y_value = float(50 * Length[0])
 
 # ----------------------------------------------------------------------
 # Scaling Factors
@@ -59,15 +67,13 @@ update_glyph_clean_data = {
     "upper_surface_filename": r'"G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/main_airfoil_upper.dat"',     # Path to the upper surface file
     "lower_surface_filename": r'"G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/main_airfoil_lower.dat"',     # Path to the lower surface file
     "connector_dimensions": [200, 200, 8],     # Dimensions for connectors
-    "spacing_59_63": "0.001",                  # Spacing value for lines 59 to 63
+    "spacing_59_62": "0.001",                  # Spacing value for lines 59 to 63
     "spacing_68_71": "0.0005",                 # Spacing value for lines 68 to 71
     "su2meshed_file": r'"G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/su2meshEx.su2"',  # Path to the SU2 meshed file
     "run_iterations_1": "230",                 # Number of iterations for the first run
     "run_iterations_2": "-1",                  # Number of iterations for the second run
     "stop_at_height_1": "Off",                 # Option to stop at a specific height for the first run
     "stop_at_height_2": "529",                 # Height at which to stop for the second run
-    "normal_marching_vector": "{-0 -0 -1}",    # Normal marching vector
-    "scaling_anchor": "{0 0 0}",               # Anchor point for scaling
     "scaling_factors": scaling_factors_str     # Scaling factors for scaling the entities
 }
 
@@ -99,10 +105,10 @@ update_glyph_flapped_data = {
     "spacing_192_195": "0.001",                                   # Spacing value for lines 192 to 195
     "spacing_201_204": "0.00050000000000000001",                  # Spacing value for lines 201 to 204
     "spacing_211_214": "0.00050000000000000001",                  # Spacing value for lines 211 to 214
-    "addPoint228": "{60 60 0}",                                   # Coordinates for addPoint at line 228
-    "addPoint229": "{60 -60 0}",                                  # Coordinates for addPoint at line 229
-    "addPoint245": "{-60 -60 0}",                                 # Coordinates for addPoint at line 245
-    "addPoint255": "{-60 60 0}",                                  # Coordinates for addPoint at line 255
+    "addPoint228": "{ " + str(x_value) + " " + str(y_value) + " 0 }",                         # Coordinates for addPoint at line 228
+    "addPoint229": "{ " + str(x_value) + " " + str(-y_value) + " 0 }",                        # Coordinates for addPoint at line 229
+    "addPoint245": "{ " + str(-x_value) + " " + str(-y_value) + " 0 }",                       # Coordinates for addPoint at line 245
+    "addPoint255": "{ " + str(-x_value) + " " + str(y_value) + " 0 }",                        # Coordinates for addPoint at line 255
     "far_field_connector_dim": "20",                              # Dimensions for the far-field connector
     "addPoint_287": "{0.5 3 0}",                                  # Coordinates for addPoint at line 287
     "addPoint_288": "{0.5 0 0}",                                  # Coordinates for addPoint at line 288
@@ -111,7 +117,6 @@ update_glyph_flapped_data = {
     "addPoint_299": "{0.5 0 0}",                                  # Coordinates for addPoint at line 299
     "EndAngle_300": "360 {0 0 1}",                                # End angle for line 300
     "node_to_connector_313": "100",                               # Node to connector dimension
-    "scaling_anchor": "{0 0 0}",                                  # Anchor point for scaling
     "scaling_factors": scaling_factors_str,                       # Scaling factors for scaling the entities
     "BoundaryDecay_359": "0.75",                                  # Boundary decay value for line 359
     "BoundaryDecay_384": "0.85",                                  # Boundary decay value for line 384

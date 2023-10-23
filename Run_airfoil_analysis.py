@@ -129,14 +129,14 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
         symmetric           = True               
         turbulence_model    = 'SST'                                              # Shear Stress Transport (SST) turbulence model (combines the benefits of both, k-ε (k-epsilon) & k-ω (k-omega))
         num_proc            = 7                                                  # Number of processors
-        save_freq           = 3000
+        save_freq           = 300
         conv_criteria       = 5e-7
-        iterations          = 50000  
+        iterations          = 700
         warmstart           = 'YES'                                              # Uses previous solutions in the sweep of data (currently valid for AoA sweeps only) 
         SU2_settings = [turbulence_model, num_proc, save_freq, conv_criteria, iterations, warmstart, system, symmetric]
  
     # Input sweeep data
-    AoA_range   = np.array([3.0])                      # AoA range in degrees 0.0,1.0,2.0,3.0....
+    AoA_range   = np.array([6.0])                      # AoA range in degrees 0.0,1.0,2.0,3.0....
     # 0,3.0,6.0,8.0,10.0,12.0,13.0,14.0,15.0
 
 
@@ -209,7 +209,7 @@ if __name__ == '__main__':
 
     # Analysis flags
     droop_nose_flag = False                   #  A flag to include or exclude a droop nose
-    flap_flag       = True                    # A flag to include or exclude a flap
+    flap_flag       = False                    # A flag to include or exclude a flap
                                               # True  - airfoil has a flap
                                               # False - draws a clean airfoil
     # Airfoil inputs
