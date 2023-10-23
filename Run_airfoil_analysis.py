@@ -129,9 +129,9 @@ def run_airfoil_analysis(airfoil_data, flap_setting, flap_flag, droop_nose_flag,
         symmetric           = True               
         turbulence_model    = 'SST'                                              # Shear Stress Transport (SST) turbulence model (combines the benefits of both, k-ε (k-epsilon) & k-ω (k-omega))
         num_proc            = 7                                                  # Number of processors
-        save_freq           = 300
+        save_freq           = 3000
         conv_criteria       = 5e-7
-        iterations          = 700
+        iterations          = 50000
         warmstart           = 'YES'                                              # Uses previous solutions in the sweep of data (currently valid for AoA sweeps only) 
         SU2_settings = [turbulence_model, num_proc, save_freq, conv_criteria, iterations, warmstart, system, symmetric]
  
