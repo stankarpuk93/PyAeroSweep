@@ -5,7 +5,7 @@ from Data  import Data
 
 def Input_data():
 
-    working_dir   = r"D:/AE_software/PyAeroSweep/PyAeroSweep-main" 
+    working_dir   = r"/home/doktorand/Software/PyAeroSweep-Stan-V2/" 
 
 # ------------------------------- SOLVER SETTINGS ----------------------------------------------------------- #
 #
@@ -33,8 +33,9 @@ def Input_data():
     # Cauchy convergence criteria
     # Could be either LIFT or DRAG
     Solver.monitor          = "LIFT"
-    Solver.tolerance        = 5e-7
-    Solver.max_iterations   = 50000
+    Solver.tolerance        = 5e-7      
+    Solver.max_iterations   = 100
+    Solver.save_frequency   = 100
 
     # Warm start
     # YES or NO
@@ -48,9 +49,9 @@ def Input_data():
 # ------------------------------- FREESTREAM SETTINGS ------------------------------------------------------- #
 #
     Freestream = Data()
-    Freestream.Mach             = np.array([0.21])
-    Freestream.Altitude         = np.array([0])                 # in meters
-    Freestream.Angle_of_attack  = np.array([0.0])               # in degrees
+    Freestream.Mach             = np.array([0.21,0.25])
+    Freestream.Altitude         = np.array([0,2000])                 # in meters
+    Freestream.Angle_of_attack  = np.array([0.0,3.0,5.0])               # in degrees
 
 
 
@@ -144,26 +145,21 @@ def Input_data():
 
     # Defined the OS in which Pointwise is used
     # WINDOWS or Linux
-    Mesh.operating_system = 'WINDOWS'
+    Mesh.operating_system = 'Linux'
 
     # Pointwise tclsh directory used in Windows
-    Mesh.tclsh_directory = r"C:\Program Files (x86)\Pointwise\PointwiseV18.3R1\win64\bin" 
+    Mesh.tclsh_directory =  r"/home/doktorand/Fidelity/Pointwise/Pointwise2022.1" 
 
     # Desired Y+ value
     Mesh.Yplus = 1.0
 
     # Define the Glyph template to use for meshing
-    Mesh.glyph_file = "mesh_flapped_airfoil_SU2.glf"
+    Mesh.glyph_file = "mesh_clean_airfoil_SU2.glf"
 
     # Mesh filename for either the newly generated mesh or an eisting mesh
     Mesh.filename = 'su2meshEx.su2'
 
-    # Define far-field (for unstraucture meshes only used for flapped airfoils or wings)
-    #   min x, max x
-    #   min y, max y
-    #   min z, max z (used only for 3D cases)
-    #Mesh.far_field = [[-60, 60], [-60 ,60]]
-
+    # Define far-field 
     Mesh.far_field = 100 * Geometry.reference_values["Length"]
 
 

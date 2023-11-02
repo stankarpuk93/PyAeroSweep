@@ -11,37 +11,37 @@ pw::Application clearModified
 
 # import airfoil components
 set _TMP(mode_1) [pw::Application begin DatabaseImport]
-  $_TMP(mode_1) initialize -strict -type Automatic "G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/main_airfoil_upper.dat"
+  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Software/PyAeroSweep-Stan-V2//main_airfoil_upper.dat
   $_TMP(mode_1) read
   $_TMP(mode_1) convert
 $_TMP(mode_1) end
 
 set _TMP(mode_1) [pw::Application begin DatabaseImport]
-  $_TMP(mode_1) initialize -strict -type Automatic "G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/main_airfoil_lower.dat"
+  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Software/PyAeroSweep-Stan-V2//main_airfoil_lower.dat
   $_TMP(mode_1) read
   $_TMP(mode_1) convert
 $_TMP(mode_1) end
 
 set _TMP(mode_1) [pw::Application begin DatabaseImport]
-  $_TMP(mode_1) initialize -strict -type Automatic "G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/main_airfoil_cut1.dat"
+  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Software/PyAeroSweep-Stan-V2//main_airfoil_cut1.dat
   $_TMP(mode_1) read
   $_TMP(mode_1) convert
 $_TMP(mode_1) end
 
 set _TMP(mode_1) [pw::Application begin DatabaseImport]
-  $_TMP(mode_1) initialize -strict -type Automatic "G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/main_airfoil_cut2.dat"
+  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Software/PyAeroSweep-Stan-V2//main_airfoil_cut2.dat
   $_TMP(mode_1) read
   $_TMP(mode_1) convert
 $_TMP(mode_1) end
 
 set _TMP(mode_1) [pw::Application begin DatabaseImport]
-  $_TMP(mode_1) initialize -strict -type Automatic "G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/flap_airfoil_lower.dat"
+  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Software/PyAeroSweep-Stan-V2//flap_airfoil_lower.dat
   $_TMP(mode_1) read
   $_TMP(mode_1) convert
 $_TMP(mode_1) end
 
 set _TMP(mode_1) [pw::Application begin DatabaseImport]
-  $_TMP(mode_1) initialize -strict -type Automatic "G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/flap_airfoil_upper.dat"
+  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Software/PyAeroSweep-Stan-V2//flap_airfoil_upper.dat
   $_TMP(mode_1) read
   $_TMP(mode_1) convert
 $_TMP(mode_1) end
@@ -143,20 +143,20 @@ $_TMP(mode_1) end
 
 set _TMP(mode_1) [pw::Application begin Modify [list $_CN(1) $_CN(3)]]
   set _TMP(PW_1) [$_CN(1) getDistribution 1]
-  $_TMP(PW_1) setEndSpacing 0.00050000000000000001
+  $_TMP(PW_1) setEndSpacing 0.0005
   unset _TMP(PW_1)
   set _TMP(PW_1) [$_CN(3) getDistribution 1]
-  $_TMP(PW_1) setBeginSpacing 0.00050000000000000001
+  $_TMP(PW_1) setBeginSpacing 0.0005
   unset _TMP(PW_1)
 $_TMP(mode_1) end
 
 set _CN(4) [pw::GridEntity getByName con-7]
 set _TMP(mode_1) [pw::Application begin Modify [list $_CN(4)]]
   set _TMP(PW_1) [$_CN(4) getDistribution 1]
-  $_TMP(PW_1) setBeginSpacing 0.00050000000000000001
+  $_TMP(PW_1) setBeginSpacing 0.0005
   unset _TMP(PW_1)
   set _TMP(PW_1) [$_CN(4) getDistribution 1]
-  $_TMP(PW_1) setEndSpacing 0.00050000000000000001
+  $_TMP(PW_1) setEndSpacing 0.0005
   unset _TMP(PW_1)
 $_TMP(mode_1) end
 
@@ -198,20 +198,20 @@ $_TMP(mode_1) end
 
 set _TMP(mode_1) [pw::Application begin Modify [list $_CN(6) $_CN(7)]]
   set _TMP(PW_1) [$_CN(6) getDistribution 1]
-  $_TMP(PW_1) setBeginSpacing 0.00050000000000000001
+  $_TMP(PW_1) setBeginSpacing 0.0005
   unset _TMP(PW_1)
   set _TMP(PW_1) [$_CN(7) getDistribution 1]
-  $_TMP(PW_1) setEndSpacing 0.00050000000000000001
+  $_TMP(PW_1) setEndSpacing 0.0005
   unset _TMP(PW_1)
 $_TMP(mode_1) end
 
 set _CN(8) [pw::GridEntity getByName con-8]
 set _TMP(mode_1) [pw::Application begin Modify [list $_CN(8)]]
   set _TMP(PW_1) [$_CN(8) getDistribution 1]
-  $_TMP(PW_1) setBeginSpacing 0.00050000000000000001
+  $_TMP(PW_1) setBeginSpacing 0.0005
   unset _TMP(PW_1)
   set _TMP(PW_1) [$_CN(8) getDistribution 1]
-  $_TMP(PW_1) setEndSpacing 0.00050000000000000001
+  $_TMP(PW_1) setEndSpacing 0.0005
   unset _TMP(PW_1)
 $_TMP(mode_1) end
 
@@ -225,8 +225,8 @@ $_TMP(mode_1) abort
 unset _TMP(mode_1)
 set _TMP(mode_1) [pw::Application begin Create]
   set _TMP(PW_1) [pw::SegmentSpline create]
-  $_TMP(PW_1) addPoint { 131.0 131.0 0 }
-  $_TMP(PW_1) addPoint { 131.0 -131.0 0 }
+  $_TMP(PW_1) addPoint { 60 60 0 }
+  $_TMP(PW_1) addPoint { 60 -60 0 }
   set _CN(1) [pw::Connector create]
   $_CN(1) addSegment $_TMP(PW_1)
   unset _TMP(PW_1)
@@ -242,7 +242,7 @@ unset _TMP(mode_1)
 set _TMP(mode_1) [pw::Application begin Create]
   set _TMP(PW_1) [pw::SegmentSpline create]
   $_TMP(PW_1) addPoint [$_CN(1) getPosition -arc 1]
-  $_TMP(PW_1) addPoint { -131.0 -131.0 0 }
+  $_TMP(PW_1) addPoint { -60 -60 0 }
   set _CN(2) [pw::Connector create]
   $_CN(2) addSegment $_TMP(PW_1)
   unset _TMP(PW_1)
@@ -252,7 +252,7 @@ $_TMP(mode_1) end
 set _TMP(mode_1) [pw::Application begin Create]
   set _TMP(PW_1) [pw::SegmentSpline create]
   $_TMP(PW_1) addPoint [$_CN(2) getPosition -arc 1]
-  $_TMP(PW_1) addPoint { -131.0 131.0 0 }
+  $_TMP(PW_1) addPoint { -60 60 0 }
   set _CN(3) [pw::Connector create]
   $_CN(3) addSegment $_TMP(PW_1)
   unset _TMP(PW_1)
@@ -284,7 +284,7 @@ $_TMP(PW_1) set [list $_CN(1) $_CN(2) $_CN(3) $_CN(4)]
 # Create near field
 set _TMP(mode_1) [pw::Application begin Create]
   set _TMP(PW_1) [pw::SegmentCircle create]
-  $_TMP(PW_1) addPoint {0.5 3 0}
+  $_TMP(PW_1) addPoint {0.5 3.4351145038167936 0}
   $_TMP(PW_1) addPoint {0.5 0 0}
   $_TMP(PW_1) setEndAngle 360 {0 0 1}
   set _CN(1) [pw::Connector create]
@@ -295,7 +295,7 @@ $_TMP(mode_1) end
 
 set _TMP(mode_1) [pw::Application begin Create]
   set _TMP(PW_1) [pw::SegmentCircle create]
-  $_TMP(PW_1) addPoint {0.5 15 0}
+  $_TMP(PW_1) addPoint {0.5 17.175572519083968 0}
   $_TMP(PW_1) addPoint {0.5 0 0}
   $_TMP(PW_1) setEndAngle 360 {0 0 1}
   set _CN(2) [pw::Connector create]
@@ -426,10 +426,10 @@ set _TMP(mode_1) [pw::Application begin UnstructuredSolver [list $_DM(1)]]
   unset _TMP(PW_2)
   $_TMP(PW_3) setName wall
   $_TMP(PW_3) setConditionType Wall
-  $_TMP(PW_3) setValue 3.1722324865696836e-06
+  $_TMP(PW_3) setValue 4.9080049524228e-06
   $_DM(1) setUnstructuredSolverAttribute TRexMaximumLayers 100
   $_DM(1) setUnstructuredSolverAttribute TRexFullLayers 60
-  $_DM(1) setUnstructuredSolverAttribute TRexGrowthRate 1.2
+  $_DM(1) setUnstructuredSolverAttribute TRexGrowthRate 1.1
   $_DM(1) setUnstructuredSolverAttribute TRexGrowthRate 1.1
   $_DM(1) setUnstructuredSolverAttribute TRexPushAttributes True
   $_DM(1) setUnstructuredSolverAttribute BoundaryDecay 0.85
@@ -509,7 +509,7 @@ set _DM(1) [pw::GridEntity getByName dom-1]
 set _DM(2) [pw::GridEntity getByName dom-2]
 set _DM(3) [pw::GridEntity getByName dom-3]
 set _TMP(mode_1) [pw::Application begin CaeExport [pw::Entity sort [list $_DM(1) $_DM(2) $_DM(3)]]]
-  $_TMP(mode_1) initialize -strict -type CAE "G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/su2meshEx.su2"
+  $_TMP(mode_1) initialize -strict -type CAE /home/doktorand/Software/PyAeroSweep-Stan-V2//su2meshEx.su2
   $_TMP(mode_1) setAttribute FilePrecision Double
   $_TMP(mode_1) verify
   $_TMP(mode_1) write

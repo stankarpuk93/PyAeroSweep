@@ -82,6 +82,9 @@ def main(Solver,Freestream,Mesh,Geometry):
     Cd = np.zeros((len_Alt,len_Mach,len_AoA))                               # Array of Cd
     Cm = np.zeros((len_Alt,len_Mach,len_AoA))                               # Array of Cm
 
+    # Initialize the workbook
+    workbook  = xlsxwriter.Workbook('arrays.xlsx')
+
     wartsatrt_set = Solver.warmstart
     for i in range(len_Alt):
         for j in range(len_Mach):
@@ -98,43 +101,49 @@ def main(Solver,Freestream,Mesh,Geometry):
                     filename = run_SU2_config(Solver,Freestream.Altitude[i],Freestream.Mach[j],Freestream.Angle_of_attack,\
                                                 Geometry.reference_values,Mesh,k)
 
-                    # Run Fluent
-                    new_direct  = 'Case_alt' + str("{:.2f}".format(Alt_range[i])) + '_Mach' + str("{:.2f}".format(Mach_range[j])) + '_AoA' + str("{:.2f}".format(AoA_range[k]))
-                    file_direct = os.path.join(Ref_dir, new_direct)
-                    filename = os.path.join(file_direct, filename)
+                    # Run SU2
+                    new_direct  = 'Case_alt' + str("{:.2f}".format(Freestream.Altitude[i])) + '_Mach' + \
+                                                str("{:.2f}".format(Freestream.Mach[j])) + '_AoA' + \
+                                                    str("{:.2f}".format(Freestream.Angle_of_attack[k]))
+                    file_direct = os.path.join(Solver.working_dir, new_direct)
+                    filename1 = os.path.join(file_direct, filename)
 
                     os.chdir(file_direct)
 
                     print('Running Solution ' + filename)
-                    run_SU2(Solver.processors,filename)
+                    run_SU2(Solver.processors,filename1)
                     print('Solution ' + filename + ' Completed')
 
                     # Read results
                     Cl[i,j,k],Cd[i,j,k],Cm[i,j,k] = read_results('SU2_output.log')
 
-            # Write data into an Excel file 
-            os.chdir(Ref_dir)
-            workbook  = xlsxwriter.Workbook('arrays.xlsx')
-            sheetname = 'Altitude' + str(Alt_range[i]) + 'm'
-            worksheet = workbook.add_worksheet(name=sheetname)
+        # Write data into an Excel file 
+        os.chdir(Solver.working_dir)
+        sheetname = 'Altitude ' + str(Freestream.Altitude[i]) + 'm'
+        worksheet = workbook.add_worksheet(name=sheetname)
+
+        # create the 2D table frame
+        worksheet.write(0, 0,"Cl")
+        worksheet.write(0, 2*len_Mach,"Cd")
+        worksheet.write(0, 3*len_Mach+2,"Cm")
+        worksheet.write(1, 0,"AoA\Mach")
+        worksheet.write(1, 2*len_Mach,"AoA\Mach")
+        worksheet.write(1, 3*len_Mach+2,"AoA\Mach")
+        for j in range(len_Mach):
+            for k in range(len_AoA):
+                worksheet.write(1, j+1, Freestream.Mach[j])
+                worksheet.write(1, len_Mach + j+3, Freestream.Mach[j])
+                worksheet.write(1, 2*len_Mach + j+5, Freestream.Mach[j])
+                worksheet.write(k+2, 0, Freestream.Angle_of_attack[k])
+                worksheet.write(k+2, len_Mach+2, Freestream.Angle_of_attack[k])
+                worksheet.write(k+2, 2*len_Mach+4, Freestream.Angle_of_attack[k])
+
+                worksheet.write(k+2, j+1, Cl[i,j,k])
+                worksheet.write(k+2, len_Mach + j+3, Cd[i,j,k])
+                worksheet.write(k+2, 2*len_Mach + j+5, Cm[i,j,k])
 
 
-            # create the 2D table frame
-            for j in range(len_Mach):
-                for k in range(len_AoA):
-                    worksheet.write(0, j+1, Mach_range[j])
-                    worksheet.write(0, len_Mach + j+3, Mach_range[j])
-                    worksheet.write(0, 2*len_Mach + j+5, Mach_range[j])
-                    worksheet.write(k+1, 0, AoA_range[k])
-                    worksheet.write(k+1, len_Mach+2, AoA_range[k])
-                    worksheet.write(k+1, 2*len_Mach+4, AoA_range[k])
-
-                    worksheet.write(k+1, j+1, Cl[i,j,k])
-                    worksheet.write(k+1, len_Mach + j+3, Cd[i,j,k])
-                    worksheet.write(k+1, 2*len_Mach + j+5, Cm[i,j,k])
-
-
-            workbook.close()
+    workbook.close()
 
 
     '''else:
@@ -190,7 +199,7 @@ def run_SU2_config(Solver,Alt,Mach,AoA,Ref_values,Mesh,k):
     else:    
         new_direct  = 'Case_alt' + str("{:.2f}".format(Alt)) + '_Mach' + str("{:.2f}".format(Mach)) + '_AoA' + str("{:.2f}".format(AoA[k]))
     filename    = new_direct + '.cfg'
-    file_direct = os.path.join(Mesh.operating_system, new_direct)
+    file_direct = os.path.join(Solver.working_dir, new_direct)
 
     if os.path.exists(file_direct) and os.path.isdir(file_direct):
         shutil.rmtree(file_direct)
@@ -223,7 +232,7 @@ def run_SU2_config(Solver,Alt,Mach,AoA,Ref_values,Mesh,k):
     cfg_data = f.readlines()
     f.close()
 
-    if Solver_dim == "2d":
+    if Solver.dimensions == "2d":
         # Creates inputs according to the 2d airfoil template
         cfg_data[3]  = 'KIND_TURB_MODEL= ' + Solver.turbulence_model + '\n'
         cfg_data[8]  = 'MACH_NUMBER= ' + str(Mach) + '\n'
@@ -239,7 +248,7 @@ def run_SU2_config(Solver,Alt,Mach,AoA,Ref_values,Mesh,k):
         cfg_data[100] = 'MESH_FILENAME= ' + Mesh.filename + '\n'
         cfg_data[102] = 'RESTART_SOL= ' + Solver.warmstart + '\n'
         cfg_data[104] = 'OUTPUT_WRT_FREQ= ' + str(Solver.save_frequency) + '\n'
-    elif Solver_dim == "3d":
+    elif Solver.dimensions == "3d":
         # Creates inputs according to the 3d airfoil template
         cfg_data[15]  = 'KIND_TURB_MODEL= ' + Solver.turbulence_model + '\n'
         cfg_data[24]  = 'MACH_NUMBER= ' + str(Mach) + '\n'
@@ -313,7 +322,7 @@ def read_results(output_file):
 
     # Read results 
     with open(output_file, 'r') as f:
-        last_line = f.readlines()[-35]
+        last_line = f.readlines()[-37]
 
     results_array = last_line.split('|')
 

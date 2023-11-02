@@ -11,13 +11,13 @@ pw::Application clearModified
 
 # import airfoil components
 set _TMP(mode_1) [pw::Application begin DatabaseImport]
-  $_TMP(mode_1) initialize -strict -type Automatic "G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/main_airfoil_upper.dat"
+  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Software/PyAeroSweep-Stan-V2//main_airfoil_upper.dat
   $_TMP(mode_1) read
   $_TMP(mode_1) convert
 $_TMP(mode_1) end
 
 set _TMP(mode_1) [pw::Application begin DatabaseImport]
-  $_TMP(mode_1) initialize -strict -type Automatic "G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/main_airfoil_lower.dat"
+  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Software/PyAeroSweep-Stan-V2//main_airfoil_lower.dat
   $_TMP(mode_1) read
   $_TMP(mode_1) convert
 $_TMP(mode_1) end
@@ -95,9 +95,9 @@ unset _TMP(mode_1)
 set _TMP(mode_1) [pw::Application begin ExtrusionSolver [list $_DM(1)]]
   $_TMP(mode_1) setKeepFailingStep true
   $_DM(1) setExtrusionSolverAttribute NormalMarchingVector {-0 -0 -1}
-  $_DM(1) setExtrusionSolverAttribute NormalInitialStepSize 3.303928055000552e-06
+  $_DM(1) setExtrusionSolverAttribute NormalInitialStepSize 4.9080049524228e-06
   $_DM(1) setExtrusionSolverAttribute StopAtHeight Off
-  $_DM(1) setExtrusionSolverAttribute StopAtHeight 529
+  $_DM(1) setExtrusionSolverAttribute StopAtHeight 262.0
   $_TMP(mode_1) run 230
   $_TMP(mode_1) run -1
 $_TMP(mode_1) end
@@ -136,7 +136,7 @@ $_TMP(mode_1) end
 
 set _DM(1) [pw::GridEntity getByName dom-1]
 set _TMP(mode_1) [pw::Application begin CaeExport [pw::Entity sort [list $_DM(1)]]]
-  $_TMP(mode_1) initialize -strict -type CAE "G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/su2meshEx.su2"
+  $_TMP(mode_1) initialize -strict -type CAE /home/doktorand/Software/PyAeroSweep-Stan-V2//su2meshEx.su2
   $_TMP(mode_1) setAttribute FilePrecision Double
   $_TMP(mode_1) verify
   $_TMP(mode_1) write
