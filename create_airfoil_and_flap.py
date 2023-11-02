@@ -20,9 +20,10 @@ import parsec_functions     as pc_func
 from Bezier_curves_airfoil  import QuadBezier, RationalizedQuadBezier
 
 
+def create_airfoil_and_flap(Geometry):
 
-def create_airfoil_and_flap(airfoil_data, flap_setting, flap_flag, droop_nose_flag, droop_nose_set):
 
+# airfoil_data, flap_setting, flap_flag, droop_nose_flag, droop_nose_set
     '''Draw an airfoil based on input PARSEC coefficients, draw a flap, and export coordinates into data files
     
         Inputs:
@@ -59,6 +60,13 @@ def create_airfoil_and_flap(airfoil_data, flap_setting, flap_flag, droop_nose_fl
 
     '''
 
+
+    # Unpack inputs and arrange into a list
+    Airfoil      = Geometry.PARSEC_airfoil
+    airfoil_data = [Airfoil["rle"], Airfoil["x_pre"], Airfoil["y_pre"], Airfoil["d2ydx2_pre"], 
+                    Airfoil["th_pre"], Airfoil["x_suc"], Airfoil["y_suc"], Airfoil["d2ydx2_suc"], Airfoil["th_suc"]]
+
+
     # Define TE & LE of airfoil (normalized, chord = 1)
     xle     = 0.0
     yle     = 0.0
@@ -77,13 +85,24 @@ def create_airfoil_and_flap(airfoil_data, flap_setting, flap_flag, droop_nose_fl
     cf_pre,cf_suc,xx_pre,xx_suc,yy_pre,yy_suc = compute_airfoil(airfoil_data)
 
     # Draw a droop nose
-    if droop_nose_flag is True:
+    if Geometry.droop is True:
+        droop_nose_set = [Geometry.PARSEC_droop["delta_s"], Geometry.PARSEC_droop["cs_c"], 
+                          Geometry.PARSEC_droop["d_cs_up"], Geometry.PARSEC_droop["d_cs_low"], 
+                          Geometry.PARSEC_droop["k_Bez1"], Geometry.PARSEC_droop["k_Bez2"]]
         xx_pre,xx_suc,yy_pre,yy_suc = deploy_droop_nose(xx_pre,xx_suc,yy_pre,yy_suc,droop_nose_set,w_conic_seal)
 
 
     # Draw a flap
-    if flap_flag is True:   
-        xx_no_fl_suc, yy_no_fl_suc, xx_no_fl_pre, yy_no_fl_pre, xx_fl_suc, yy_fl_suc, xx_fl_pre, yy_fl_pre, flap_cut1, flap_cut2 = compute_flap(xx_suc,yy_suc,xx_pre,yy_pre,airfoil_data)
+    if Geometry.flap is True:  
+        flap_setting = [Geometry.PARSEC_flap["delta_f"], 
+                        Geometry.PARSEC_flap["x_gap"], 
+                        Geometry.PARSEC_flap["y_gap"]] 
+        flap_data    = [Geometry.PARSEC_flap["cf_c"],Geometry.PARSEC_flap["ce_c"],Geometry.PARSEC_flap["csr_c"],
+                        Geometry.PARSEC_flap["clip_ext"],Geometry.PARSEC_flap["r_le_flap"],
+                        Geometry.PARSEC_flap["tc_shr_tip"],Geometry.PARSEC_flap["w_conic"]]
+        flap_data.append(xte)
+        flap_data.append(yte_suc)
+        xx_no_fl_suc, yy_no_fl_suc, xx_no_fl_pre, yy_no_fl_pre, xx_fl_suc, yy_fl_suc, xx_fl_pre, yy_fl_pre, flap_cut1, flap_cut2 = compute_flap(xx_suc,yy_suc,xx_pre,yy_pre,flap_data)
         xx_fl_suc, yy_fl_suc, xx_fl_pre, yy_fl_pre = deploy_flap(xx_no_fl_suc, yy_no_fl_suc, xx_fl_suc, yy_fl_suc, xx_fl_pre, yy_fl_pre, flap_setting)
     else:
         xx_no_fl_suc = xx_suc
@@ -101,7 +120,7 @@ def create_airfoil_and_flap(airfoil_data, flap_setting, flap_flag, droop_nose_fl
 
 
     # Output airfoiil data
-    output_airfoil(xx_no_fl_pre,xx_no_fl_suc,yy_no_fl_pre,yy_no_fl_suc,cf_pre,cf_suc,xte,xx_fl_suc, yy_fl_suc, xx_fl_pre, yy_fl_pre, flap_cut1, flap_cut2, flap_flag)
+    output_airfoil(Geometry,xx_no_fl_pre,xx_no_fl_suc,yy_no_fl_pre,yy_no_fl_suc,cf_pre,cf_suc,xte,xx_fl_suc, yy_fl_suc, xx_fl_pre, yy_fl_pre, flap_cut1, flap_cut2)
     #output_airfoil(xx_pre,xx_suc,yy_pre,yy_suc,cf_pre,cf_suc,xte)
 
 
@@ -309,7 +328,7 @@ def deploy_flap(xx_no_fl_suc, yy_no_fl_suc, xx_fl_suc, yy_fl_suc, xx_fl_pre, yy_
 
 
 
-def compute_flap(xx_suc,yy_suc,xx_pre,yy_pre,airfoil_data):
+def compute_flap(xx_suc,yy_suc,xx_pre,yy_pre,flap_data):
     '''Draw a flap airfoil and cut the flap section of the main airfoil
     
         Inputs:
@@ -337,15 +356,15 @@ def compute_flap(xx_suc,yy_suc,xx_pre,yy_pre,airfoil_data):
     '''
 
     # Unpack inputs
-    cf_c        = airfoil_data[9]
-    ce_c        = airfoil_data[10]
-    csr_c       = airfoil_data[11]
-    clip_ext    = airfoil_data[12]
-    r_le_flap   = airfoil_data[13]
-    tc_shr_tip  = airfoil_data[14]
-    w_conic     = airfoil_data[15]
-    xte         = airfoil_data[-3]
-    yte_suc     = airfoil_data[-2]
+    cf_c        = flap_data[0]
+    ce_c        = flap_data[1]
+    csr_c       = flap_data[2]
+    clip_ext    = flap_data[3]
+    r_le_flap   = flap_data[4]
+    tc_shr_tip  = flap_data[5]
+    w_conic     = flap_data[6]
+    xte         = flap_data[-2]
+    yte_suc     = flap_data[-1]
 
 
     # Cut the airfoil upper surface using the shroud length
@@ -519,7 +538,7 @@ def compute_airfoil(airfoil_data):
 
 
 
-def output_airfoil(xx_pre,xx_suc,yy_pre,yy_suc,cf_pre,cf_suc,xte,xx_fl_suc,yy_fl_suc,xx_fl_pre,yy_fl_pre, flap_cut1, flap_cut2, flap_flag):
+def output_airfoil(Geometry,xx_pre,xx_suc,yy_pre,yy_suc,cf_pre,cf_suc,xte,xx_fl_suc,yy_fl_suc,xx_fl_pre,yy_fl_pre, flap_cut1, flap_cut2):
 
     '''Outputs an airfoil in data and image formats
     
@@ -548,20 +567,22 @@ def output_airfoil(xx_pre,xx_suc,yy_pre,yy_suc,cf_pre,cf_suc,xte,xx_fl_suc,yy_fl
         f.write(plain_coords)
 
     # Plot each part of the airfoil for Pointwise meshing
-    fpath = ['main_airfoil_upper.dat','main_airfoil_lower.dat','main_airfoil_cut1.dat','main_airfoil_cut2.dat','flap_airfoil_upper.dat','flap_airfoil_lower.dat']
+    fpath = [Geometry.airfoil_files["upper"],Geometry.airfoil_files["lower"]]
     pc_func.ppoint_Pointwise(fpath[0], xx_suc, yy_suc)
     pc_func.ppoint_Pointwise(fpath[1], xx_pre, yy_pre)  
-    if flap_flag is True: 
-        pc_func.ppoint_Pointwise(fpath[2], flap_cut1[0,:], flap_cut1[1,:]) 
-        pc_func.ppoint_Pointwise(fpath[3], flap_cut2[0,:], flap_cut2[1,:]) 
-        pc_func.ppoint_Pointwise(fpath[4], xx_fl_suc, yy_fl_suc) 
-        pc_func.ppoint_Pointwise(fpath[5], xx_fl_pre, yy_fl_pre)             
+    if Geometry.flap is True: 
+        fpath1 = [Geometry.PARSEC_flap["flap cutout"][0],Geometry.PARSEC_flap["flap cutout"][1],
+                  Geometry.PARSEC_flap["upper surface file"],Geometry.PARSEC_flap["lower surface file"]]
+        pc_func.ppoint_Pointwise(fpath1[0], flap_cut1[0,:], flap_cut1[1,:]) 
+        pc_func.ppoint_Pointwise(fpath1[1], flap_cut2[0,:], flap_cut2[1,:]) 
+        pc_func.ppoint_Pointwise(fpath1[2], xx_fl_suc, yy_fl_suc) 
+        pc_func.ppoint_Pointwise(fpath1[3], xx_fl_pre, yy_fl_pre)             
 
     # Plot airfoil contour with the flap, if it was defined
     plt.figure()
 
     plt.plot(xx_suc,yy_suc,'r',xx_pre,yy_pre,'b', linewidth=2)
-    if flap_flag is True:
+    if Geometry.flap is True:
         plt.plot(flap_cut1[0,:],flap_cut1[1,:])
         plt.plot(flap_cut2[0,:],flap_cut2[1,:])
         plt.plot(xx_fl_suc,yy_fl_suc,'g')
@@ -591,43 +612,6 @@ def output_airfoil(xx_pre,xx_suc,yy_pre,yy_suc,cf_pre,cf_suc,xte,xx_fl_suc,yy_fl
 
 
 
-if __name__ == '__main__':
+#if __name__ == '__main__':
 
-    # Analysis flags
-    droop_nose_flag = True
-    flap_flag       = True               # A flag to include or exclude a flap
-                                            # True  - airfoil has a flap
-                                            # False - draws a clean airfoil
-
-    # Sample input
-    rle         = .011              # Main airfoil LE radius
-    x_pre       = .3                # x-location of the crest on the pressure side
-    y_pre       = -0.04             # y-location of the crest on the pressure side
-    d2ydx2_pre  = .2                # curvature of the crest on the pressure side
-    th_pre      = 2                 # trailing edge angle on the pressure side [deg]
-    x_suc       = .4                # x-location of the crest on the suction side        
-    y_suc       = .056              # y-location of the crest on the suction side    
-    d2ydx2_suc  = -.35              # curvature of the crest on the suction side
-    th_suc      = -10               # trailing edge angle on the suction side [deg]
-
-    cf_c        = 0.3               # flap chord ratio
-    ce_c        = 0.3               # conical curve extent ratio wrt the flap chord length
-    csr_c       = 0.9               # shroud chord ratio
-    clip_ext    = 0.3               # shroud lip extent ratio wrt the flap 
-    r_le_flap   = 0.01              # flap leading edge radius
-    tc_shr_tip  = 0.003             # shroud tip thickness
-    w_conic     = 0.5                 # conical parameter for the suction side of the flap airfoil
-
-    delta_f     = 30                # flap deflection [deg]
-    x_gap       = 0.02              # x-length gap from the shroud TE (positive value is moving the flap left)
-    y_gap       = 0.02              # y-length gap from the shroud TE (positive value is moving the flap down)   
-
-    delta_s     = 25                # droop nose deflection [deg]
-    cs_c        = 0.2               # droop nose chord ratio
-    d_cs        = 0.02              # droop nose offset from the hinge
-
-    airfoil_data   = [rle, x_pre, y_pre, d2ydx2_pre, th_pre, x_suc, y_suc, d2ydx2_suc, th_suc, cf_c, ce_c, csr_c, clip_ext, r_le_flap, tc_shr_tip, w_conic]
-    flap_setting   = [delta_f, x_gap, y_gap]
-    droop_nose_set = [delta_s, cs_c, d_cs]
-
-    create_airfoil_and_flap(airfoil_data, flap_setting, flap_flag, droop_nose_flag, droop_nose_set)
+   

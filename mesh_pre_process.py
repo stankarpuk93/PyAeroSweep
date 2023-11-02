@@ -1,132 +1,86 @@
-# mesh_pre_process.py
-#
-# Created: Oct 2023, S.Holenarsipura
-# Modified: Oct 2023, S.Holenarsipura
-#
-# This script provides configuration data for preprocessing airfoil meshes using Glyph script.
-
-# ----------------------------------------------------------------------
-# Imports
-# ----------------------------------------------------------------------
+#mesh_pre_process.py
 
 import numpy as np
 
-# ----------------------------------------------------------------------
-# Desired Y+ and Length
-# ----------------------------------------------------------------------
-# Desired Y+ value is required for mesh generation.
-# You can change the value by modifying the `get_desired_Yplus` function.
-# Length is the reference length of the airfoil.
-# You can change the value by modifying the `get_length` function.
+'''Mesh pre-processing file
 
-def get_desired_Yplus():
-    """Returns the desired Y+ value."""
-    return 1.0
+        Notes:
+            1. define all paths with '/' both for Ubuntu and windows systems
 
-desired_Yplus = get_desired_Yplus()
+    '''
 
-def get_length():
-    """Returns the reference length of the airfoil."""
-    return 2.62
+def mesh_pre_process(working_dir,Geometry,Mesh):
 
-Length = np.array([get_length()])
+    Length          = Geometry.reference_values["Length"]
+    scaling_factors = np.array([Length,Length,Length])
 
-# ----------------------------------------------------------------------
-# Altitude and Mach Ranges
-# ----------------------------------------------------------------------
-# Define the altitude and Mach number ranges for analysis.
-
-# Mach_and_Alt
-Alt_range   = np.array([10])             # Altitude range in meters
-Mach_range  = np.array([0.5])          # Mach number range  0.4,0.5,0.6,0.65,0.7,0.75,0.8,0.85,0.9,0.95
-
-# ----------------------------------------------------------------------
-# Far-Field Vertices
-# ----------------------------------------------------------------------
-
-# Calculate the 'x' and 'y' values based on 'Length'
-x_value = float(50 * Length[0])
-y_value = float(50 * Length[0])
-
-# ----------------------------------------------------------------------
-# Scaling Factors
-# ----------------------------------------------------------------------
-# The scaling factors are used for data required in Glyph scripts.
-# They depend on the reference length.
-
-
-scaling_factors = np.array([Length[0], Length[0], Length[0]])
-scaling_factors_str = "{" + " ".join(f"{x:.2f}" for x in scaling_factors) + "}"  # Change the brackets in the `scaling_factors` array from `[]` to `{}`.
-
-# ----------------------------------------------------------------------
-# Data for Glyph Script (mesh_clean_airfoil_SU2.glf)
-# ----------------------------------------------------------------------
-# This data is used for generating structured airfoil meshes WITHOUT FLAPS.
-
-update_glyph_clean_data = {
-    "upper_surface_filename": r'"G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/main_airfoil_upper.dat"',     # Path to the upper surface file
-    "lower_surface_filename": r'"G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/main_airfoil_lower.dat"',     # Path to the lower surface file
-    "connector_dimensions": [200, 200, 8],     # Dimensions for connectors
-    "spacing_59_62": "0.001",                  # Spacing value for lines 59 to 63
-    "spacing_68_71": "0.0005",                 # Spacing value for lines 68 to 71
-    "su2meshed_file": r'"G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/su2meshEx.su2"',  # Path to the SU2 meshed file
-    "run_iterations_1": "230",                 # Number of iterations for the first run
-    "run_iterations_2": "-1",                  # Number of iterations for the second run
-    "stop_at_height_1": "Off",                 # Option to stop at a specific height for the first run
-    "stop_at_height_2": "529",                 # Height at which to stop for the second run
-    "scaling_factors": scaling_factors_str     # Scaling factors for scaling the entities
-}
-
-
-
-# ----------------------------------------------------------------------
-# Data for Glyph Script (mesh_flapped_airfoil_SU2.glf)
-# ----------------------------------------------------------------------
-# This data is used for generating structured airfoil meshes WITH FLAPS.
     
+    if Geometry.flap is False:
+        # Data required for mesh_clean_airfoil_SU2.glf    
+        update_glyph_data = {
+            "upper_surface_filename": working_dir + "/" + Geometry.airfoil_files["upper"],
+            "lower_surface_filename": working_dir + "/" + Geometry.airfoil_files["lower"],
+            "connector_dimensions"  : Mesh.airfoil_mesh_settings["connector dimensions"],
+            "begin_spacing"         : Mesh.airfoil_mesh_settings["LE_spacing"],
+            "end_spacing"           : Mesh.airfoil_mesh_settings["TE_spacing"],
+            "su2meshed_file"        : working_dir + '/' + Mesh.filename,
+            "run_iterations_1"      : Mesh.airfoil_mesh_settings["number of normal cells"],
+            "run_iterations_2"      : "-1",
+            "stop_at_height_1"      : "Off",
+            "stop_at_height_2"      : Mesh.far_field,
+            "scaling_factor"        : "{" + str(Length) + ' ' + str(Length) + ' ' + str(Length) +"}",  # Include the calculated scaling factors here
+            "su2meshed_file"        : working_dir + "/" + Mesh.filename, 
+        }
 
-scaling_factors = np.array([Length[0], Length[0], Length[0]])
-scaling_factors_str = "{" + " ".join(f"{x:.2f}" for x in scaling_factors) + "}"  # Change the brackets in the `scaling_factors` array from `[]` to `{}`.
+    #--------------------------------------------------------------------------------------------------------------
+    else:
+        # Data required for mesh_flapped_airfoil_SU2.glf
 
-update_glyph_flapped_data = {
-    "upper_surface_filename": r'"G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/main_airfoil_upper.dat"',  # Path to the upper surface file
-    "lower_surface_filename": r'"G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/main_airfoil_lower.dat"',  # Path to the lower surface file
-    "cut1_filename": r'"G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/main_airfoil_cut1.dat"',  # Path to cut1 file
-    "cut2_filename": r'"G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/main_airfoil_cut2.dat"',  # Path to cut2 file
-    "flap_airfoil_lower_filename": r'"G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/flap_airfoil_lower.dat"',  # Path to the lower flap airfoil file
-    "flap_airfoil_upper_filename": r'"G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/flap_airfoil_upper.dat"',  # Path to the upper flap airfoil file
-    "connector_dimensions": [200, 120, 150, 150, 70, 25, 8, 8],   # Dimensions for connectors
-    "spacing_127_130": "0.001",                                   # Spacing value for lines 127 to 130
-    "spacing_137_140": "0.001",                                   # Spacing value for lines 137 to 140
-    "spacing_146_149": "0.00050000000000000001",                  # Spacing value for lines 146 to 149
-    "spacing_156_159": "0.00050000000000000001",                  # Spacing value for lines 156 to 159
-    "spacing_165_172": "0.001",                                   # Spacing value for lines 165 to 172
-    "spacing_178_184": "0.005",                                   # Spacing value for lines 178 to 184
-    "spacing_192_195": "0.001",                                   # Spacing value for lines 192 to 195
-    "spacing_201_204": "0.00050000000000000001",                  # Spacing value for lines 201 to 204
-    "spacing_211_214": "0.00050000000000000001",                  # Spacing value for lines 211 to 214
-    "addPoint228": "{ " + str(x_value) + " " + str(y_value) + " 0 }",                         # Coordinates for addPoint at line 228
-    "addPoint229": "{ " + str(x_value) + " " + str(-y_value) + " 0 }",                        # Coordinates for addPoint at line 229
-    "addPoint245": "{ " + str(-x_value) + " " + str(-y_value) + " 0 }",                       # Coordinates for addPoint at line 245
-    "addPoint255": "{ " + str(-x_value) + " " + str(y_value) + " 0 }",                        # Coordinates for addPoint at line 255
-    "far_field_connector_dim": "20",                              # Dimensions for the far-field connector
-    "addPoint_287": "{0.5 3 0}",                                  # Coordinates for addPoint at line 287
-    "addPoint_288": "{0.5 0 0}",                                  # Coordinates for addPoint at line 288
-    "EndAngle_289": "360 {0 0 1}",                                # End angle for line 289
-    "addPoint_298": "{0.5 15 0}",                                 # Coordinates for addPoint at line 298
-    "addPoint_299": "{0.5 0 0}",                                  # Coordinates for addPoint at line 299
-    "EndAngle_300": "360 {0 0 1}",                                # End angle for line 300
-    "node_to_connector_313": "100",                               # Node to connector dimension
-    "scaling_factors": scaling_factors_str,                       # Scaling factors for scaling the entities
-    "BoundaryDecay_359": "0.75",                                  # Boundary decay value for line 359
-    "BoundaryDecay_384": "0.85",                                  # Boundary decay value for line 384
-    "maxlayers_430": "100",                                       # Maximum layers for TRex at line 430
-    "fulllayers_431": "60",                                       # Full layers for TRex at line 431
-    "growthrate_432": "1.2",                                      # Growth rate for TRex at line 432
-    "growthrate_433": "1.1",                                      # Growth rate for TRex at line 433
-    "BoundaryDecay_435": "0.85",                                  # Boundary decay value for line 435
-    "su2meshed_file": r'"G:/TUBS/HiWi/Dr Karpuk/Version/AF_CFD_V1/su2meshEx.su2"',  # Path to the SU2 meshed file
-}
+        # Normalize the the near-field
+        R_NF1 = Mesh.airfoil_mesh_settings["near-field refinement radius 1"] / Length
+        R_NF2 = Mesh.airfoil_mesh_settings["near-field refinement radius 2"] / Length    
 
+
+        update_glyph_data = {
+            "upper_surface_filename"        : working_dir + "/" + Geometry.airfoil_files["upper"],
+            "lower_surface_filename"        : working_dir + "/" + Geometry.airfoil_files["lower"],
+            "cut1_filename"                 : working_dir + "/" + Geometry.PARSEC_flap["flap cutout"][0], 
+            "cut2_filename"                 : working_dir + "/" + Geometry.PARSEC_flap["flap cutout"][1], 
+            "flap_airfoil_lower_filename"   : working_dir + "/" + Geometry.PARSEC_flap["lower surface file"],
+            "flap_airfoil_upper_filename"   : working_dir + "/" + Geometry.PARSEC_flap["upper surface file"],
+            "connector_dimensions"          : Mesh.airfoil_mesh_settings["connector dimensions"],
+            "spacing_127_130"               : Mesh.airfoil_mesh_settings["LE_spacing"],
+            "spacing_137_140"               : Mesh.airfoil_mesh_settings["LE_spacing"],
+            "spacing_146_149"               : Mesh.airfoil_mesh_settings["TE_spacing"],
+            "spacing_156_159"               : Mesh.airfoil_mesh_settings["TE_spacing"], 
+            "spacing_165_172"               : Mesh.airfoil_mesh_settings["LE_spacing"],  
+            "spacing_178_184"               : Mesh.airfoil_mesh_settings["flap_cut_cluster"], 
+            "spacing_192_195"               : Mesh.airfoil_mesh_settings["LE_flap_spacing"],
+            "spacing_201_204"               : Mesh.airfoil_mesh_settings["TE_flap_spacing"],
+            "spacing_211_214"               : Mesh.airfoil_mesh_settings["TE_flap_spacing"],
+            "addPoint228"                   : "{ " + str(Mesh.far_field[0][1]) + " " + str(Mesh.far_field[1][1]) + " 0 }",
+            "addPoint229"                   : "{ " + str(Mesh.far_field[0][1]) + " " + str(Mesh.far_field[1][0]) + " 0 }",
+            "addPoint245"                   : "{ " + str(Mesh.far_field[0][0]) + " " + str(Mesh.far_field[1][0]) + " 0 }",
+            "addPoint255"                   : "{ " + str(Mesh.far_field[0][0]) + " " + str(Mesh.far_field[1][1]) + " 0 }",
+            "far_field_connector_dim"       : Mesh.airfoil_mesh_settings["far-field connectors"],
+            "addPoint_287"                  : "{0.5 " + str(R_NF1) + " 0}",
+            "addPoint_288"                  : "{0.5 0 0}",
+            "EndAngle_289"                  : "360 {0 0 1}",
+            "addPoint_298"                  : "{0.5 " + str(R_NF2) + " 0}",
+            "addPoint_299"                  : "{0.5 0 0}",
+            "EndAngle_300"                  : "360 {0 0 1}",
+            "node_to_connector_313"         : Mesh.airfoil_mesh_settings["near-field nodes"], 
+            "scaling_factor"                : "{" + str(Length) + ' ' + str(Length) + ' ' + str(Length) +"}",  # Include the calculated scaling factors here
+            "BoundaryDecay_359"             : Mesh.airfoil_mesh_settings["near-field boundary decay 2"],
+            "BoundaryDecay_384"             : Mesh.airfoil_mesh_settings["near-field boundary decay 1"], 
+            "maxlayers_430"                 : Mesh.airfoil_mesh_settings["Max TREX layers"], 
+            "fulllayers_431"                : Mesh.airfoil_mesh_settings["Full TREX layers"],
+            "growthrate_433"                : Mesh.airfoil_mesh_settings["TREX growth rate"], 
+            "BoundaryDecay_435"             : Mesh.airfoil_mesh_settings["near-field boundary decay 0"],
+            "su2meshed_file"                : working_dir + "/" + Mesh.filename  
+        }
+
+
+    return update_glyph_data
 
 #######################################################################################################

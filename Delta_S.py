@@ -1,45 +1,24 @@
 #Delta_S.py
-#
-# Created: Oct 2023, S.Holenarsipura
-# Modified: Oct 2023, S.Holenarsipura
-#
-# This script calculates the value of Delta S
-
-# ----------------------------------------------------------------------
-# Imports
-# ----------------------------------------------------------------------
 
 import math
-from mesh_pre_process import desired_Yplus, Alt_range, Mach_range, Length as L  #chord length - Scaling factor from Run_airfoil_analysis         
+import numpy as np
+
 
 # Calculate initial step size using the provided values
-def calculate_initstepsize(M, altitude, Yplus):
-
-    """Calculates the initial step size (delta_s) for a given Mach number,
-  altitude, and desired Yplus value.
-
-  Args:
-    M: Mach number
-    altitude: Altitude in meters
-    Yplus: Desired Yplus value
-
-  Returns:
-    Initial step size (delta_s) in meters
-  """
-    
+def calculate_initstepsize(M, altitude, L, Yplus):
     # Constants for standard atmosphere model
-    TSL = 288.16  # Sea-level temperature (K)
-    Tiso = 216.65  # Isothermal temperature (K)
-    κ = -0.0065  # Temperature lapse rate (K/m)
-    pSL = 101325.0  # Sea-level pressure (Pa)
-    piso = 22632.1  # Pressure at isothermal layer (Pa)
-    η = 0.2233611  # Pressure ratio
-    rho_SL = 1.225  # Sea-level density (kg/m^3)
-    rho_iso = 0.36391  # Density at isothermal layer (kg/m^3)
-    µ0 = 1.716e-5  # Dynamic viscosity reference value (kg/(m·s))
-    T0 = 273.15  # Reference temperature (K)
-    S = 110.6  # Sutherland's constant (K)
-    R_universal = 287.05 #specific gas constant for dry air J/(kg·K)
+    TSL         = 288.16        # Sea-level temperature (K)
+    Tiso        = 216.65        # Isothermal temperature (K)
+    κ           = -0.0065       # Temperature lapse rate (K/m)
+    pSL         = 101325.0      # Sea-level pressure (Pa)
+    piso        = 22632.1       # Pressure at isothermal layer (Pa)
+    η           = 0.2233611     # Pressure ratio
+    rho_SL      = 1.225         # Sea-level density (kg/m^3)
+    rho_iso     = 0.36391       # Density at isothermal layer (kg/m^3)
+    µ0          = 1.716e-5      # Dynamic viscosity reference value (kg/(m·s))
+    T0          = 273.15        # Reference temperature (K)
+    S           = 110.6         # Sutherland's constant (K)
+    R_universal = 287.05        #specific gas constant for dry air J/(kg·K)
     
     
     
@@ -85,11 +64,3 @@ def calculate_initstepsize(M, altitude, Yplus):
 
     return delta_s
 
-
-# Loop over altitude and Mach number ranges      NOTE: Mach_range & Alt_range are under the file mesh_pre_process.py (circular import error)
-for altitude in Alt_range:
-    for Mach_number in Mach_range:
-        # Calculate initial step size
-        delta_s = calculate_initstepsize(Mach_number, altitude, desired_Yplus)
-
-#######################################################################################################
