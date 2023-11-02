@@ -1,4 +1,8 @@
-#Delta_S.py
+# Delta_S.py
+# 
+# Created:  Oct 2023, S. Holenarsipura M Madhava
+# Modified: 
+#           
 
 import math
 import numpy as np
@@ -6,6 +10,24 @@ import numpy as np
 
 # Calculate initial step size using the provided values
 def calculate_initstepsize(M, altitude, L, Yplus):
+
+    '''Calculate the first mesh step size based on Y+
+    
+        Inputs:
+            M     - Mach number
+            altitude - cruise altitude
+            L           - reference length [m]
+            Yplus       - Desired Y+ value
+
+
+        Outputs:
+           
+
+        Assumptions:
+
+    '''
+
+
     # Constants for standard atmosphere model
     TSL         = 288.16        # Sea-level temperature (K)
     Tiso        = 216.65        # Isothermal temperature (K)

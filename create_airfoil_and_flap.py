@@ -5,7 +5,7 @@
 
 """
 Creates an airfoil based on the PARSEC method,
-Generates a flap based on multiple Bezier curves,
+Generates a flap or a droop nose based on multiple Bezier curves,
 and exports airfoils in plain coordinate format.
 """
 
@@ -27,36 +27,52 @@ def create_airfoil_and_flap(Geometry):
     '''Draw an airfoil based on input PARSEC coefficients, draw a flap, and export coordinates into data files
     
         Inputs:
-            airfoil_data.rle          Main airfoil LE radius
-                         x_pre        x-location of the crest on the pressure side
-                         y_pre        y-location of the crest on the pressure side
-                         d2ydx2_pre   curvature of the crest on the pressure side
-                         th_pre       trailing edge angle on the pressure side [deg]
-                         x_suc        x-location of the crest on the suction side        
-                         y_suc        y-location of the crest on the suction side    
-                         d2ydx2_suc   curvature of the crest on the suction side
-                         th_suc       trailing edge angle on the suction side [deg]
+            Geometry.PARSEC_airfoil.rle          Main airfoil LE radius
+                                    x_pre        x-location of the crest on the pressure side
+                                    y_pre        y-location of the crest on the pressure side
+                                    d2ydx2_pre   curvature of the crest on the pressure side
+                                    th_pre       trailing edge angle on the pressure side [deg]
+                                    x_suc        x-location of the crest on the suction side        
+                                    y_suc        y-location of the crest on the suction side    
+                                    d2ydx2_suc   curvature of the crest on the suction side
+                                    th_suc       trailing edge angle on the suction side [deg]
 
-                         cf_c         flap chord ratio
-                         ce_c         conical curve extent ratio wrt the flap chord length
-                         csr_c        shroud chord ratio
-                         clip_ext     shroud lip extent ratio wrt the airfoil
-                         r_le_flap    flap leading edge radius
-                         tc_shr_tip   shroud tip thickness
-                         w_conic      conical parameter for the suction side of the flap airfoil
+                                    cf_c         flap chord ratio
+                                    ce_c         conical curve extent ratio wrt the flap chord length
+                                    csr_c        shroud chord ratio
+                                    clip_ext     shroud lip extent ratio wrt the airfoil
+                                    r_le_flap    flap leading edge radius
+                                    tc_shr_tip   shroud tip thickness
+                                    w_conic      conical parameter for the suction side of the flap airfoil
 
-                         delta_f      flap deflection [deg]
-                         x_gap        x-length gap from the shroud TE (positive value is moving the flap left)
-                         y_gap        y-length gap from the shroud TE (positive value is moving the flap down)    
+                                    delta_f      flap deflection [deg]
+                                    x_gap        x-length gap from the shroud TE (positive value is moving the flap left)
+                                    y_gap        y-length gap from the shroud TE (positive value is moving the flap down)    
 
-            flap_flag                flag to compute the flap airfoil
-            droop_nose_flag          flag to compute the droop nose
+                    PARSEC_droop.delta_s         Droop nose deflection [deg]
+                                 cs_s            Droop nose chord ratio
+                                 d_cs_up
+                                 d_cs_low
+                                 k_Bez1
+                                 k_Bez2
+
+                    PARSEC_flap.delta_f         Flap deflection [deg]
+                                x_gap           x-length gap from the shroud TE (positive value is moving the flap left)
+                                y_gap           y-length gap from the shroud TE (positive value is moving the flap down)    
+                                cf_c            flap chord ratio
+                                ce_c            conical curve extent ratio wrt the flap chord length
+                                csr_c           shroud chord ratio 
+                                clip_ext        shroud lip extent ratio wrt the flap  
+                                r_le_flap       flap leading edge radius
+                                tc_shr_tip      shroud tip thickness
+                                w_conic         conical parameter for the suction side of the flap airfoil
 
         Outputs:
            
 
+        
         Assumptions:
-            1. airfoil tip thickness is assumed 0.0025 from each side
+
 
     '''
 
@@ -117,11 +133,8 @@ def create_airfoil_and_flap(Geometry):
         flap_cut2 = []
 
 
-
-
     # Output airfoiil data
     output_airfoil(Geometry,xx_no_fl_pre,xx_no_fl_suc,yy_no_fl_pre,yy_no_fl_suc,cf_pre,cf_suc,xte,xx_fl_suc, yy_fl_suc, xx_fl_pre, yy_fl_pre, flap_cut1, flap_cut2)
-    #output_airfoil(xx_pre,xx_suc,yy_pre,yy_suc,cf_pre,cf_suc,xte)
 
 
 
@@ -200,18 +213,6 @@ def deploy_droop_nose(xx_pre,xx_suc,yy_pre,yy_suc,droop_nose_set,w_conic_seal):
         yy_pre_ds.append((xx_pre_for[i]-cs_c)*np.sin(np.radians(delta_s))+(yy_pre_for[i])*np.cos(np.radians(delta_s)))         
 
 
-    ## Connect two parts into one airfoil 
-    # lower surface
-    '''xx_pre_ds1  = []
-    yy_pre_ds1  = []
-    xx_min_pre  = np.min(xx_pre_aft)
-    for i in range(len(xx_pre_ds)):
-        if xx_pre_ds[i] < xx_min_pre:
-            xx_pre_ds1.append(xx_pre_ds[i])
-            yy_pre_ds1.append(yy_pre_ds[i])
-    xx_pre_ds = xx_pre_aft + xx_pre_ds1
-    yy_pre_ds = yy_pre_aft + yy_pre_ds1'''
-
     # Create a filler of the upper surface
     point1  = [np.max(xx_suc_ds), yy_suc_ds[np.argmax(xx_suc_ds)]] 
     point11 = [xx_suc_ds[np.argmax(xx_suc_ds)-1], yy_suc_ds[np.argmax(xx_suc_ds)-1]]
@@ -250,9 +251,6 @@ def deploy_droop_nose(xx_pre,xx_suc,yy_pre,yy_suc,droop_nose_set,w_conic_seal):
         fill_points_low1[1,i] = curve_point[1]
 
     fill_points_low = fill_points_low1.tolist()
-
-    #fill_curve_low  = RationalizedQuadBezier(p0x=point1[0], p0y=point1[1], p1x=point2[0], p1y=point2[1], p2x=point3[0], p2y=point3[1])
-    #fill_points_low = fill_curve_low.calc_curve([1,w_conic_seal,1],10)
 
 
     xx_suc_ds = xx_suc_ds + fill_points_up[0][:] + xx_suc_aft 
@@ -571,8 +569,8 @@ def output_airfoil(Geometry,xx_pre,xx_suc,yy_pre,yy_suc,cf_pre,cf_suc,xte,xx_fl_
     pc_func.ppoint_Pointwise(fpath[0], xx_suc, yy_suc)
     pc_func.ppoint_Pointwise(fpath[1], xx_pre, yy_pre)  
     if Geometry.flap is True: 
-        fpath1 = [Geometry.PARSEC_flap["flap cutout"][0],Geometry.PARSEC_flap["flap cutout"][1],
-                  Geometry.PARSEC_flap["upper surface file"],Geometry.PARSEC_flap["lower surface file"]]
+        fpath1 = [Geometry.flap_files["flap cutout"][0],Geometry.flap_files["flap cutout"][1],
+                  Geometry.flap_files["upper surface file"],Geometry.flap_files["lower surface file"]]
         pc_func.ppoint_Pointwise(fpath1[0], flap_cut1[0,:], flap_cut1[1,:]) 
         pc_func.ppoint_Pointwise(fpath1[1], flap_cut2[0,:], flap_cut2[1,:]) 
         pc_func.ppoint_Pointwise(fpath1[2], xx_fl_suc, yy_fl_suc) 
@@ -609,9 +607,5 @@ def output_airfoil(Geometry,xx_pre,xx_suc,yy_pre,yy_suc,cf_pre,cf_suc,xte,xx_fl_
     return
 
 
-
-
-
-#if __name__ == '__main__':
 
    

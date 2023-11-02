@@ -11,6 +11,21 @@ import numpy as np
 
 def mesh_pre_process(working_dir,Geometry,Mesh):
 
+    '''Function to define dictionaries that will update the Glyph script
+    
+        Inputs:
+            working_dir    - Working directory
+            Geometry       - Geometric settings
+                Mesh       - Mesh settings
+
+
+        Outputs:
+           
+
+        Assumptions:
+
+    '''
+
     Length          = Geometry.reference_values["Length"]
     scaling_factors = np.array([Length,Length,Length])
 
@@ -44,10 +59,10 @@ def mesh_pre_process(working_dir,Geometry,Mesh):
         update_glyph_data = {
             "upper_surface_filename"        : working_dir + "/" + Geometry.airfoil_files["upper"],
             "lower_surface_filename"        : working_dir + "/" + Geometry.airfoil_files["lower"],
-            "cut1_filename"                 : working_dir + "/" + Geometry.PARSEC_flap["flap cutout"][0], 
-            "cut2_filename"                 : working_dir + "/" + Geometry.PARSEC_flap["flap cutout"][1], 
-            "flap_airfoil_lower_filename"   : working_dir + "/" + Geometry.PARSEC_flap["lower surface file"],
-            "flap_airfoil_upper_filename"   : working_dir + "/" + Geometry.PARSEC_flap["upper surface file"],
+            "cut1_filename"                 : working_dir + "/" + Geometry.flap_files["flap cutout"][0], 
+            "cut2_filename"                 : working_dir + "/" + Geometry.flap_files["flap cutout"][1], 
+            "flap_airfoil_lower_filename"   : working_dir + "/" + Geometry.flap_files["lower surface file"],
+            "flap_airfoil_upper_filename"   : working_dir + "/" + Geometry.flap_files["upper surface file"],
             "connector_dimensions"          : Mesh.airfoil_mesh_settings["connector dimensions"],
             "spacing_127_130"               : Mesh.airfoil_mesh_settings["LE_spacing"],
             "spacing_137_140"               : Mesh.airfoil_mesh_settings["LE_spacing"],
@@ -83,4 +98,3 @@ def mesh_pre_process(working_dir,Geometry,Mesh):
 
     return update_glyph_data
 
-#######################################################################################################

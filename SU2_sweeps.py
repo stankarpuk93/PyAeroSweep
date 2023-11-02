@@ -1,7 +1,7 @@
 # SU2_sweeps.py
 # 
 # Created:  Aug 2022, S. Karpuk
-# Modified:
+# Modified: Nov 2023, S. Karpuk
 
 # ----------------------------------------------------------------------
 #   Imports
@@ -26,21 +26,15 @@ def main(Solver,Freestream,Mesh,Geometry):
         Available sweeps:
             Altitude
             Mach
-            anagle-of-attach
-
+            anagle-of-attack
 
 
         Inputs:
-            num_proc                                    Number of processors used fot the solution
-            Alt_range                                   Analysis altitudes
-            Mach_range                                  Range of Mach numbers
-            AoA_range                                   Range of angles-of-attack
-            Ref_dir                                     Solution refefence directory
-            turbulence_model                            Turbulence model
-            save_freq                                   Data saving frequency in number of iterations
-            conv_criteria                               Global residual convergence criteria 
-            iterations                                  Number of iterations to converge the solution
-            SU2_config_file                             Reference .cfg file
+            Solver      - Solver settings
+            Freestream  - Freestream conditions
+            Mesh        - Mesh settings
+            Geometry    - Geometric settings
+            
 
         Outputs:
             CL, CD, CM
@@ -78,6 +72,7 @@ def main(Solver,Freestream,Mesh,Geometry):
     len_Alt  = len(Freestream.Altitude)
     len_Mach = len(Freestream.Mach)
     len_AoA  = len(Freestream.Angle_of_attack)
+
     Cl = np.zeros((len_Alt,len_Mach,len_AoA))                               # Array of Cl
     Cd = np.zeros((len_Alt,len_Mach,len_AoA))                               # Array of Cd
     Cm = np.zeros((len_Alt,len_Mach,len_AoA))                               # Array of Cm
@@ -143,15 +138,8 @@ def main(Solver,Freestream,Mesh,Geometry):
                 worksheet.write(k+2, 2*len_Mach + j+5, Cm[i,j,k])
 
 
+
     workbook.close()
-
-
-    '''else:
-        for i in range(len(Altitude_range)):
-            for j in range(len(Mach_range)):
-                for k in range(len(AoA_range)): 
-                    for l in range(len(AoS_range)):'''
-
 
     print(Cl)
     print(Cd)
@@ -163,20 +151,21 @@ def main(Solver,Freestream,Mesh,Geometry):
 
 
 def run_SU2_config(Solver,Alt,Mach,AoA,Ref_values,Mesh,k):
+
     ''' Creates a 2D case SU2 config file for airfoils
     
         Inputs:
-            SU2_settings                                Array of SU2 prescribed settings
-            Alt                                         Altitudes
-            Mach                                        Mach number
-            AoA                                         Angle-of-attack
-            Ref_dir                                     Reference directory
-            Ref_values                                  Reference values
-            ref_casefile                                case file name
+            Solver          - solver settings
+            Mesh            - mesh settings
+            Alt             - altitudes [m]
+            Mach            - mach number
+            AoA             - angle-of-attack [deg]
+            Ref_values      - reference values for aero forces nad moments
+            k               - angle-of-attack index
 
 
         Outputs:
-            filename                                    Generated journal filename
+            filename        - Generated journal filename
 
 
         Assumptions:
@@ -234,25 +223,25 @@ def run_SU2_config(Solver,Alt,Mach,AoA,Ref_values,Mesh,k):
 
     if Solver.dimensions == "2d":
         # Creates inputs according to the 2d airfoil template
-        cfg_data[3]  = 'KIND_TURB_MODEL= ' + Solver.turbulence_model + '\n'
-        cfg_data[8]  = 'MACH_NUMBER= ' + str(Mach) + '\n'
-        cfg_data[9]  = 'AOA= ' + str(AoA[k]) + '\n'
-        cfg_data[12] = 'FREESTREAM_TEMPERATURE= ' + str(T_ref) + '\n'
-        cfg_data[13] = 'REYNOLDS_NUMBER= ' + str(round(Re)) + '\n'
-        cfg_data[14] = 'REYNOLDS_LENGTH= ' + str(Ref_values["Length"] ) + '\n'
-        cfg_data[18] = 'REF_AREA= ' + str(Ref_values["Area"]) + '\n'
-        cfg_data[19] = 'REF_LENGTH= ' + str(Ref_values["Length"] ) + '\n'
-        cfg_data[20] = 'REF_ORIGIN_MOMENT_X= ' + str(Ref_values["Point"][2]) + '\n'
-        cfg_data[81] = 'ITER= ' + str(Solver.max_iterations) + '\n'
-        cfg_data[95] = 'CONV_CAUCHY_EPS= ' + str(Solver.tolerance) + '\n'
+        cfg_data[3]   = 'KIND_TURB_MODEL= ' + Solver.turbulence_model + '\n'
+        cfg_data[8]   = 'MACH_NUMBER= ' + str(Mach) + '\n'
+        cfg_data[9]   = 'AOA= ' + str(AoA[k]) + '\n'
+        cfg_data[12]  = 'FREESTREAM_TEMPERATURE= ' + str(T_ref) + '\n'
+        cfg_data[13]  = 'REYNOLDS_NUMBER= ' + str(round(Re)) + '\n'
+        cfg_data[14]  = 'REYNOLDS_LENGTH= ' + str(Ref_values["Length"] ) + '\n'
+        cfg_data[18]  = 'REF_AREA= ' + str(Ref_values["Area"]) + '\n'
+        cfg_data[19]  = 'REF_LENGTH= ' + str(Ref_values["Length"] ) + '\n'
+        cfg_data[20]  = 'REF_ORIGIN_MOMENT_X= ' + str(Ref_values["Point"][2]) + '\n'
+        cfg_data[81]  = 'ITER= ' + str(Solver.max_iterations) + '\n'
+        cfg_data[95]  = 'CONV_CAUCHY_EPS= ' + str(Solver.tolerance) + '\n'
         cfg_data[100] = 'MESH_FILENAME= ' + Mesh.filename + '\n'
         cfg_data[102] = 'RESTART_SOL= ' + Solver.warmstart + '\n'
         cfg_data[104] = 'OUTPUT_WRT_FREQ= ' + str(Solver.save_frequency) + '\n'
     elif Solver.dimensions == "3d":
         # Creates inputs according to the 3d airfoil template
-        cfg_data[15]  = 'KIND_TURB_MODEL= ' + Solver.turbulence_model + '\n'
-        cfg_data[24]  = 'MACH_NUMBER= ' + str(Mach) + '\n'
-        cfg_data[27]  = 'AOA= ' + str(AoA[k]) + '\n'
+        cfg_data[15] = 'KIND_TURB_MODEL= ' + Solver.turbulence_model + '\n'
+        cfg_data[24] = 'MACH_NUMBER= ' + str(Mach) + '\n'
+        cfg_data[27] = 'AOA= ' + str(AoA[k]) + '\n'
         cfg_data[41] = 'FREESTREAM_TEMPERATURE= ' + str(T_ref) + '\n'
         cfg_data[44] = 'REYNOLDS_NUMBER= ' + str(round(Re)) + '\n'
         cfg_data[47] = 'REYNOLDS_LENGTH= ' + str(Ref_values["Length"]) + '\n'
@@ -287,11 +276,12 @@ def run_SU2_config(Solver,Alt,Mach,AoA,Ref_values,Mesh,k):
 
 
 def run_SU2(processors,filename):
+
     ''' Runs SU2
     
         Inputs:
-            SU2_settings                             Array of SU2 prescribed settings
-            filename                                 Generated journal filename
+            SU2_settings     - Array of SU2 prescribed settings
+            filename         - Generated journal filename
 
         Outputs:
             
@@ -311,7 +301,7 @@ def read_results(output_file):
     ''' Read output SU2 results 
     
         Inputs:
-            output_file                      SU2 log file with output
+            output_file     - SU2 log file with output
 
         Outputs:
             Cl, Cd, Cm

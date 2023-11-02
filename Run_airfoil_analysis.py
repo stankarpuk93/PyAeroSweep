@@ -1,7 +1,8 @@
 # Run_airfoil_analysis.py
 # 
 # Created:  Dec 2022, S. Karpuk
-# Modified:
+# Modified: Oct 2023, S. Holenarsipura M Madhava
+#           Nov 2023, S. Karpuk
 
 
 """
@@ -12,15 +13,16 @@ and runs the airfoil analysis sweep using a given CFD package
 Capabilities:
     1. Generation of PARSEC airfoils for clean and flapped configurations
     2. Airfoil automaitc meshing using Pointwise
-    3. Execution of ANSYS Fluent or SU2 for given airfoils using RANS with available turbulence models
+    3. Execution of SU2 for given airfoils using RANS with available turbulence models
 
 Options 1 to 3 can be used separately or together
 
 Compatibility: 
-    The tool is compatible for both Windows and Linux systems (needs further testing for bugs)
+    The tool is compatible for both Windows and Linux systems
 
 Prerequiseites:
-    Installed Pointwise 
+    1. Installed Pointwise 
+    2. Installed SU2
 
 """
 
@@ -37,9 +39,11 @@ from Fluent_sweeps           import main as Run_fluent
 from SU2_sweeps              import main as Run_SU2
 
 
-# Input function import
-from Input_data              import Input_data
-from Input_data_flapped      import Input_data_flapped
+# Input data library imports
+from Input_data                     import Input_data
+from Input_data_flapped             import Input_data_flapped
+from Input_data_existing_mesh       import Input_data_with_mesh
+from Input_data_flapped_NoPARSEC    import Input_data_flapped_NoPARSEC
 
 
 
@@ -49,14 +53,16 @@ def run_airfoil_analysis(Input):
     '''Main function to run the analysis
     
         Inputs:
- 
+            Input.Solver     - Solver settings
+                  Geometry   - Geometric settings
+                  Freestream - Freestream conditions
+                  Mesh       - Mesh settings
 
 
         Outputs:
            
 
         Assumptions:
-            1. airfoil tip thickness is assumed 0.0025 from each side
 
     '''
 
@@ -70,7 +76,7 @@ def run_airfoil_analysis(Input):
     
     # Run the airfoil generation script
     if Geometry.PARSEC is True:
-            create_airfoil_and_flap(Geometry)
+        create_airfoil_and_flap(Geometry)
 
                 
     # Mesh the geometry
@@ -96,7 +102,6 @@ def run_airfoil_analysis(Input):
 
 
         # Run Pointwise glyph script to generate the mesh
-
         os.chdir(Mesh.tclsh_directory)
         if Mesh.operating_system == "WINDOWS":
             working_dir_change = Solver.working_dir.replace('/','\\')
@@ -106,11 +111,11 @@ def run_airfoil_analysis(Input):
             full_glyph_path = Solver.working_dir + "\\" + Mesh.glyph_file 
             subprocess.run('./pointwise ' + '-b ' + full_glyph_path, shell = True, stdin=subprocess.PIPE)
 
-        # Run CFD solution
-        if Solver.name == 'Fluent':
-            Run_fluent(Solver,Freestream,Mesh)
-        elif Solver.name == 'SU2':
-            Run_SU2(Solver,Freestream,Mesh,Geometry)
+    # Run CFD solution
+    if Solver.name == 'Fluent':
+        Run_fluent(Solver,Freestream,Mesh)
+    elif Solver.name == 'SU2':
+        Run_SU2(Solver,Freestream,Mesh,Geometry)
 
 
     print("Analysis completed")
@@ -121,15 +126,16 @@ def run_airfoil_analysis(Input):
 
 if __name__ == '__main__':
 
-    # Define airfoil sample inputs
-    #--------------------------------------------------------------------------------------------------------------
 
+
+        # Define an input file
         #Input = Input_data()
-        Input = Input_data_flapped()
+        #Input = Input_data_flapped()
+        #Input = Input_data_with_mesh()
+        Input = Input_data_flapped_NoPARSEC()
 
+        # Run the airfoil analysis
         run_airfoil_analysis(Input)
 
-
-#######################################################################################################
 
 
