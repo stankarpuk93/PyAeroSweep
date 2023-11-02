@@ -107,10 +107,10 @@ def run_airfoil_analysis(Input):
             subprocess.run('./pointwise ' + '-b ' + full_glyph_path, shell = True, stdin=subprocess.PIPE)
 
         # Run CFD solution
-        '''if Solver == 'Fluent':
-            Run_fluent(Alt_range,Mach_range,AoA_range,Fluent_settings,Ref_values,working_dir,casefile)
-        elif Solver == 'SU2':
-            Run_SU2(Solver_dim,Alt_range,Mach_range,AoA_range,SU2_settings,Ref_values,working_dir, SU2_conf_file, SU2_mesh)'''
+        if Solver.name == 'Fluent':
+            Run_fluent(Solver,Freestream,Mesh)
+        elif Solver.name == 'SU2':
+            Run_SU2(Solver,Freestream,Mesh,Geometry)
 
 
     print("Analysis completed")

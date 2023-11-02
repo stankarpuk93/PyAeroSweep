@@ -33,8 +33,9 @@ def Input_data_flapped():
     # Cauchy convergence criteria
     # Could be either LIFT or DRAG
     Solver.monitor          = "LIFT"
-    Solver.tolerance        = 5e-7
+    Solver.tolerance        = 5e-7      
     Solver.max_iterations   = 50000
+    Solver.save_frequency   = 3000
 
     # Warm start
     # YES or NO

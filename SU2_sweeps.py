@@ -1,27 +1,25 @@
 # SU2_sweeps.py
 # 
 # Created:  Aug 2022, S. Karpuk
-# Modified: Oct 20223, S. Karpuk
-#
-# Runs the SU2 aerodynamic analysis sweep for airfoils, wings, and aircraft
+# Modified:
 
 # ----------------------------------------------------------------------
 #   Imports
 # ----------------------------------------------------------------------
-
 import numpy as np
 import os
 import subprocess
 import shutil
 import xlsxwriter
 
+
 # ----------------------------------------------------------------------
 #   Main
 # ----------------------------------------------------------------------
 
 
-def main(Solver_dim,Alt_range,Mach_range,AoA_range,SU2_settings,Ref_values,Ref_dir,SU2_conf_file,SU2_mesh):
-    ''' 
+def main(Solver,Freestream,Mesh,Geometry):
+    ''' Runs the SU2 aerodynamic analysis sweep for airfoils, wings, and aircraft
         So far, the file uses a .cfg template and sets reference values and methods up
         The .cfg file needs to be established beforehand
 
@@ -77,15 +75,14 @@ def main(Solver_dim,Alt_range,Mach_range,AoA_range,SU2_settings,Ref_values,Ref_d
 
     # Create SU2 .cfg files for sweeps
     #--------------------------------------------------------------------
-    len_Alt  = len(Alt_range)
-    len_Mach = len(Mach_range)
-    len_AoA  = len(AoA_range)
+    len_Alt  = len(Freestream.Altitude)
+    len_Mach = len(Freestream.Mach)
+    len_AoA  = len(Freestream.Angle_of_attack)
     Cl = np.zeros((len_Alt,len_Mach,len_AoA))                               # Array of Cl
     Cd = np.zeros((len_Alt,len_Mach,len_AoA))                               # Array of Cd
     Cm = np.zeros((len_Alt,len_Mach,len_AoA))                               # Array of Cm
 
-
-    wartsatrt_set = SU2_settings[5]
+    wartsatrt_set = Solver.warmstart
     for i in range(len_Alt):
         for j in range(len_Mach):
             for k in range(len_AoA): 
@@ -95,13 +92,13 @@ def main(Solver_dim,Alt_range,Mach_range,AoA_range,SU2_settings,Ref_values,Ref_d
                     # Create a config file
                     # Adjust settings for the warm start
                     if (k == 0 and wartsatrt_set == 'YES') or wartsatrt_set == 'NO':
-                        SU2_settings[5] = 'NO'
+                        Solver.warmstart = 'NO'
                     else:
-                        SU2_settings[5] = 'YES'
-                    filename = run_SU2_config(Solver_dim,Alt_range[i],Mach_range[j],AoA_range,\
-                                                            SU2_settings,Ref_values,Ref_dir,SU2_conf_file,SU2_mesh,k)
-                    
-                    # Run SU2
+                        Solver.warmstart = 'YES'
+                    filename = run_SU2_config(Solver,Freestream.Altitude[i],Freestream.Mach[j],Freestream.Angle_of_attack,\
+                                                Geometry.reference_values,Mesh,k)
+
+                    # Run Fluent
                     new_direct  = 'Case_alt' + str("{:.2f}".format(Alt_range[i])) + '_Mach' + str("{:.2f}".format(Mach_range[j])) + '_AoA' + str("{:.2f}".format(AoA_range[k]))
                     file_direct = os.path.join(Ref_dir, new_direct)
                     filename = os.path.join(file_direct, filename)
@@ -109,7 +106,7 @@ def main(Solver_dim,Alt_range,Mach_range,AoA_range,SU2_settings,Ref_values,Ref_d
                     os.chdir(file_direct)
 
                     print('Running Solution ' + filename)
-                    run_SU2(SU2_settings,filename)
+                    run_SU2(Solver.processors,filename)
                     print('Solution ' + filename + ' Completed')
 
                     # Read results
@@ -156,7 +153,7 @@ def main(Solver_dim,Alt_range,Mach_range,AoA_range,SU2_settings,Ref_values,Ref_d
 
 
 
-def run_SU2_config(Solver_dim,Alt,Mach,AoA,SU2_settings,Ref_values,Ref_dir,ref_casefile,meshfile,k):
+def run_SU2_config(Solver,Alt,Mach,AoA,Ref_values,Mesh,k):
     ''' Creates a 2D case SU2 config file for airfoils
     
         Inputs:
@@ -177,6 +174,7 @@ def run_SU2_config(Solver_dim,Alt,Mach,AoA,SU2_settings,Ref_values,Ref_dir,ref_c
 
     '''
 
+
     # Compute standard atmospheric and reference properties
     p_ref, T_ref, mu_ref = standard_atmosphere(Alt)
     rho_ref = p_ref/(287*T_ref)
@@ -184,7 +182,7 @@ def run_SU2_config(Solver_dim,Alt,Mach,AoA,SU2_settings,Ref_values,Ref_dir,ref_c
     V_ref   = Mach * a_ref
 
     # Calculate Reynoldes number
-    Re = rho_ref * V_ref * Ref_values[1] / mu_ref               # Reynolcs number based on unit length
+    Re = rho_ref * V_ref * Ref_values["Length"] / mu_ref               # Reynolcs number based on unit length
 
     # Create run directories and copy the case file there
     if AoA[k] < 0:
@@ -192,29 +190,29 @@ def run_SU2_config(Solver_dim,Alt,Mach,AoA,SU2_settings,Ref_values,Ref_dir,ref_c
     else:    
         new_direct  = 'Case_alt' + str("{:.2f}".format(Alt)) + '_Mach' + str("{:.2f}".format(Mach)) + '_AoA' + str("{:.2f}".format(AoA[k]))
     filename    = new_direct + '.cfg'
-    file_direct = os.path.join(Ref_dir, new_direct)
+    file_direct = os.path.join(Mesh.operating_system, new_direct)
 
     if os.path.exists(file_direct) and os.path.isdir(file_direct):
         shutil.rmtree(file_direct)
     os.mkdir(file_direct)
 
-    os.chdir(Ref_dir)
+    os.chdir(Solver.working_dir)
     
-    shutil.copyfile(os.path.join(os.getcwd()+'/'+ref_casefile), file_direct+'/'+filename) 
+    shutil.copyfile(os.path.join(os.getcwd()+'/'+Solver.config_file), file_direct+'/'+filename) 
 
     # Copy the mesh file
-    if SU2_settings[-2] == "Unix":
-        shutil.copy(Ref_dir + '\\' + meshfile, file_direct + '\\' + meshfile)                               # copies the mesh file from the reference folder to the target one
+    if Mesh.operating_system == "WINDOWS":
+        shutil.copy(Solver.working_dir + '\\' + Mesh.filename, file_direct + '\\' + Mesh.filename)                               # copies the mesh file from the reference folder to the target one
     else:
-        shutil.copy(Ref_dir + '/' + meshfile, file_direct + '/' + meshfile)         
+        shutil.copy(Solver.working_dir + '/' + Mesh.filename, file_direct + '/' + Mesh.filename)         
 
     # Copy the restart file
-    if SU2_settings[5] == 'YES':
+    if Solver.warmstart == 'YES':
         if AoA[k] < 0:
             prev_direct  = 'Case_alt' + str("{:.2f}".format(Alt)) + '_Mach' + str("{:.2f}".format(Mach)) + '_AoA_' + str("{:.2f}".format(abs(AoA[k-1])))
         else:    
             prev_direct  = 'Case_alt' + str("{:.2f}".format(Alt)) + '_Mach' + str("{:.2f}".format(Mach)) + '_AoA' + str("{:.2f}".format(AoA[k-1]))
-        prev_file_direct = os.path.join(Ref_dir, prev_direct)
+        prev_file_direct = os.path.join(Solver.working_dir, prev_direct)
         shutil.copyfile(prev_file_direct+'/restart.dat', file_direct+'/solution_flow.dat')        
 
 
@@ -227,45 +225,45 @@ def run_SU2_config(Solver_dim,Alt,Mach,AoA,SU2_settings,Ref_values,Ref_dir,ref_c
 
     if Solver_dim == "2d":
         # Creates inputs according to the 2d airfoil template
-        cfg_data[3]  = 'KIND_TURB_MODEL= ' + SU2_settings[0] + '\n'
+        cfg_data[3]  = 'KIND_TURB_MODEL= ' + Solver.turbulence_model + '\n'
         cfg_data[8]  = 'MACH_NUMBER= ' + str(Mach) + '\n'
         cfg_data[9]  = 'AOA= ' + str(AoA[k]) + '\n'
         cfg_data[12] = 'FREESTREAM_TEMPERATURE= ' + str(T_ref) + '\n'
         cfg_data[13] = 'REYNOLDS_NUMBER= ' + str(round(Re)) + '\n'
-        cfg_data[14] = 'REYNOLDS_LENGTH= ' + str(Ref_values[1]) + '\n'
-        cfg_data[18] = 'REF_AREA= ' + str(Ref_values[0]) + '\n'
-        cfg_data[19] = 'REF_LENGTH= ' + str(Ref_values[1]) + '\n'
-        cfg_data[20] = 'REF_ORIGIN_MOMENT_X= ' + str(Ref_values[2]) + '\n'
-        cfg_data[81] = 'ITER= ' + str(SU2_settings[4]) + '\n'
-        cfg_data[95] = 'CONV_CAUCHY_EPS= ' + str(SU2_settings[3]) + '\n'
-        cfg_data[100] = 'MESH_FILENAME= ' + meshfile + '\n'
-        cfg_data[102] = 'RESTART_SOL= ' + SU2_settings[5] + '\n'
-        cfg_data[104] = 'OUTPUT_WRT_FREQ= ' + str(SU2_settings[2]) + '\n'
+        cfg_data[14] = 'REYNOLDS_LENGTH= ' + str(Ref_values["Length"] ) + '\n'
+        cfg_data[18] = 'REF_AREA= ' + str(Ref_values["Area"]) + '\n'
+        cfg_data[19] = 'REF_LENGTH= ' + str(Ref_values["Length"] ) + '\n'
+        cfg_data[20] = 'REF_ORIGIN_MOMENT_X= ' + str(Ref_values["Point"][2]) + '\n'
+        cfg_data[81] = 'ITER= ' + str(Solver.max_iterations) + '\n'
+        cfg_data[95] = 'CONV_CAUCHY_EPS= ' + str(Solver.tolerance) + '\n'
+        cfg_data[100] = 'MESH_FILENAME= ' + Mesh.filename + '\n'
+        cfg_data[102] = 'RESTART_SOL= ' + Solver.warmstart + '\n'
+        cfg_data[104] = 'OUTPUT_WRT_FREQ= ' + str(Solver.save_frequency) + '\n'
     elif Solver_dim == "3d":
         # Creates inputs according to the 3d airfoil template
-        cfg_data[15]  = 'KIND_TURB_MODEL= ' + SU2_settings[0] + '\n'
+        cfg_data[15]  = 'KIND_TURB_MODEL= ' + Solver.turbulence_model + '\n'
         cfg_data[24]  = 'MACH_NUMBER= ' + str(Mach) + '\n'
         cfg_data[27]  = 'AOA= ' + str(AoA[k]) + '\n'
         cfg_data[41] = 'FREESTREAM_TEMPERATURE= ' + str(T_ref) + '\n'
         cfg_data[44] = 'REYNOLDS_NUMBER= ' + str(round(Re)) + '\n'
-        cfg_data[47] = 'REYNOLDS_LENGTH= ' + str(Ref_values[1]) + '\n'
-        cfg_data[90] = 'REF_ORIGIN_MOMENT_X= ' + str(Ref_values[2]) + '\n'
-        cfg_data[95] = 'REF_LENGTH= ' + str(Ref_values[1]) + '\n'
-        cfg_data[98] = 'REF_AREA= ' + str(Ref_values[0]) + '\n'
-        if SU2_settings[-1] is True:
+        cfg_data[47] = 'REYNOLDS_LENGTH= ' + str(Ref_values["Length"]) + '\n'
+        cfg_data[90] = 'REF_ORIGIN_MOMENT_X= ' + str(Ref_values["Point"][2]) + '\n'
+        cfg_data[95] = 'REF_LENGTH= ' + str(Ref_values["Length"]) + '\n'
+        cfg_data[98] = 'REF_AREA= ' + str(Ref_values["Area"]) + '\n'
+        if Solver.symmetric is True:
             # The case if a symmetry BC is used
             cfg_data[113] = 'MARKER_SYM= ( symmetry ) \n'
-            cfg_data[219] = 'ITER= ' + str(SU2_settings[4]) + '\n'
-            cfg_data[233] = 'CONV_CAUCHY_EPS= ' + str(SU2_settings[3]) + '\n'
-            cfg_data[239] = 'MESH_FILENAME= ' + meshfile + '\n'
-            cfg_data[241] = 'RESTART_SOL= ' + SU2_settings[5] + '\n'
-            cfg_data[243] = 'OUTPUT_WRT_FREQ= ' + str(SU2_settings[2]) + '\n'
+            cfg_data[219] = 'ITER= ' + str(Solver.max_iterations) + '\n'
+            cfg_data[233] = 'CONV_CAUCHY_EPS= ' + str(Solver.tolerance) + '\n'
+            cfg_data[239] = 'MESH_FILENAME= ' + Mesh.filename + '\n'
+            cfg_data[241] = 'RESTART_SOL= ' + Solver.warmstart + '\n'
+            cfg_data[243] = 'OUTPUT_WRT_FREQ= ' + str(Solver.save_frequency) + '\n'
         else:
-            cfg_data[216] = 'ITER= ' + str(SU2_settings[4]) + '\n'
-            cfg_data[230] = 'CONV_CAUCHY_EPS= ' + str(SU2_settings[3]) + '\n'
-            cfg_data[236] = 'MESH_FILENAME= ' + meshfile + '\n'
-            cfg_data[239] = 'RESTART_SOL= ' + SU2_settings[5] + '\n'
-            cfg_data[240] = 'OUTPUT_WRT_FREQ= ' + str(SU2_settings[2]) + '\n'
+            cfg_data[216] = 'ITER= ' + str(Solver.max_iterations) + '\n'
+            cfg_data[230] = 'CONV_CAUCHY_EPS= ' + str(Solver.tolerance) + '\n'
+            cfg_data[236] = 'MESH_FILENAME= ' + Mesh.filename + '\n'
+            cfg_data[239] = 'RESTART_SOL= ' + Solver.warmstart + '\n'
+            cfg_data[240] = 'OUTPUT_WRT_FREQ= ' + str(Solver.save_frequency) + '\n'
                        
 
 
@@ -279,7 +277,7 @@ def run_SU2_config(Solver_dim,Alt,Mach,AoA,SU2_settings,Ref_values,Ref_dir,ref_c
 
 
 
-def run_SU2(SU2_settings,filename):
+def run_SU2(processors,filename):
     ''' Runs SU2
     
         Inputs:
@@ -295,7 +293,7 @@ def run_SU2(SU2_settings,filename):
 
     # Run Fluent
     with open('SU2_output.log', 'w') as f:
-        subprocess.call(['mpiexec', '-n',str(SU2_settings[1]),'SU2_CFD', filename], stdout= f, stderr= None, stdin=subprocess.PIPE)
+        subprocess.call(['mpiexec', '-n',str(processors),'SU2_CFD', filename], stdout= f, stderr= None, stdin=subprocess.PIPE)
 
     return
 
@@ -316,6 +314,7 @@ def read_results(output_file):
     # Read results 
     with open(output_file, 'r') as f:
         last_line = f.readlines()[-35]
+
     results_array = last_line.split('|')
 
     Cl = float(results_array[-4])
@@ -323,7 +322,9 @@ def read_results(output_file):
     Cm = float(results_array[-3])
 
 
+
     return Cl, Cd, Cm
+
 
 
 
