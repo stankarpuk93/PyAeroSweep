@@ -1,11 +1,8 @@
-# Fidelity Pointwise V18.6 Journal file - Mon Nov 20 14:51:49 2023
+# Fidelity Pointwise V18.6 Journal file - Fri Nov 24 14:28:35 2023
 
 package require PWI_Glyph 6.22.1
 
 pw::Application setUndoMaximumLevels 5
-
-pw::Application setCAESolver SU2 3
-pw::Application markUndoLevel {Set Dimension 3D}
 
 set _TMP(mode_2) [pw::Application begin Create]
   set _DM(1) [pw::GridEntity getByName dom-3]
@@ -29,3 +26,5 @@ $_TMP(mode_2) end
 unset _TMP(mode_2)
 unset _TMP(face_1)
 pw::Application markUndoLevel {Extrude, Translate}
+
+pw::Application undo
