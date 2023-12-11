@@ -18,14 +18,14 @@ def Input_data_flapped():
 
     # Solver dimensions
     # 2d   or 3d        for SU2 
-    Solver.dimensions = '2d'            
+    Solver.dimensions = '3d'            
 
     # Only available for SU2 in 3D
     # defines half od the shape or a full shape analysis (Only symmetric works for now)
     Solver.symmetric = True             
 
-    # SST or SA for SU2
-    Solver.turbulence_model = 'SST'
+    # SST or SA for SU2 - Verify with the config files before changing
+    Solver.turbulence_model = 'SA'
 
     # Number of processors
     Solver.processors = 7
@@ -40,11 +40,6 @@ def Input_data_flapped():
     # Warm start
     # YES or NO
     Solver.warmstart = 'YES'
-
-    # SU2 reference config file name which will be updated
-    Solver.config_file = 'Run_airfoil_template.cfg'
-
-
 
 # ------------------------------- FREESTREAM SETTINGS ------------------------------------------------------- #
 #
@@ -145,6 +140,15 @@ def Input_data_flapped():
     # Mesh type
     Mesh.structured = False
 
+    # Q3D for Quasi 3D or None for the rest
+    Mesh.Quasi3D = True
+
+    if Mesh.Quasi3D == True :
+        Solver.config_file = 'Run_Quasi3D_template.cfg'
+    else:
+        Solver.config_file = 'Run_airfoil_template.cfg'
+    
+    
     # Defined the OS in which Pointwise is used
     # WINDOWS or Unix(Linux)
     Mesh.operating_system = 'Windows'
@@ -155,11 +159,17 @@ def Input_data_flapped():
     # Desired Y+ value
     Mesh.Yplus = 1.0
 
-    # Define the Glyph template to use for meshing
-    Mesh.glyph_file = "mesh_flapped_airfoil_SU2.glf"
 
-    # Mesh filename for either the newly generated mesh or an eisting mesh
-    Mesh.filename = 'su2meshEx.su2'
+    # Mesh filename for either the newly generated mesh or an existing mesh
+    if Mesh.Quasi3D == True :
+        # Define the Glyph template to use for meshing
+        Mesh.glyph_file = "extrude_flapped_airfoil_SU2_unstructured.glf"
+        Mesh.filename = 'su2meshExtrusion.su2'
+    
+    else:
+        # Define the Glyph template to use for meshing
+        Mesh.glyph_file = "mesh_flapped_airfoil_SU2.glf"
+        Mesh.filename = 'su2meshEx.su2'
 
     # Define far-field 
     #   min x, max x

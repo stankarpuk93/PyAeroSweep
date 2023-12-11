@@ -3,7 +3,7 @@
 
 
 
-def update_glyph_script_cl(delta_s,glyph_file,update_glyph_data):
+def update_glyph_script_cl(delta_s,glyph_file,update_glyph_data, Mesh):
 
     # Unpack inputs
     upper_surface_filename = update_glyph_data["upper_surface_filename"]
@@ -18,14 +18,15 @@ def update_glyph_script_cl(delta_s,glyph_file,update_glyph_data):
     run_iterations_2       = update_glyph_data["run_iterations_2"]
     su2meshed_file         = update_glyph_data["su2meshed_file"]
 
-    
-    Extrusion_direction    = update_glyph_data["Extrusion_direction"]
-    Extrusion_distance     = update_glyph_data["Extrusion_distance"]
-    Extrusion_steps        = update_glyph_data["Extrusion_steps"]
-
+    if Mesh.Quasi3D == True: 
+        Extrusion_direction    = update_glyph_data["Extrusion_direction"]
+        Extrusion_distance     = update_glyph_data["Extrusion_distance"]
+        Extrusion_steps        = update_glyph_data["Extrusion_steps"]
+    else:
+        None
 
     # Assign new values to a template
-    lines_to_update = [14, 20, 46, 49, 52, 59, 62, 68, 71, 80, 99, 100, 101, 102, 139, 167, 168, 169]             # 15 updates in total (16th update is written below, for line 96)
+    lines_to_update = [14, 20, 46, 49, 52, 59, 62, 68, 71, 80, 99, 100, 101, 102, 139, 168, 169, 170, 206]             # 15 updates in total (16th update is written below, for line 96)
     new_values = [
         f"  $_TMP(mode_1) initialize -strict -type Automatic {upper_surface_filename}",
         f"  $_TMP(mode_1) initialize -strict -type Automatic {lower_surface_filename}",
@@ -42,9 +43,10 @@ def update_glyph_script_cl(delta_s,glyph_file,update_glyph_data):
         f"  $_TMP(mode_1) run {run_iterations_1}",
         f"  $_TMP(mode_1) run {run_iterations_2}",
         f"  $_TMP(mode_1) initialize -strict -type CAE {su2meshed_file}",
-        f"  $_BL(1) setExtrusionSolverAttribute TranslateDirection " + f"{Extrusion_direction}",
-        f"  $_BL(1) setExtrusionSolverAttribute TranslateDistance {Extrusion_distance}",
-        f"  $_TMP(mode_1) run {Extrusion_steps}"
+        f"  $_BL(1) setExtrusionSolverAttribute TranslateDirection " + f"{Extrusion_direction}" if Mesh.Quasi3D == True else None,
+        f"  $_BL(1) setExtrusionSolverAttribute TranslateDistance {Extrusion_distance}"if Mesh.Quasi3D == True else None,
+        f"  $_TMP(mode_1) run {Extrusion_steps}"if Mesh.Quasi3D == True else None,
+        f"  $_TMP(mode_1) initialize -strict -type CAE {su2meshed_file}",
     ]
 
     # Read the entire content of the Glyph script

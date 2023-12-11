@@ -40,8 +40,8 @@ from SU2_sweeps              import main as Run_SU2
 
 
 # Input data library imports
-#from Input_data                     import Input_data
-from Input_data_flapped             import Input_data_flapped
+from Input_data                     import Input_data
+#from Input_data_flapped             import Input_data_flapped
 #from Input_data_existing_mesh       import Input_data_with_mesh
 #from Input_data_flapped_NoPARSEC    import Input_data_flapped_NoPARSEC
 
@@ -92,13 +92,13 @@ def run_airfoil_analysis(Input):
 
             # Update the Glyph script - Flapped Airfoil                               
             from glyph_updater_flapped   import update_glyph_script_fl    
-            update_glyph_script_fl(delta_s,Mesh.glyph_file, update_glyph_data) 
+            update_glyph_script_fl(delta_s,Mesh.glyph_file, update_glyph_data, Mesh) 
 
         else:
 
             # Update the Glyph script - Clean Airfoil   
             from glyph_updater_clean     import update_glyph_script_cl
-            update_glyph_script_cl(delta_s,Mesh.glyph_file, update_glyph_data)
+            update_glyph_script_cl(delta_s,Mesh.glyph_file, update_glyph_data, Mesh)
 
 
         # Run Pointwise glyph script to generate the mesh
@@ -127,10 +127,9 @@ def run_airfoil_analysis(Input):
 if __name__ == '__main__':
 
 
-
         # Define an input file
-        #Input = Input_data()
-        Input = Input_data_flapped()
+        Input = Input_data()
+        #Input = Input_data_flapped()
         #Input = Input_data_with_mesh()
         #Input = Input_data_flapped_NoPARSEC()
 

@@ -239,30 +239,29 @@ def run_SU2_config(Solver,Alt,Mach,AoA,Ref_values,Mesh,k):
         cfg_data[104] = 'OUTPUT_WRT_FREQ= ' + str(Solver.save_frequency) + '\n'
     elif Solver.dimensions == "3d":
         # Creates inputs according to the 3d airfoil template
-        cfg_data[15] = 'KIND_TURB_MODEL= ' + Solver.turbulence_model + '\n'
-        cfg_data[24] = 'MACH_NUMBER= ' + str(Mach) + '\n'
-        cfg_data[27] = 'AOA= ' + str(AoA[k]) + '\n'
-        cfg_data[41] = 'FREESTREAM_TEMPERATURE= ' + str(T_ref) + '\n'
-        cfg_data[44] = 'REYNOLDS_NUMBER= ' + str(round(Re)) + '\n'
-        cfg_data[47] = 'REYNOLDS_LENGTH= ' + str(Ref_values["Length"]) + '\n'
-        cfg_data[90] = 'REF_ORIGIN_MOMENT_X= ' + str(Ref_values["Point"][2]) + '\n'
-        cfg_data[95] = 'REF_LENGTH= ' + str(Ref_values["Length"]) + '\n'
-        cfg_data[98] = 'REF_AREA= ' + str(Ref_values["Area"]) + '\n'
+        cfg_data[8] = 'KIND_TURB_MODEL= ' + Solver.turbulence_model + '\n'
+        cfg_data[19] = 'MACH_NUMBER= ' + str(Mach) + '\n'
+        cfg_data[22] = 'AOA= ' + str(AoA[k]) + '\n'
+        cfg_data[36] = 'FREESTREAM_TEMPERATURE= ' + str(T_ref) + '\n'
+        cfg_data[39] = 'REYNOLDS_NUMBER= ' + str(round(Re)) + '\n'
+        cfg_data[42] = 'REYNOLDS_LENGTH= ' + str(Ref_values["Length"]) + '\n'
+        cfg_data[85] = 'REF_ORIGIN_MOMENT_X= ' + str(Ref_values["Point"][2]) + '\n'
+        cfg_data[90] = 'REF_LENGTH= ' + str(Ref_values["Length"]) + '\n'
+        cfg_data[93] = 'REF_AREA= ' + str(Ref_values["Area"]) + '\n'
         if Solver.symmetric is True:
             # The case if a symmetry BC is used
-            cfg_data[113] = 'MARKER_SYM= ( symmetry ) \n'
-            cfg_data[219] = 'ITER= ' + str(Solver.max_iterations) + '\n'
-            cfg_data[233] = 'CONV_CAUCHY_EPS= ' + str(Solver.tolerance) + '\n'
-            cfg_data[239] = 'MESH_FILENAME= ' + Mesh.filename + '\n'
-            cfg_data[241] = 'RESTART_SOL= ' + Solver.warmstart + '\n'
-            cfg_data[243] = 'OUTPUT_WRT_FREQ= ' + str(Solver.save_frequency) + '\n'
+            cfg_data[108] = 'MARKER_SYM= ( symmetry ) \n'
+            cfg_data[135] = 'ITER= ' + str(Solver.max_iterations) + '\n'
+            cfg_data[213] = 'CONV_CAUCHY_EPS= ' + str(Solver.tolerance) + '\n'
+            cfg_data[219] = 'MESH_FILENAME= ' + Mesh.filename + '\n'
+            cfg_data[14] = 'RESTART_SOL= ' + Solver.warmstart + '\n'
+            cfg_data[264] = 'OUTPUT_WRT_FREQ= ' + str(Solver.save_frequency) + '\n'
         else:
-            cfg_data[216] = 'ITER= ' + str(Solver.max_iterations) + '\n'
-            cfg_data[230] = 'CONV_CAUCHY_EPS= ' + str(Solver.tolerance) + '\n'
-            cfg_data[236] = 'MESH_FILENAME= ' + Mesh.filename + '\n'
-            cfg_data[239] = 'RESTART_SOL= ' + Solver.warmstart + '\n'
-            cfg_data[240] = 'OUTPUT_WRT_FREQ= ' + str(Solver.save_frequency) + '\n'
-                       
+            cfg_data[135] = 'ITER= ' + str(Solver.max_iterations) + '\n'
+            cfg_data[213] = 'CONV_CAUCHY_EPS= ' + str(Solver.tolerance) + '\n'
+            cfg_data[219] = 'MESH_FILENAME= ' + Mesh.filename + '\n'
+            cfg_data[14] = 'RESTART_SOL= ' + Solver.warmstart + '\n'
+            cfg_data[264] = 'OUTPUT_WRT_FREQ= ' + str(Solver.save_frequency) + '\n'                 
 
 
     f = open(filename, 'w')

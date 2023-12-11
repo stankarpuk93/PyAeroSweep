@@ -18,14 +18,14 @@ def Input_data():
 
     # Solver dimensions
     # 2d   or 3d        for SU2 
-    Solver.dimensions = '2d'            
+    Solver.dimensions = '3d'         
 
     # Only available for SU2 in 3D
-    # defines half od the shape or a full shape analysis (Only symmetric works for now)
+    # defines half of the shape or a full shape analysis (Only symmetric works for now)
     Solver.symmetric = True             
 
-    # SST or SA for SU2
-    Solver.turbulence_model = 'SST'
+    # SST or SA for SU2 - Verify with the config files before changing
+    Solver.turbulence_model = 'SA'
 
     # Number of processors
     Solver.processors = 7
@@ -41,17 +41,13 @@ def Input_data():
     # YES or NO
     Solver.warmstart = 'YES'
 
-    # SU2 reference config file name which will be updated
-    Solver.config_file = 'Run_airfoil_template.cfg'
-
-
 
 # ------------------------------- FREESTREAM SETTINGS ------------------------------------------------------- #
 #
     Freestream = Data()
-    Freestream.Mach             = np.array([0.21,0.25])
-    Freestream.Altitude         = np.array([0,2000])                 # in meters
-    Freestream.Angle_of_attack  = np.array([0.0,3.0,5.0])               # in degrees
+    Freestream.Mach             = np.array([0.21])
+    Freestream.Altitude         = np.array([0])                 # in meters
+    Freestream.Angle_of_attack  = np.array([0.0])               # in degrees
 
 
 
@@ -138,10 +134,20 @@ def Input_data():
     Mesh = Data()
 
     # Flag to mesh the shape or not
-    Mesh.meshing    = True
+    Mesh.meshing    = True             
 
     # Mesh type
     Mesh.structured = True
+
+
+    # Q3D for Quasi 3D or None for the rest
+    Mesh.Quasi3D = True
+
+    if Mesh.Quasi3D == True :
+        Solver.config_file = 'Run_Quasi3D_template.cfg'
+    else:
+        Solver.config_file = 'Run_airfoil_template.cfg'
+
 
     # Defined the OS in which Pointwise is used
     # WINDOWS or Linux
@@ -153,11 +159,16 @@ def Input_data():
     # Desired Y+ value
     Mesh.Yplus = 1.0
 
-    # Define the Glyph template to use for meshing
-    Mesh.glyph_file = "mesh_clean_airfoil_SU2.glf"
-
-    # Mesh filename for either the newly generated mesh or an eisting mesh
-    Mesh.filename = 'su2meshEx.su2'
+    # Mesh filename for either the newly generated mesh or an existing mesh
+    if Mesh.Quasi3D == True :
+        # Define the Glyph template to use for meshing
+        Mesh.glyph_file = "extrude_clean_airfoil_SU2_structured.glf"
+        Mesh.filename = 'su2meshExtrusion.su2'
+    
+    else:
+        # Define the Glyph template to use for meshing
+        Mesh.glyph_file = "mesh_clean_airfoil_SU2.glf"
+        Mesh.filename = 'su2meshEx.su2'
 
     # Define far-field 
     Mesh.far_field = 100 * Geometry.reference_values["Length"]
@@ -170,6 +181,7 @@ def Input_data():
         "connector dimensions"   : [200, 200, 8],     #         "connector_dimensions": [200, 120, 150, 150, 70, 25, 8, 8],
         "number of normal cells" : 230
     }
+
 
     Mesh.airfoil_extrusion_settings = {
         "Extrusion_direction"            : '{-0 -0 -1}',                 # Direction of Extrusion - -ve Z Axis
