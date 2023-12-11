@@ -114,7 +114,7 @@ def update_glyph_script_fl(delta_s,glyph_file,update_glyph_data, Mesh):
         f"  $_BL(1) setExtrusionSolverAttribute TranslateDirection " + f"{Extrusion_direction}" if Mesh.Quasi3D == True else None,
         f"  $_BL(1) setExtrusionSolverAttribute TranslateDistance {Extrusion_distance}"if Mesh.Quasi3D == True else None,
         f"  $_TMP(mode_1) run {Extrusion_steps}"if Mesh.Quasi3D == True else None,
-        f"  $_TMP(mode_1) initialize -strict -type CAE {su2meshed_file}",
+        f"  $_TMP(mode_1) initialize -strict -type CAE {su2meshed_file}" if Mesh.Quasi3D == True else None,
     ]
 
     # Read the entire content of the Glyph script
