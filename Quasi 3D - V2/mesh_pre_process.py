@@ -34,7 +34,7 @@ def mesh_pre_process(working_dir,Geometry,Mesh):
     if Geometry.flap is False:
 
 
-        # Data required for mesh_clean_airfoil_SU2.glf    
+        # Data required for mesh_clean_airfoil_SU2.glf and for both the cases in mesh_pre_process_Quasi3D.py
         update_glyph_data = {
                 "upper_surface_filename": (working_dir + "/" + Geometry.airfoil_files["upper"]) if Mesh.operating_system == "Unix" else ('"' + working_dir + "/" + Geometry.airfoil_files["upper"] + '"'),
                 "lower_surface_filename": (working_dir + "/" + Geometry.airfoil_files["lower"]) if Mesh.operating_system == "Unix" else ('"' + working_dir + "/" + Geometry.airfoil_files["lower"] + '"'),
@@ -48,14 +48,14 @@ def mesh_pre_process(working_dir,Geometry,Mesh):
                 "stop_at_height_2"      : Mesh.far_field,
                 "scaling_factor"        : "{" + str(Length) + ' ' + str(Length) + ' ' + str(Length) +"}",  # Include the calculated scaling factors here
                 "su2meshed_file"        : (working_dir + "/" + Mesh.filename) if Mesh.operating_system == "Unix" else ('"' + working_dir + "/" + Mesh.filename + '"'),
-                "Extrusion_direction"   : str(Mesh.airfoil_extrusion_settings["Extrusion_direction"]) if Mesh.Quasi3D == True else None,
-                "Extrusion_distance"    : Mesh.airfoil_extrusion_settings["Extrusion_distance"] if Mesh.Quasi3D == True else None ,
-                "Extrusion_steps"       : Mesh.airfoil_extrusion_settings["Extrusion_steps"] if Mesh.Quasi3D == True else None ,     
+                "Extrusion_direction"   : str(Mesh.airfoil_extrusion_settings["Extrusion_direction"]) if Mesh.Quasi3D is True else None,
+                "Extrusion_distance"    : Mesh.airfoil_extrusion_settings["Extrusion_distance"] if Mesh.Quasi3D is True else None ,
+                "Extrusion_steps"       : Mesh.airfoil_extrusion_settings["Extrusion_steps"] if Mesh.Quasi3D is True else None ,     
             }
 
     #--------------------------------------------------------------------------------------------------------------
     else:
-        # Data required for mesh_flapped_airfoil_SU2.glf
+        # Data required for mesh_flapped_airfoil_SU2.glf and for both the cases in mesh_pre_process_Quasi3D.py
 
         # Normalize the the near-field
         R_NF1 = Mesh.airfoil_mesh_settings["near-field refinement radius 1"] / Length
@@ -100,9 +100,9 @@ def mesh_pre_process(working_dir,Geometry,Mesh):
                 "growthrate_433"                : Mesh.airfoil_mesh_settings["TREX growth rate"], 
                 "BoundaryDecay_435"             : Mesh.airfoil_mesh_settings["near-field boundary decay 0"],
                 "su2meshed_file"                : (working_dir + "/" + Mesh.filename) if Mesh.operating_system == "Unix" else ('"' + working_dir + "/" + Mesh.filename + '"'),  
-                "Extrusion_direction"           : str(Mesh.airfoil_extrusion_settings["Extrusion_direction"]) if Mesh.Quasi3D == True else None ,
-                "Extrusion_distance"            : Mesh.airfoil_extrusion_settings["Extrusion_distance"] if Mesh.Quasi3D == True else None ,
-                "Extrusion_steps"               : Mesh.airfoil_extrusion_settings["Extrusion_steps"] if Mesh.Quasi3D == True else None ,
+                "Extrusion_direction"           : str(Mesh.airfoil_extrusion_settings["Extrusion_direction"]) if Mesh.Quasi3D is True else None ,
+                "Extrusion_distance"            : Mesh.airfoil_extrusion_settings["Extrusion_distance"] if Mesh.Quasi3D is True else None ,
+                "Extrusion_steps"               : Mesh.airfoil_extrusion_settings["Extrusion_steps"] if Mesh.Quasi3D is True else None ,
             }
 
     return update_glyph_data
