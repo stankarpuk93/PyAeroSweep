@@ -39,18 +39,18 @@ def mesh_pre_process_2D(working_dir,Geometry,Mesh):
     if Mesh.structured is True:
         # Data required for mesh_clean_airfoil_SU2.glf    
         Mesh.update_glyph_data = {
-            "upper_surface_filename": working_dir + "/" + 'Geometry_files/' + Segment.Airfoil.files["upper"],
-            "lower_surface_filename": working_dir + "/" + 'Geometry_files/' + Segment.Airfoil.files["lower"],
-            "connector_dimensions"  : Mesh.airfoil_mesh_settings["connector dimensions"],
-            "begin_spacing"         : Mesh.airfoil_mesh_settings["LE_spacing"],
-            "end_spacing"           : Mesh.airfoil_mesh_settings["TE_spacing"],
-            "su2meshed_file"        : working_dir + '/' + Mesh.filename,
-            "run_iterations_1"      : Mesh.airfoil_mesh_settings["number of normal cells"],
-            "run_iterations_2"      : "-1",
-            "stop_at_height_1"      : "Off",
-            "stop_at_height_2"      : Mesh.far_field,
-            "scaling_factor"        : "{" + str(Length) + ' ' + str(Length) + ' ' + str(Length) +"}",  # Include the calculated scaling factors here
-            "su2meshed_file"        : working_dir + "/" + Mesh.filename, 
+            "upper_surface_filename"        : (working_dir + "/" + Segment.Airfoil.files["upper"]) if Mesh.operating_system == "Unix" else ('"' + working_dir + "/" + Segment.Airfoil.files["upper"] + '"'),
+            "lower_surface_filename"        : (working_dir + "/" + Segment.Airfoil.files["lower"]) if Mesh.operating_system == "Unix" else ('"' + working_dir + "/" + Segment.Airfoil.files["lower"] + '"'),
+            "connector_dimensions"          : Mesh.airfoil_mesh_settings["connector dimensions"],
+            "begin_spacing"                 : Mesh.airfoil_mesh_settings["LE_spacing"],
+            "end_spacing"                   : Mesh.airfoil_mesh_settings["TE_spacing"],
+            "su2meshed_file"                : working_dir + '/' + Mesh.filename,
+            "run_iterations_1"              : Mesh.airfoil_mesh_settings["number of normal cells"],
+            "run_iterations_2"              : "-1",
+            "stop_at_height_1"              : "Off",
+            "stop_at_height_2"              : Mesh.far_field,
+            "scaling_factor"                : "{" + str(Length) + ' ' + str(Length) + ' ' + str(Length) +"}",  # Include the calculated scaling factors here
+            "su2meshed_file"                : (working_dir + "/" + Mesh.filename) if Mesh.operating_system == "Unix" else ('"' + working_dir + "/" + Mesh.filename + '"'),  
         }
 
     #--------------------------------------------------------------------------------------------------------------
@@ -63,12 +63,12 @@ def mesh_pre_process_2D(working_dir,Geometry,Mesh):
 
 
         Mesh.update_glyph_data = {
-            "upper_surface_filename"        : working_dir + "/" + 'Geometry_files/' + Segment.Airfoil.files["upper"],
-            "lower_surface_filename"        : working_dir + "/" + 'Geometry_files/' + Segment.Airfoil.files["lower"],
-            "cut1_filename"                 : working_dir + "/" + 'Geometry_files/' + Segment.TrailingEdgeDevice.files["flap cutout"][0], 
-            "cut2_filename"                 : working_dir + "/" + 'Geometry_files/' + Segment.TrailingEdgeDevice.files["flap cutout"][1], 
-            "flap_airfoil_lower_filename"   : working_dir + "/" + 'Geometry_files/' + Segment.TrailingEdgeDevice.files["lower surface file"],
-            "flap_airfoil_upper_filename"   : working_dir + "/" + 'Geometry_files/' + Segment.TrailingEdgeDevice.files["upper surface file"],
+            "upper_surface_filename"        : (working_dir + "/" + Segment.Airfoil.files["upper"]) if Mesh.operating_system == "Unix" else ('"' + working_dir + "/" + Segment.Airfoil.files["upper"] + '"'),
+            "lower_surface_filename"        : (working_dir + "/" + Segment.Airfoil.files["lower"]) if Mesh.operating_system == "Unix" else ('"' + working_dir + "/" + Segment.Airfoil.files["lower"] + '"'),
+            "cut1_filename"                 : (working_dir + "/" + Segment.TrailingEdgeDevice.files["flap cutout"][0]) if Mesh.operating_system == "Unix" else ('"' + working_dir + "/" + Segment.TrailingEdgeDevice.files["flap cutout"][0] + '"'),
+            "cut2_filename"                 : (working_dir + "/" + Segment.TrailingEdgeDevice.files["flap cutout"][1]) if Mesh.operating_system == "Unix" else ('"' + working_dir + "/" + Segment.TrailingEdgeDevice.files["flap cutout"][1] + '"'),
+            "flap_airfoil_lower_filename"   : (working_dir + "/" + Segment.TrailingEdgeDevice.files["lower surface file"]) if Mesh.operating_system == "Unix" else ('"' + working_dir + "/" + Segment.TrailingEdgeDevice.files["lower surface file"] + '"'),
+            "flap_airfoil_upper_filename"   : (working_dir + "/" + Segment.TrailingEdgeDevice.files["upper surface file"]) if Mesh.operating_system == "Unix" else ('"' + working_dir + "/" + Segment.TrailingEdgeDevice.files["upper surface file"] + '"'),
             "connector_dimensions"          : Mesh.airfoil_mesh_settings["connector dimensions"],
             "spacing_127_130"               : Mesh.airfoil_mesh_settings["LE_spacing"],
             "spacing_137_140"               : Mesh.airfoil_mesh_settings["LE_spacing"],
@@ -98,7 +98,7 @@ def mesh_pre_process_2D(working_dir,Geometry,Mesh):
             "fulllayers_431"                : Mesh.airfoil_mesh_settings["Full TREX layers"],
             "growthrate_433"                : Mesh.airfoil_mesh_settings["TREX growth rate"], 
             "BoundaryDecay_435"             : Mesh.airfoil_mesh_settings["near-field boundary decay 0"],
-            "su2meshed_file"                : working_dir + "/" + Mesh.filename  
+            "su2meshed_file"                : (working_dir + "/" + Mesh.filename) if Mesh.operating_system == "Unix" else ('"' + working_dir + "/" + Mesh.filename + '"'),  
         }
 
 
