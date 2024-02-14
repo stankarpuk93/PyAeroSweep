@@ -86,7 +86,7 @@ def Input_data():
     segment = Segment()
     segment.tag                = 'section_1'
     segment.spanwise_location  = 0 
-    segment.chord              = 7.760
+    segment.chord              = 2.62
     segment.Airfoil.files      = {
         "upper" : "main_airfoil_upper_1.dat",
         "lower" : "main_airfoil_lower_1.dat"
