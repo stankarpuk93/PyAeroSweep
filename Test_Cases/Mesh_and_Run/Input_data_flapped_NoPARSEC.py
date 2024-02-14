@@ -87,7 +87,7 @@ def Input_data():
 
     segment = Segment()
     segment.tag                = 'section_1'
-    segment.chord              = 7.760
+    segment.chord              = 2.62
     segment.Airfoil.files      = {
         "upper" : "main_airfoil_upper_fixed.dat",
         "lower" : "main_airfoil_lower_fixed.dat"
