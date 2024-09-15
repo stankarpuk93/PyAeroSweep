@@ -39,8 +39,8 @@ def mesh_pre_process_2D(working_dir,Geometry,Mesh):
     if Mesh.structured is True:
         # Data required for mesh_clean_airfoil_SU2.glf    
         Mesh.update_glyph_data = {
-            "upper_surface_filename"        : (working_dir + "/" + Segment.Airfoil.files["upper"]) if Mesh.operating_system == "Unix" else ('"' + working_dir + "/" + Segment.Airfoil.files["upper"] + '"'),
-            "lower_surface_filename"        : (working_dir + "/" + Segment.Airfoil.files["lower"]) if Mesh.operating_system == "Unix" else ('"' + working_dir + "/" + Segment.Airfoil.files["lower"] + '"'),
+            "upper_surface_filename"        : (working_dir + "/" + 'Geometry_files/' + Segment.Airfoil.files["upper"]) if Mesh.operating_system == "Unix" else ('"' + working_dir + "/" + 'Geometry_files/' + Segment.Airfoil.files["upper"] + '"'),
+            "lower_surface_filename"        : (working_dir + "/" + 'Geometry_files/' + Segment.Airfoil.files["lower"]) if Mesh.operating_system == "Unix" else ('"' + working_dir + "/" + 'Geometry_files/' + Segment.Airfoil.files["lower"] + '"'),
             "connector_dimensions"          : Mesh.airfoil_mesh_settings["connector dimensions"],
             "begin_spacing"                 : Mesh.airfoil_mesh_settings["LE_spacing"],
             "end_spacing"                   : Mesh.airfoil_mesh_settings["TE_spacing"],
