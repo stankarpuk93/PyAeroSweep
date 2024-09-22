@@ -1,0 +1,1243 @@
+WARNING: The current SST-1994m model is inconsistent with literature. We recommend using the SST-2003m model.
+In SU2 v8 the 2003m model will become default, and the inconsistency will be fixed.
+
+-------------------------------------------------------------------------
+|    ___ _   _ ___                                                      |
+|   / __| | | |_  )   Release 7.4.0 "Blackbird"                         |
+|   \__ \ |_| |/ /                                                      |
+|   |___/\___//___|   Suite (Computational Fluid Dynamics Code)         |
+|                                                                       |
+-------------------------------------------------------------------------
+| SU2 Project Website: https://su2code.github.io                        |
+|                                                                       |
+| The SU2 Project is maintained by the SU2 Foundation                   |
+| (http://su2foundation.org)                                            |
+-------------------------------------------------------------------------
+| Copyright 2012-2022, SU2 Contributors                                 |
+|                                                                       |
+| SU2 is free software; you can redistribute it and/or                  |
+| modify it under the terms of the GNU Lesser General Public            |
+| License as published by the Free Software Foundation; either          |
+| version 2.1 of the License, or (at your option) any later version.    |
+|                                                                       |
+| SU2 is distributed in the hope that it will be useful,                |
+| but WITHOUT ANY WARRANTY; without even the implied warranty of        |
+| MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU      |
+| Lesser General Public License for more details.                       |
+|                                                                       |
+| You should have received a copy of the GNU Lesser General Public      |
+| License along with SU2. If not, see <http://www.gnu.org/licenses/>.   |
+-------------------------------------------------------------------------
+WARNING: The current SST-1994m model is inconsistent with literature. We recommend using the SST-2003m model.
+In SU2 v8 the 2003m model will become default, and the inconsistency will be fixed.
+
+Parsing config file for zone 0
+WARNING: The current SST-1994m model is inconsistent with literature. We recommend using the SST-2003m model.
+In SU2 v8 the 2003m model will become default, and the inconsistency will be fixed.
+
+----------------- Physical Case Definition ( Zone 0 ) -------------------
+Compressible RANS equations.
+Turbulence model: Menter's k-omega SST-1994m with no production modification.
+Hybrid RANS/LES: No Hybrid RANS/LES
+Mach number: 0.21.
+Angle of attack (AoA): -2 deg, and angle of sideslip (AoS): 0 deg.
+Reynolds number: 1.28186e+07. Reference length 2.62.
+Reading and writing binary SU2 native restart files.
+Read flow solution from: solution_flow.
+Non-Dimensional simulation (V=Mach, Rho=1.0, T=1.0 at the farfield).
+The reference area is 2.62 m^2.
+The semi-span will be computed using the max y(3D) value.
+The reference length is 2.62 m.
+Reference origin for moment evaluation is (0, 0, 0).
+Surface(s) where the force coefficients are evaluated: wall.
+
+Surface(s) plotted in the output file: wall.
+Input mesh file name: su2meshEx.su2
+
+--------------- Space Numerical Integration ( Zone 0 ) ------------------
+Roe (with entropy fix = 1e-05) solver for the flow inviscid terms.
+Standard Roe without low-dissipation function.
+Second order integration in space, with slope limiter.
+Van Albada slope-limiting method implemented by edges.
+Scalar upwind solver for the turbulence model.
+First order integration in space.
+Average of gradients with correction (viscous flow terms).
+Average of gradients with correction (viscous turbulence terms).
+Gradient for upwind reconstruction: Green-Gauss.
+Gradient for viscous and source terms: Green-Gauss.
+
+--------------- Time Numerical Integration  ( Zone 0 ) ------------------
+Local time stepping (steady state simulation).
+Euler implicit method for the flow equations.
+FGMRES is used for solving the linear system.
+Using a ILU(0) preconditioning.
+Convergence criteria of the linear solver: 0.2.
+Max number of linear iterations: 4.
+CFL adaptation. Factor down: 0.1, factor up: 1.2,
+                lower limit: 25, upper limit: 1000,
+                acceptable linear residual: 0.001.
+Courant-Friedrichs-Lewy number:       25
+Euler implicit time integration for the turbulence model.
+
+------------------ Convergence Criteria  ( Zone 0 ) ---------------------
+Maximum number of solver subiterations: 25000.
+Begin convergence monitoring at iteration 10.
+Residual minimum value: 1e-11.5.
+Cauchy series min. value: 5e-07.
+Number of Cauchy elements: 500.
+Begin windowed time average at iteration 0.
+
+-------------------- Output Information ( Zone 0 ) ----------------------
+File writing frequency: 
++------------------------------------+
+|                     File| Frequency|
++------------------------------------+
+|                  RESTART|       100|
+|                 PARAVIEW|       100|
+|         SURFACE_PARAVIEW|       100|
++------------------------------------+
+Writing the convergence history file every 1 inner iterations.
+Writing the screen convergence history every 25 inner iterations.
+The tabular file format is CSV (.csv).
+Convergence history file name: history.
+Forces breakdown file name: forces_breakdown.dat.
+Surface file name: surface.
+Volume file name: vol_solution.
+Restart file name: restart.dat.
+
+------------- Config File Boundary Information ( Zone 0 ) ---------------
++-----------------------------------------------------------------------+
+|                        Marker Type|                        Marker Name|
++-----------------------------------------------------------------------+
+|                          Far-field|                          far-field|
++-----------------------------------------------------------------------+
+|                     Heat flux wall|                               wall|
++-----------------------------------------------------------------------+
+
+-------------------- Output Preprocessing ( Zone 0 ) --------------------
+
+WARNING: SURFACE_PRESSURE_DROP can only be computed for at least 2 surfaces (outlet, inlet, ...)
+
+  Info: Ignoring the following screen output fields:
+  RMS_NU_TILDE
+Screen output fields: INNER_ITER, RMS_DENSITY, RMS_MOMENTUM-X, RMS_MOMENTUM-Y, RMS_ENERGY, DRAG, LIFT, MOMENT_Z, LINSOL_RESIDUAL
+History output group(s): ITER, RMS_RES, AERO_COEFF
+Convergence field(s): LIFT
+Warning: No (valid) fields chosen for time convergence monitoring. Time convergence monitoring inactive.
+Volume output fields: COORDINATES, SOLUTION, PRIMITIVE
+
+------------------- Geometry Preprocessing ( Zone 0 ) -------------------
+Two dimensional problem.
+66015 grid points before partitioning.
+65610 volume elements before partitioning.
+2 surface markers.
+405 boundary elements in index 0 (Marker = far-field).
+405 boundary elements in index 1 (Marker = wall).
+Executing the partitioning functions.
+Building the graph adjacency structure.
+Calling ParMETIS... graph partitioning complete (888 edge cuts).
+Distributing ParMETIS coloring.
+Rebalancing vertices.
+Rebalancing volume element connectivity.
+Rebalancing markers and surface elements.
+67791 vertices including ghost points. 
+66494 interior elements including halo cells. 
+66494 quadrilaterals.
+Establishing MPI communication patterns.
+Setting point connectivity.
+Renumbering points (Reverse Cuthill McKee Ordering).
+Recomputing point connectivity.
+Setting element connectivity.
+Checking the numerical grid orientation.
+All volume elements are correctly orientend.
+All surface elements are correctly orientend.
+Identifying edges and vertices.
+Setting the control volume structure.
+Area of the computational grid: 177681.
+Searching for the closest normal neighbors to the surfaces.
+Storing a mapping from global to local point index.
+Compute the surface curvature.
+Max K: 1084.38. Mean K: 3.59037. Standard deviation K: 49.7608.
+Checking for periodicity.
+Computing mesh quality statistics for the dual control volumes.
++--------------------------------------------------------------+
+|           Mesh Quality Metric|        Minimum|        Maximum|
++--------------------------------------------------------------+
+|    Orthogonality Angle (deg.)|         82.757|             90|
+|     CV Face Area Aspect Ratio|        1.00372|        11629.9|
+|           CV Sub-Volume Ratio|              1|        2.23945|
++--------------------------------------------------------------+
+Finding max control volume width.
+Communicating number of neighbors.
+Wetted area = 5.32649 m.
+Area projection in the x-plane = 0.29702 m, y-plane = 2.61984 m.
+Max. coordinate in the x-direction = 2.62 m, y-direction = 0.165086 m.
+Min. coordinate in the x-direction = 0 m, y-direction = -0.119236 m.
+Computing wall distances.
+
+-------------------- Solver Preprocessing ( Zone 0 ) --------------------
+Viscous flow: Computing pressure using the ideal gas law
+based on the free-stream temperature and a density computed
+from the Reynolds number.
+Force coefficients computed using free-stream values.
+
+-- Models:
++------------------------------------------------------------------------------+
+|          Viscosity Model|        Conductivity Model|              Fluid Model|
++------------------------------------------------------------------------------+
+|               SUTHERLAND|          CONSTANT_PRANDTL|             STANDARD_AIR|
++------------------------------------------------------------------------------+
+-- Fluid properties:
++------------------------------------------------------------------------------+
+|                  Name|    Dim. value|    Ref. value|      Unit|Non-dim. value|
++------------------------------------------------------------------------------+
+|        Ref. Viscosity|     1.716e-05|       416.883|   N.s/m^2|   4.11626e-08|
+|      Sutherland Temp.|        273.15|        288.16|         K|      0.947911|
+|     Sutherland Const.|         110.4|        288.16|         K|       0.38312|
++------------------------------------------------------------------------------+
+|        Prandtl (Lam.)|             -|             -|         -|          0.72|
+|       Prandtl (Turb.)|             -|             -|         -|           0.9|
++------------------------------------------------------------------------------+
+|          Gas Constant|       287.058|       401.881|  N.m/kg.K|      0.714286|
+|      Spec. Heat Ratio|             -|             -|         -|           1.4|
++------------------------------------------------------------------------------+
+-- Initial and free-stream conditions:
++------------------------------------------------------------------------------+
+|                  Name|    Dim. value|    Ref. value|      Unit|Non-dim. value|
++------------------------------------------------------------------------------+
+|       Static Pressure|        101333|        141867|        Pa|      0.714286|
+|               Density|       1.22504|       1.22504|    kg/m^3|             1|
+|           Temperature|        288.16|        288.16|         K|             1|
+|          Total Energy|        209369|        115806|   m^2/s^2|       1.80793|
+|            Velocity-X|       71.4201|       340.303|       m/s|      0.209872|
+|            Velocity-Y|      -2.49404|       340.303|       m/s|   -0.00732889|
+|    Velocity Magnitude|       71.4636|       340.303|       m/s|          0.21|
++------------------------------------------------------------------------------+
+|             Viscosity|   1.78935e-05|       416.883|   N.s/m^2|    4.2922e-08|
+|          Conductivity|             -|        167537|   W/m^2.K|             -|
+|     Turb. Kin. Energy|       19.1514|        115806|   m^2/s^2|   0.000165375|
+|     Spec. Dissipation|        131116|       340.303|       1/s|       385.292|
++------------------------------------------------------------------------------+
+|           Mach Number|             -|             -|         -|          0.21|
+|       Reynolds Number|             -|             -|         -|   1.28186e+07|
++------------------------------------------------------------------------------+
+Initialize Jacobian structure (Navier-Stokes). MG level: 0.
+Initialize Jacobian structure (SST model).
+
+------------------- Numerics Preprocessing ( Zone 0 ) -------------------
+
+----------------- Integration Preprocessing ( Zone 0 ) ------------------
+
+------------------- Iteration Preprocessing ( Zone 0 ) ------------------
+Euler/Navier-Stokes/RANS fluid iteration.
+
+------------------------------ Begin Solver -----------------------------
+
+Simulation Run using the Single-zone Driver
+WARNING: SU2 was not compiled for an AVX-capable architecture.
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|           0|   -3.420364|   -3.727950|   -3.447146|   -3.016562|    0.007002|   -0.041418|    0.068939|   -0.801645|
+|          25|   -5.247701|   -4.877454|   -4.767423|   -4.851614|    0.003951|    0.029707|    0.103968|   -0.667304|
+|          50|   -5.859307|   -4.959703|   -5.086296|   -5.344655|    0.005303|    0.015554|    0.087601|   -0.830703|
+|          75|   -6.127492|   -5.102174|   -5.524157|   -5.571533|    0.004425|    0.121908|    0.117418|   -1.007970|
+|         100|   -6.272658|   -5.250522|   -5.823118|   -5.715462|    0.007393|    0.093554|    0.100071|   -0.678024|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|         125|   -6.416269|   -5.448300|   -5.989149|   -5.906203|    0.008429|    0.051531|    0.090983|   -0.678977|
+|         150|   -6.692963|   -5.714193|   -6.348522|   -6.162655|    0.007669|    0.057814|    0.094976|   -0.641730|
+|         175|   -6.947047|   -6.061955|   -6.526186|   -6.452758|    0.007390|    0.072060|    0.099086|   -0.650979|
+|         200|   -7.428924|   -6.353814|   -6.895944|   -6.855679|    0.007514|    0.075712|    0.099861|   -0.933179|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|         225|   -7.655336|   -6.592720|   -7.088183|   -7.068100|    0.007606|    0.075111|    0.099717|   -0.730095|
+|         250|   -7.617089|   -6.753000|   -7.205897|   -7.137100|    0.007640|    0.074334|    0.099549|   -0.845460|
+|         275|   -7.808352|   -6.902512|   -7.429750|   -7.328197|    0.007633|    0.074370|    0.099562|   -0.541840|
+|         300|   -7.962435|   -7.083861|   -7.637483|   -7.478545|    0.007595|    0.075316|    0.099956|   -0.618864|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|         325|   -8.086647|   -7.226848|   -7.692176|   -7.600507|    0.007597|    0.075848|    0.100125|   -0.705273|
+|         350|   -8.229617|   -7.326500|   -7.750699|   -7.728205|    0.007581|    0.076431|    0.100340|   -0.610827|
+|         375|   -8.345335|   -7.408363|   -7.850864|   -7.843435|    0.007585|    0.076709|    0.100404|   -0.620880|
+|         400|   -8.501969|   -7.500540|   -7.996097|   -7.987786|    0.007590|    0.076953|    0.100489|   -0.634563|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|         425|   -8.631373|   -7.614752|   -8.126202|   -8.106140|    0.007588|    0.077138|    0.100541|   -0.619435|
+|         450|   -8.653473|   -7.749030|   -8.180727|   -8.150356|    0.007591|    0.077166|    0.100532|   -0.582349|
+|         475|   -8.669258|   -7.842003|   -8.207615|   -8.191572|    0.007590|    0.077284|    0.100583|   -0.567713|
+|         500|   -8.720524|   -7.883772|   -8.263973|   -8.261622|    0.007591|    0.077369|    0.100608|   -0.574002|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|         525|   -8.813570|   -7.929550|   -8.356984|   -8.364547|    0.007588|    0.077429|    0.100625|   -0.548688|
+|         550|   -8.939432|   -7.988960|   -8.491837|   -8.496498|    0.007583|    0.077563|    0.100674|   -0.550326|
+|         575|   -9.059125|   -8.073044|   -8.637103|   -8.615136|    0.007581|    0.077625|    0.100677|   -0.555584|
+|         600|   -9.139094|   -8.184642|   -8.748640|   -8.689326|    0.007578|    0.077686|    0.100684|   -0.575141|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|         625|   -9.229102|   -8.301676|   -8.835738|   -8.761665|    0.007574|    0.077761|    0.100695|   -0.616194|
+|         650|   -9.313747|   -8.381979|   -8.900421|   -8.836969|    0.007573|    0.077766|    0.100671|   -0.655287|
+|         675|   -9.386282|   -8.427082|   -8.960018|   -8.903317|    0.007572|    0.077777|    0.100658|   -0.686641|
+|         700|   -9.446420|   -8.447469|   -9.032827|   -8.958791|    0.007571|    0.077768|    0.100635|   -0.605719|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|         725|   -9.501859|   -8.453366|   -9.126683|   -9.013349|    0.007571|    0.077726|    0.100603|   -0.613155|
+|         750|   -9.521008|   -8.460016|   -9.209910|   -9.045778|    0.007572|    0.077701|    0.100584|   -0.598858|
+|         775|   -9.509324|   -8.485408|   -9.273249|   -9.067337|    0.007572|    0.077650|    0.100554|   -0.734574|
+|         800|   -9.588279|   -8.532997|   -9.343646|   -9.156344|    0.007573|    0.077613|    0.100535|   -0.561378|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|         825|   -9.530358|   -8.601365|   -9.357853|   -9.162413|    0.007574|    0.077576|    0.100515|   -0.663915|
+|         850|   -9.632623|   -8.677289|   -9.418496|   -9.301013|    0.007575|    0.077529|    0.100493|   -0.715248|
+|         875|   -9.707977|   -8.749858|   -9.442416|   -9.393164|    0.007576|    0.077496|    0.100478|   -0.561381|
+|         900|   -9.669421|   -8.806125|   -9.437283|   -9.356464|    0.007578|    0.077455|    0.100458|   -0.686146|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|         925|   -9.735590|   -8.839523|   -9.445759|   -9.431110|    0.007579|    0.077414|    0.100441|   -0.741833|
+|         950|   -9.768468|   -8.859285|   -9.444556|   -9.464242|    0.007581|    0.077379|    0.100425|   -0.564193|
+|         975|   -9.716158|   -8.870355|   -9.436614|   -9.383584|    0.007583|    0.077336|    0.100406|   -0.677950|
+|        1000|   -9.770650|   -8.877707|   -9.445298|   -9.453186|    0.007585|    0.077300|    0.100391|   -0.671691|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        1025|   -9.773795|   -8.883816|   -9.449685|   -9.449073|    0.007587|    0.077263|    0.100375|   -0.663813|
+|        1050|   -9.784051|   -8.890120|   -9.454602|   -9.457455|    0.007589|    0.077224|    0.100359|   -0.656621|
+|        1075|   -9.791483|   -8.896212|   -9.462828|   -9.462758|    0.007590|    0.077189|    0.100345|   -0.649850|
+|        1100|   -9.798048|   -8.902765|   -9.471512|   -9.464279|    0.007592|    0.077151|    0.100329|   -0.647471|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        1125|   -9.808478|   -8.910284|   -9.479403|   -9.473441|    0.007595|    0.077115|    0.100315|   -0.643229|
+|        1150|   -9.818292|   -8.918004|   -9.491181|   -9.480639|    0.007596|    0.077080|    0.100301|   -0.641195|
+|        1175|   -9.828959|   -8.926002|   -9.502357|   -9.487861|    0.007598|    0.077043|    0.100287|   -0.642217|
+|        1200|   -9.841038|   -8.934636|   -9.513054|   -9.498471|    0.007600|    0.077009|    0.100274|   -0.641624|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        1225|   -9.852625|   -8.943458|   -9.524600|   -9.507384|    0.007602|    0.076976|    0.100261|   -0.642855|
+|        1250|   -9.865434|   -8.952271|   -9.535009|   -9.518115|    0.007604|    0.076942|    0.100248|   -0.646387|
+|        1275|   -9.877253|   -8.961264|   -9.546050|   -9.528381|    0.007606|    0.076911|    0.100236|   -0.648220|
+|        1300|   -9.889658|   -8.970239|   -9.558027|   -9.538615|    0.007608|    0.076879|    0.100223|   -0.651180|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        1325|   -9.904002|   -8.979130|   -9.570493|   -9.551783|    0.007609|    0.076849|    0.100212|   -0.656417|
+|        1350|   -9.916897|   -8.987857|   -9.584973|   -9.562999|    0.007611|    0.076820|    0.100201|   -0.661427|
+|        1375|   -9.931291|   -8.996573|   -9.600193|   -9.575512|    0.007613|    0.076791|    0.100190|   -0.667102|
+|        1400|   -9.946705|   -9.005315|   -9.615544|   -9.590127|    0.007614|    0.076763|    0.100180|   -0.675201|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        1425|   -9.960528|   -9.013877|   -9.631836|   -9.602390|    0.007616|    0.076737|    0.100170|   -0.683786|
+|        1450|   -9.975161|   -9.022399|   -9.647943|   -9.615830|    0.007617|    0.076711|    0.100160|   -0.691934|
+|        1475|   -9.935539|   -9.030705|   -9.655932|   -9.564091|    0.007618|    0.076686|    0.100151|   -0.691903|
+|        1500|  -10.001218|   -9.039266|   -9.678181|   -9.640302|    0.007620|    0.076662|    0.100142|   -0.548705|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        1525|  -10.020241|   -9.047899|   -9.701946|   -9.659659|    0.007621|    0.076639|    0.100133|   -0.726168|
+|        1550|  -10.034574|   -9.055595|   -9.719736|   -9.672087|    0.007622|    0.076618|    0.100126|   -0.737956|
+|        1575|  -10.036788|   -9.063274|   -9.738357|   -9.671617|    0.007623|    0.076597|    0.100118|   -0.708522|
+|        1600|  -10.054736|   -9.071741|   -9.755061|   -9.689558|    0.007625|    0.076575|    0.100110|   -0.514590|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        1625|  -10.078578|   -9.079795|   -9.781096|   -9.713653|    0.007626|    0.076556|    0.100103|   -0.725556|
+|        1650|  -10.075955|   -9.087094|   -9.804356|   -9.705637|    0.007627|    0.076539|    0.100097|   -0.805571|
+|        1675|  -10.103668|   -9.093508|   -9.820210|   -9.739566|    0.007627|    0.076523|    0.100091|   -0.758881|
+|        1700|  -10.062317|   -9.100435|   -9.837806|   -9.688934|    0.007628|    0.076508|    0.100085|   -0.752772|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        1725|  -10.111779|   -9.107274|   -9.867926|   -9.744954|    0.007629|    0.076494|    0.100080|   -0.961569|
+|        1750|  -10.156145|   -9.113578|   -9.889944|   -9.799005|    0.007630|    0.076481|    0.100075|   -0.701730|
+|        1775|  -10.138084|   -9.120047|   -9.909464|   -9.776150|    0.007631|    0.076469|    0.100070|   -0.706328|
+|        1800|  -10.115441|   -9.126189|   -9.925662|   -9.750860|    0.007632|    0.076458|    0.100066|   -0.747328|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        1825|  -10.127532|   -9.131806|   -9.943009|   -9.762500|    0.007632|    0.076448|    0.100062|   -0.745662|
+|        1850|  -10.133268|   -9.137098|   -9.963443|   -9.769019|    0.007633|    0.076438|    0.100059|   -0.900548|
+|        1875|  -10.151227|   -9.142923|   -9.990714|   -9.790382|    0.007633|    0.076429|    0.100055|   -0.801832|
+|        1900|  -10.122524|   -9.148035|   -9.999901|   -9.750563|    0.007634|    0.076422|    0.100052|   -0.722689|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        1925|  -10.127611|   -9.152759|  -10.021236|   -9.741798|    0.007635|    0.076415|    0.100050|   -0.721420|
+|        1950|  -10.134806|   -9.158235|  -10.042486|   -9.756960|    0.007635|    0.076408|    0.100047|   -0.740936|
+|        1975|  -10.145240|   -9.164578|  -10.044979|   -9.782491|    0.007636|    0.076402|    0.100044|   -0.908992|
+|        2000|  -10.194436|   -9.174360|  -10.112157|   -9.845176|    0.007637|    0.076392|    0.100040|   -0.731836|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        2025|  -10.147976|   -9.183892|  -10.108287|   -9.779897|    0.007638|    0.076385|    0.100036|   -0.777527|
+|        2050|  -10.171331|   -9.189492|  -10.153232|   -9.809519|    0.007638|    0.076381|    0.100034|   -0.753003|
+|        2075|  -10.168502|   -9.194349|  -10.161990|   -9.814380|    0.007638|    0.076379|    0.100033|   -0.705754|
+|        2100|  -10.162812|   -9.198730|  -10.144424|   -9.799032|    0.007639|    0.076376|    0.100031|   -0.790582|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        2125|  -10.168575|   -9.204291|  -10.195481|   -9.832191|    0.007639|    0.076374|    0.100030|   -0.744264|
+|        2150|  -10.157718|   -9.208346|  -10.161536|   -9.804263|    0.007640|    0.076373|    0.100029|   -0.779859|
+|        2175|  -10.168350|   -9.213487|  -10.211555|   -9.820418|    0.007640|    0.076371|    0.100028|   -0.745538|
+|        2200|  -10.158865|   -9.217714|  -10.181001|   -9.813306|    0.007640|    0.076370|    0.100027|   -0.767053|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        2225|  -10.176318|   -9.222481|  -10.226239|   -9.837053|    0.007641|    0.076371|    0.100027|   -0.728296|
+|        2250|  -10.158693|   -9.226416|  -10.189678|   -9.813073|    0.007641|    0.076370|    0.100026|   -0.749771|
+|        2275|  -10.171726|   -9.231167|  -10.229584|   -9.836498|    0.007641|    0.076371|    0.100025|   -0.703199|
+|        2300|  -10.181537|   -9.236550|  -10.238451|   -9.853520|    0.007642|    0.076372|    0.100025|   -0.774410|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        2325|  -10.180122|   -9.241629|  -10.246033|   -9.854743|    0.007642|    0.076373|    0.100025|   -0.764018|
+|        2350|  -10.176221|   -9.246488|  -10.243257|   -9.856676|    0.007642|    0.076374|    0.100025|   -0.750598|
+|        2375|  -10.206426|   -9.251997|  -10.253472|   -9.901225|    0.007642|    0.076376|    0.100025|   -0.668916|
+|        2400|  -10.157723|   -9.260350|  -10.225440|   -9.843717|    0.007643|    0.076380|    0.100025|   -0.660271|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        2425|  -10.163545|   -9.268180|  -10.231776|   -9.857875|    0.007643|    0.076384|    0.100025|   -0.702942|
+|        2450|  -10.184326|   -9.273843|  -10.243633|   -9.895496|    0.007643|    0.076386|    0.100025|   -0.702499|
+|        2475|  -10.164138|   -9.279406|  -10.229727|   -9.877254|    0.007644|    0.076390|    0.100026|   -0.713086|
+|        2500|  -10.168387|   -9.284337|  -10.221745|   -9.877909|    0.007644|    0.076394|    0.100027|   -0.840558|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        2525|  -10.199007|   -9.290314|  -10.254208|   -9.945291|    0.007644|    0.076398|    0.100027|   -0.732650|
+|        2550|  -10.197964|   -9.295588|  -10.250744|   -9.947616|    0.007644|    0.076403|    0.100029|   -0.711712|
+|        2575|  -10.174341|   -9.300785|  -10.223846|   -9.900228|    0.007644|    0.076407|    0.100029|   -0.781679|
+|        2600|  -10.182658|   -9.305846|  -10.215535|   -9.925193|    0.007645|    0.076412|    0.100030|   -0.797559|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        2625|  -10.202824|   -9.311629|  -10.223367|   -9.974106|    0.007645|    0.076417|    0.100031|   -0.802718|
+|        2650|  -10.197402|   -9.317010|  -10.230762|   -9.961853|    0.007645|    0.076422|    0.100032|   -0.846828|
+|        2675|  -10.205864|   -9.322478|  -10.221034|   -9.989076|    0.007645|    0.076428|    0.100034|   -0.782811|
+|        2700|  -10.198020|   -9.328514|  -10.229446|   -9.972141|    0.007645|    0.076433|    0.100035|   -0.827996|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        2725|  -10.205879|   -9.334188|  -10.222003|   -9.996217|    0.007645|    0.076439|    0.100036|   -0.768810|
+|        2750|  -10.197311|   -9.339986|  -10.226819|   -9.978151|    0.007645|    0.076445|    0.100038|   -0.814047|
+|        2775|  -10.206309|   -9.345503|  -10.215039|  -10.004522|    0.007646|    0.076451|    0.100039|   -0.753867|
+|        2800|  -10.197276|   -9.351422|  -10.221762|   -9.983880|    0.007646|    0.076457|    0.100041|   -0.799342|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        2825|  -10.205771|   -9.356949|  -10.212293|  -10.011696|    0.007646|    0.076463|    0.100042|   -0.739462|
+|        2850|  -10.198025|   -9.362803|  -10.218702|   -9.990960|    0.007646|    0.076470|    0.100044|   -0.786657|
+|        2875|  -10.206452|   -9.368439|  -10.210416|  -10.019807|    0.007646|    0.076476|    0.100045|   -0.726895|
+|        2900|  -10.197966|   -9.374492|  -10.217210|   -9.997696|    0.007646|    0.076482|    0.100047|   -0.775302|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        2925|  -10.207166|   -9.380069|  -10.209170|  -10.027066|    0.007646|    0.076489|    0.100049|   -0.715125|
+|        2950|  -10.198894|   -9.386091|  -10.215757|  -10.005439|    0.007646|    0.076495|    0.100050|   -0.764445|
+|        2975|  -10.207901|   -9.391767|  -10.207988|  -10.035409|    0.007647|    0.076502|    0.100052|   -0.704490|
+|        3000|  -10.199842|   -9.397910|  -10.215550|  -10.012480|    0.007647|    0.076508|    0.100053|   -0.754680|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        3025|  -10.208995|   -9.403585|  -10.208385|  -10.044040|    0.007647|    0.076515|    0.100055|   -0.694713|
+|        3050|  -10.201279|   -9.409779|  -10.215686|  -10.020840|    0.007647|    0.076522|    0.100057|   -0.745906|
+|        3075|  -10.210427|   -9.415579|  -10.209811|  -10.052795|    0.007647|    0.076528|    0.100059|   -0.686260|
+|        3100|  -10.202727|   -9.421874|  -10.218131|  -10.029311|    0.007647|    0.076535|    0.100060|   -0.737918|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        3125|  -10.212270|   -9.427655|  -10.212624|  -10.062281|    0.007647|    0.076542|    0.100062|   -0.678464|
+|        3150|  -10.204626|   -9.434029|  -10.221454|  -10.038412|    0.007647|    0.076548|    0.100064|   -0.730674|
+|        3175|  -10.214004|   -9.439902|  -10.216533|  -10.071904|    0.007647|    0.076555|    0.100065|   -0.671474|
+|        3200|  -10.206749|   -9.446332|  -10.225429|  -10.047721|    0.007647|    0.076562|    0.100067|   -0.723991|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        3225|  -10.216102|   -9.452220|  -10.220398|  -10.082070|    0.007647|    0.076568|    0.100069|   -0.664984|
+|        3250|  -10.208880|   -9.458706|  -10.229039|  -10.057237|    0.007647|    0.076575|    0.100071|   -0.717675|
+|        3275|  -10.218156|   -9.464596|  -10.224252|  -10.091789|    0.007647|    0.076582|    0.100072|   -0.658620|
+|        3300|  -10.211079|   -9.471086|  -10.233010|  -10.066771|    0.007648|    0.076588|    0.100074|   -0.711832|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        3325|  -10.220275|   -9.476971|  -10.228351|  -10.101689|    0.007648|    0.076595|    0.100076|   -0.652580|
+|        3350|  -10.213376|   -9.483516|  -10.237475|  -10.076349|    0.007648|    0.076601|    0.100078|   -0.706538|
+|        3375|  -10.222462|   -9.489422|  -10.233118|  -10.111740|    0.007648|    0.076608|    0.100079|   -0.647134|
+|        3400|  -10.215906|   -9.496011|  -10.242348|  -10.086421|    0.007648|    0.076614|    0.100081|   -0.701416|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        3425|  -10.224882|   -9.501955|  -10.238280|  -10.122246|    0.007648|    0.076621|    0.100083|   -0.642318|
+|        3450|  -10.224723|   -9.508722|  -10.249369|  -10.124449|    0.007648|    0.076627|    0.100085|   -0.691915|
+|        3475|  -10.225576|   -9.515144|  -10.251482|  -10.128610|    0.007648|    0.076634|    0.100086|   -0.689820|
+|        3500|  -10.227684|   -9.521521|  -10.254878|  -10.135121|    0.007648|    0.076640|    0.100088|   -0.687955|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        3525|  -10.228482|   -9.527977|  -10.258575|  -10.140960|    0.007648|    0.076647|    0.100090|   -0.685990|
+|        3550|  -10.230449|   -9.534467|  -10.262388|  -10.146711|    0.007648|    0.076653|    0.100092|   -0.684921|
+|        3575|  -10.232002|   -9.540982|  -10.266525|  -10.153272|    0.007648|    0.076660|    0.100093|   -0.683482|
+|        3600|  -10.233083|   -9.547543|  -10.270650|  -10.158832|    0.007648|    0.076666|    0.100095|   -0.681981|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        3625|  -10.234865|   -9.553981|  -10.275574|  -10.164287|    0.007648|    0.076672|    0.100097|   -0.680559|
+|        3650|  -10.236374|   -9.560327|  -10.280363|  -10.171204|    0.007648|    0.076678|    0.100098|   -0.678979|
+|        3675|  -10.237843|   -9.566750|  -10.284778|  -10.176971|    0.007648|    0.076685|    0.100100|   -0.677932|
+|        3700|  -10.239454|   -9.573327|  -10.289259|  -10.182810|    0.007648|    0.076691|    0.100102|   -0.676594|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        3725|  -10.240754|   -9.579865|  -10.293409|  -10.188631|    0.007648|    0.076697|    0.100103|   -0.675420|
+|        3750|  -10.242399|   -9.586328|  -10.296960|  -10.194543|    0.007648|    0.076703|    0.100105|   -0.674135|
+|        3775|  -10.243796|   -9.592828|  -10.301081|  -10.200132|    0.007648|    0.076708|    0.100107|   -0.672943|
+|        3800|  -10.245169|   -9.599328|  -10.305397|  -10.205861|    0.007648|    0.076714|    0.100108|   -0.671847|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        3825|  -10.246862|   -9.605789|  -10.309695|  -10.212017|    0.007648|    0.076720|    0.100110|   -0.670484|
+|        3850|  -10.248300|   -9.612257|  -10.314248|  -10.217880|    0.007648|    0.076726|    0.100111|   -0.669482|
+|        3875|  -10.249803|   -9.618768|  -10.318909|  -10.223937|    0.007648|    0.076732|    0.100113|   -0.668246|
+|        3900|  -10.251414|   -9.625261|  -10.323659|  -10.229889|    0.007648|    0.076737|    0.100114|   -0.667283|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        3925|  -10.252877|   -9.631737|  -10.328329|  -10.235845|    0.007648|    0.076743|    0.100116|   -0.666267|
+|        3950|  -10.254428|   -9.638230|  -10.332935|  -10.241820|    0.007649|    0.076748|    0.100118|   -0.665464|
+|        3975|  -10.255934|   -9.644731|  -10.337640|  -10.247531|    0.007649|    0.076754|    0.100119|   -0.664617|
+|        4000|  -10.257463|   -9.651216|  -10.342220|  -10.253671|    0.007649|    0.076759|    0.100121|   -0.663550|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        4025|  -10.259013|   -9.657689|  -10.346708|  -10.259495|    0.007649|    0.076765|    0.100122|   -0.662709|
+|        4050|  -10.260541|   -9.664171|  -10.351364|  -10.265513|    0.007649|    0.076770|    0.100123|   -0.661569|
+|        4075|  -10.262061|   -9.670641|  -10.356011|  -10.271453|    0.007649|    0.076775|    0.100125|   -0.660732|
+|        4100|  -10.263607|   -9.677095|  -10.360649|  -10.277220|    0.007649|    0.076780|    0.100126|   -0.659849|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        4125|  -10.265129|   -9.683559|  -10.365410|  -10.283205|    0.007649|    0.076785|    0.100128|   -0.659163|
+|        4150|  -10.266659|   -9.690034|  -10.370181|  -10.289019|    0.007649|    0.076791|    0.100129|   -0.658516|
+|        4175|  -10.268260|   -9.696504|  -10.375001|  -10.295189|    0.007649|    0.076796|    0.100130|   -0.657570|
+|        4200|  -10.269791|   -9.702972|  -10.379810|  -10.301101|    0.007649|    0.076801|    0.100132|   -0.656856|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        4225|  -10.271366|   -9.709445|  -10.384697|  -10.307116|    0.007649|    0.076805|    0.100133|   -0.656009|
+|        4250|  -10.272943|   -9.715911|  -10.389702|  -10.313178|    0.007649|    0.076810|    0.100135|   -0.655461|
+|        4275|  -10.274487|   -9.722374|  -10.394698|  -10.319029|    0.007649|    0.076815|    0.100136|   -0.654903|
+|        4300|  -10.276081|   -9.728840|  -10.399731|  -10.325106|    0.007649|    0.076820|    0.100137|   -0.654292|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        4325|  -10.277638|   -9.735312|  -10.404765|  -10.331022|    0.007649|    0.076825|    0.100138|   -0.653762|
+|        4350|  -10.279246|   -9.741779|  -10.409784|  -10.337248|    0.007649|    0.076829|    0.100140|   -0.652951|
+|        4375|  -10.280831|   -9.748236|  -10.414775|  -10.343254|    0.007649|    0.076834|    0.100141|   -0.652380|
+|        4400|  -10.282379|   -9.754691|  -10.419750|  -10.349058|    0.007649|    0.076838|    0.100142|   -0.651788|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        4425|  -10.283960|   -9.761144|  -10.424732|  -10.355021|    0.007649|    0.076843|    0.100143|   -0.651314|
+|        4450|  -10.285534|   -9.767594|  -10.429703|  -10.360889|    0.007649|    0.076847|    0.100145|   -0.650857|
+|        4475|  -10.287141|   -9.774047|  -10.434698|  -10.367082|    0.007649|    0.076852|    0.100146|   -0.650144|
+|        4500|  -10.288728|   -9.780501|  -10.439699|  -10.373015|    0.007649|    0.076856|    0.100147|   -0.649603|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        4525|  -10.290319|   -9.786957|  -10.444757|  -10.378972|    0.007649|    0.076860|    0.100148|   -0.649052|
+|        4550|  -10.291920|   -9.793409|  -10.449893|  -10.385016|    0.007649|    0.076865|    0.100149|   -0.648734|
+|        4575|  -10.293512|   -9.799858|  -10.455083|  -10.390896|    0.007649|    0.076869|    0.100151|   -0.648396|
+|        4600|  -10.295137|   -9.806310|  -10.460348|  -10.397084|    0.007649|    0.076873|    0.100152|   -0.647862|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        4625|  -10.296746|   -9.812770|  -10.465598|  -10.403084|    0.007649|    0.076877|    0.100153|   -0.647444|
+|        4650|  -10.298373|   -9.819239|  -10.470849|  -10.409209|    0.007649|    0.076881|    0.100154|   -0.646983|
+|        4675|  -10.299994|   -9.825707|  -10.476099|  -10.415297|    0.007649|    0.076885|    0.100155|   -0.646771|
+|        4700|  -10.301604|   -9.832175|  -10.481313|  -10.421186|    0.007649|    0.076889|    0.100156|   -0.646538|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        4725|  -10.303238|   -9.838641|  -10.486547|  -10.427328|    0.007649|    0.076893|    0.100157|   -0.646143|
+|        4750|  -10.304859|   -9.845107|  -10.491785|  -10.433302|    0.007649|    0.076897|    0.100158|   -0.645788|
+|        4775|  -10.306504|   -9.851574|  -10.497081|  -10.439474|    0.007649|    0.076900|    0.100159|   -0.645376|
+|        4800|  -10.308144|   -9.858041|  -10.502427|  -10.445584|    0.007649|    0.076904|    0.100160|   -0.645223|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        4825|  -10.309773|   -9.864511|  -10.507776|  -10.451509|    0.007649|    0.076908|    0.100161|   -0.645089|
+|        4850|  -10.311427|   -9.870984|  -10.513162|  -10.457681|    0.007649|    0.076911|    0.100162|   -0.644835|
+|        4875|  -10.313071|   -9.877460|  -10.518550|  -10.463714|    0.007649|    0.076915|    0.100163|   -0.644585|
+|        4900|  -10.314736|   -9.883941|  -10.523977|  -10.469951|    0.007649|    0.076919|    0.100164|   -0.644282|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        4925|  -10.316396|   -9.890423|  -10.529435|  -10.476096|    0.007649|    0.076922|    0.100165|   -0.644231|
+|        4950|  -10.318046|   -9.896909|  -10.534884|  -10.482063|    0.007649|    0.076926|    0.100166|   -0.644200|
+|        4975|  -10.319718|   -9.903397|  -10.540353|  -10.488267|    0.007649|    0.076929|    0.100167|   -0.644038|
+|        5000|  -10.321382|   -9.909889|  -10.545822|  -10.494340|    0.007649|    0.076932|    0.100168|   -0.643865|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        5025|  -10.323063|   -9.916385|  -10.551326|  -10.500590|    0.007649|    0.076936|    0.100169|   -0.643680|
+|        5050|  -10.324742|   -9.922881|  -10.556863|  -10.506757|    0.007649|    0.076939|    0.100170|   -0.643737|
+|        5075|  -10.326413|   -9.929381|  -10.562398|  -10.512773|    0.007649|    0.076942|    0.100171|   -0.643804|
+|        5100|  -10.328106|   -9.935883|  -10.567958|  -10.519041|    0.007648|    0.076946|    0.100172|   -0.643716|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        5125|  -10.329790|   -9.942388|  -10.573520|  -10.525156|    0.007648|    0.076949|    0.100173|   -0.643618|
+|        5150|  -10.331487|   -9.948899|  -10.579112|  -10.531399|    0.007648|    0.076952|    0.100173|   -0.643575|
+|        5175|  -10.333185|   -9.955416|  -10.584738|  -10.537594|    0.007648|    0.076955|    0.100174|   -0.643764|
+|        5200|  -10.334883|   -9.961939|  -10.590375|  -10.543694|    0.007648|    0.076958|    0.100175|   -0.643948|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        5225|  -10.336600|   -9.968464|  -10.596060|  -10.550068|    0.007648|    0.076961|    0.100176|   -0.643938|
+|        5250|  -10.338307|   -9.974991|  -10.601775|  -10.556262|    0.007648|    0.076964|    0.100177|   -0.643942|
+|        5275|  -10.340021|   -9.981522|  -10.607534|  -10.562488|    0.007648|    0.076967|    0.100177|   -0.644068|
+|        5300|  -10.341738|   -9.988055|  -10.613337|  -10.568715|    0.007648|    0.076970|    0.100178|   -0.644378|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        5325|  -10.343456|   -9.994592|  -10.619135|  -10.574899|    0.007648|    0.076973|    0.100179|   -0.644632|
+|        5350|  -10.345195|  -10.001136|  -10.624919|  -10.581377|    0.007648|    0.076975|    0.100180|   -0.644696|
+|        5375|  -10.346923|  -10.007692|  -10.630652|  -10.587624|    0.007648|    0.076978|    0.100181|   -0.644822|
+|        5400|  -10.348651|  -10.014262|  -10.636353|  -10.593786|    0.007648|    0.076981|    0.100181|   -0.645114|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        5425|  -10.350385|  -10.020832|  -10.642088|  -10.599998|    0.007648|    0.076984|    0.100182|   -0.645479|
+|        5450|  -10.352123|  -10.027399|  -10.647871|  -10.606219|    0.007648|    0.076986|    0.100183|   -0.645742|
+|        5475|  -10.353880|  -10.033969|  -10.653724|  -10.612743|    0.007648|    0.076989|    0.100183|   -0.645885|
+|        5500|  -10.355631|  -10.040544|  -10.659628|  -10.619067|    0.007648|    0.076991|    0.100184|   -0.646198|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        5525|  -10.357380|  -10.047126|  -10.665558|  -10.625272|    0.007648|    0.076994|    0.100185|   -0.646672|
+|        5550|  -10.359139|  -10.053712|  -10.671526|  -10.631628|    0.007648|    0.076997|    0.100186|   -0.647114|
+|        5575|  -10.360901|  -10.060304|  -10.677502|  -10.637950|    0.007648|    0.076999|    0.100186|   -0.647437|
+|        5600|  -10.362676|  -10.066904|  -10.683504|  -10.644482|    0.007648|    0.077001|    0.100187|   -0.647776|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        5625|  -10.364447|  -10.073509|  -10.689522|  -10.650852|    0.007648|    0.077004|    0.100188|   -0.648324|
+|        5650|  -10.366217|  -10.080121|  -10.695529|  -10.657113|    0.007648|    0.077006|    0.100188|   -0.648914|
+|        5675|  -10.368000|  -10.086738|  -10.701548|  -10.663610|    0.007648|    0.077009|    0.100189|   -0.649360|
+|        5700|  -10.369782|  -10.093359|  -10.707571|  -10.669973|    0.007648|    0.077011|    0.100189|   -0.649735|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        5725|  -10.371570|  -10.099989|  -10.713622|  -10.676407|    0.007648|    0.077013|    0.100190|   -0.650289|
+|        5750|  -10.373359|  -10.106623|  -10.719711|  -10.682778|    0.007648|    0.077015|    0.100191|   -0.651008|
+|        5775|  -10.375151|  -10.113264|  -10.725811|  -10.689142|    0.007648|    0.077018|    0.100191|   -0.651648|
+|        5800|  -10.376958|  -10.119911|  -10.731938|  -10.695796|    0.007648|    0.077020|    0.100192|   -0.652138|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        5825|  -10.378760|  -10.126564|  -10.738082|  -10.702239|    0.007648|    0.077022|    0.100192|   -0.652687|
+|        5850|  -10.380564|  -10.133226|  -10.744241|  -10.708611|    0.007648|    0.077024|    0.100193|   -0.653466|
+|        5875|  -10.382374|  -10.139894|  -10.750432|  -10.715048|    0.007648|    0.077026|    0.100194|   -0.654274|
+|        5900|  -10.384188|  -10.146568|  -10.756637|  -10.721504|    0.007648|    0.077028|    0.100194|   -0.654930|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        5925|  -10.386014|  -10.153249|  -10.762875|  -10.728205|    0.007648|    0.077030|    0.100195|   -0.655574|
+|        5950|  -10.387837|  -10.159937|  -10.769145|  -10.734710|    0.007648|    0.077032|    0.100195|   -0.656402|
+|        5975|  -10.389661|  -10.166632|  -10.775423|  -10.741128|    0.007648|    0.077034|    0.100196|   -0.657344|
+|        6000|  -10.391494|  -10.173333|  -10.781721|  -10.747731|    0.007648|    0.077036|    0.100196|   -0.658158|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        6025|  -10.393328|  -10.180039|  -10.788023|  -10.754247|    0.007648|    0.077038|    0.100197|   -0.658857|
+|        6050|  -10.395169|  -10.186756|  -10.794349|  -10.760863|    0.007648|    0.077040|    0.100197|   -0.659754|
+|        6075|  -10.397010|  -10.193477|  -10.800705|  -10.767371|    0.007648|    0.077042|    0.100198|   -0.660815|
+|        6100|  -10.398855|  -10.200206|  -10.807065|  -10.773884|    0.007648|    0.077044|    0.100198|   -0.661802|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        6125|  -10.400711|  -10.206943|  -10.813444|  -10.780674|    0.007648|    0.077045|    0.100199|   -0.662657|
+|        6150|  -10.402565|  -10.213686|  -10.819835|  -10.787252|    0.007648|    0.077047|    0.100199|   -0.663534|
+|        6175|  -10.404421|  -10.220435|  -10.826253|  -10.793771|    0.007648|    0.077049|    0.100200|   -0.664668|
+|        6200|  -10.406282|  -10.227190|  -10.832707|  -10.800344|    0.007648|    0.077051|    0.100200|   -0.665833|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        6225|  -10.408148|  -10.233953|  -10.839174|  -10.806952|    0.007648|    0.077052|    0.100201|   -0.666829|
+|        6250|  -10.410023|  -10.240725|  -10.845668|  -10.813795|    0.007648|    0.077054|    0.100201|   -0.667851|
+|        6275|  -10.411897|  -10.247503|  -10.852190|  -10.820429|    0.007648|    0.077056|    0.100201|   -0.669039|
+|        6300|  -10.413772|  -10.254289|  -10.858714|  -10.826987|    0.007648|    0.077057|    0.100202|   -0.670330|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        6325|  -10.415656|  -10.261082|  -10.865262|  -10.833744|    0.007648|    0.077059|    0.100202|   -0.671517|
+|        6350|  -10.417541|  -10.267881|  -10.871822|  -10.840412|    0.007648|    0.077060|    0.100203|   -0.672575|
+|        6375|  -10.419432|  -10.274690|  -10.878411|  -10.847159|    0.007648|    0.077062|    0.100203|   -0.673867|
+|        6400|  -10.421324|  -10.281506|  -10.885039|  -10.853804|    0.007648|    0.077063|    0.100203|   -0.675307|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        6425|  -10.423220|  -10.288329|  -10.891678|  -10.860482|    0.007648|    0.077065|    0.100204|   -0.676659|
+|        6450|  -10.425126|  -10.295160|  -10.898341|  -10.867434|    0.007648|    0.077066|    0.100204|   -0.677914|
+|        6475|  -10.427031|  -10.301998|  -10.905022|  -10.874171|    0.007648|    0.077068|    0.100205|   -0.679194|
+|        6500|  -10.428938|  -10.308846|  -10.911712|  -10.880843|    0.007648|    0.077069|    0.100205|   -0.680737|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        6525|  -10.430849|  -10.315700|  -10.918430|  -10.887565|    0.007648|    0.077071|    0.100205|   -0.682290|
+|        6550|  -10.432765|  -10.322562|  -10.925164|  -10.894326|    0.007648|    0.077072|    0.100206|   -0.683657|
+|        6575|  -10.434689|  -10.329433|  -10.931926|  -10.901311|    0.007648|    0.077073|    0.100206|   -0.685103|
+|        6600|  -10.436613|  -10.336312|  -10.938720|  -10.908085|    0.007648|    0.077075|    0.100206|   -0.686702|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        6625|  -10.438539|  -10.343199|  -10.945518|  -10.914806|    0.007648|    0.077076|    0.100207|   -0.688393|
+|        6650|  -10.440472|  -10.350094|  -10.952337|  -10.921726|    0.007648|    0.077077|    0.100207|   -0.689990|
+|        6675|  -10.442407|  -10.356996|  -10.959171|  -10.928544|    0.007648|    0.077079|    0.100207|   -0.691445|
+|        6700|  -10.444347|  -10.363908|  -10.966029|  -10.935434|    0.007647|    0.077080|    0.100208|   -0.693166|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        6725|  -10.446288|  -10.370828|  -10.972924|  -10.942217|    0.007647|    0.077081|    0.100208|   -0.695016|
+|        6750|  -10.448234|  -10.377756|  -10.979830|  -10.949047|    0.007647|    0.077082|    0.100208|   -0.696772|
+|        6775|  -10.450188|  -10.384691|  -10.986755|  -10.956143|    0.007647|    0.077083|    0.100209|   -0.698455|
+|        6800|  -10.451899|  -10.392132|  -10.992549|  -10.944195|    0.007647|    0.077085|    0.100209|   -0.746312|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        6825|  -10.454982|  -10.399272|  -11.002392|  -11.000331|    0.007647|    0.077086|    0.100209|   -0.681981|
+|        6850|  -10.456098|  -10.406405|  -11.010102|  -10.977078|    0.007647|    0.077087|    0.100209|   -0.704821|
+|        6875|  -10.458245|  -10.413298|  -11.015950|  -10.984405|    0.007647|    0.077088|    0.100210|   -0.706472|
+|        6900|  -10.460857|  -10.420109|  -11.023825|  -11.031077|    0.007647|    0.077089|    0.100210|   -0.683173|
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
++--------------------------------------------------------------------------------------------------------------------+
+|  Inner_Iter|    rms[Rho]|   rms[RhoU]|   rms[RhoV]|   rms[RhoE]|          CD|          CL|         CMz|   LinSolRes|
++--------------------------------------------------------------------------------------------------------------------+
+|        6925|  -10.460731|  -10.426951|  -11.017160|  -10.917174|    0.007647|    0.077090|    0.100210|   -0.693512|
+|        6948|  -10.464562|  -10.434063|  -11.036394|  -11.005087|    0.007647|    0.077091|    0.100211|   -0.712006|
+
+----------------------------- Solver Exit -------------------------------
+All convergence criteria satisfied.
++-----------------------------------------------------------------------+
+|      Convergence Field     |     Value    |   Criterion  |  Converged |
++-----------------------------------------------------------------------+
+|                  Cauchy[CL]|   4.99986e-07|       < 5e-07|         Yes|
++-----------------------------------------------------------------------+
+-------------------------------------------------------------------------
++-----------------------------------------------------------------------+
+|        File Writing Summary       |              Filename             |
++-----------------------------------------------------------------------+
+|SU2 binary restart                 |restart.dat                        |
+|Paraview                           |vol_solution.vtu                   |
+|Paraview surface                   |surface.vtu                        |
++-----------------------------------------------------------------------+
+
+------------------------- Solver Postprocessing -------------------------
+Deleted CNumerics container.
+Deleted CIntegration container.
+Deleted CSolver container.
+Deleted CIteration container.
+Deleted CInterface container.
+Deleted CGeometry container.
+Deleted CFreeFormDefBox class.
+Deleted CSurfaceMovement class.
+Deleted CVolumetricMovement class.
+Deleted CConfig container.
+Deleted nInst container.
+Deleted COutput class.
+-------------------------------------------------------------------------
+
+------------------------- Exit Success (SU2_CFD) ------------------------
+
