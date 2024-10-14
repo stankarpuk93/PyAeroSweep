@@ -1,0 +1,20 @@
+# Rename this file to config.yaml
+# you only need to this once per system
+# Specify System Specific Variabels in this file
+# do not push to git hub
+
+# Set path to Pointwise install
+MeshOperatingsystem: "Unix"
+PointwisePath:  "/usr/local/Fidelity/Pointwise/Pointwise2022.1.2"
+# Set path to Outputs Directory
+#OutputDirectory: "/home/christoffer/galileo.data0_Carstensen"
+OutputDirectory: ""
+# Set Utilised Processor Cores
+UtilisedCpuCores: 4     # Physical cores only 
+
+#configure data transfere to remote machine
+#Automatic ssh login must be configured
+
+# solver_machine: "remote"                                             ## "local" "remote"
+# remote_machine_hostadress: "ccarstensen@galileo.strm.ing.tu-bs.de"
+# remote_machine_folderpath: "/galileo.data0/Carstensen/cases"
