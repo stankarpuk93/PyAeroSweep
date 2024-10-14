@@ -1,7 +1,7 @@
 #Segment.py
 # 
 # Created:  Nov 2023, S. Karpuk, 
-# Modified: 
+# Modified: July 2024. Chr. Carstensen (added .dat method)
 #           
 
 
@@ -59,6 +59,9 @@ class Segment():
 
         # Airfoil definition constants based on the CST method
         self.Airfoil.CST         = {}
+
+        # Airfoil definition constants based on DAT file
+        self.Airfoil.DAT         = {}
 
         # Airfoil files are used either to write PARSEC-generated 
         # airfoil and then read by Pointwise or to read directly from them
@@ -293,6 +296,115 @@ class Segment():
 
 
         return
+    
+    def create_DAT_airfoil(self):
+        '''Draw an airfoil based on .dat file
+           draw high-lift devices, and export coordinates into data files
+        
+            Inputs:
+                Geometry.DAT["upper"]
+                         DAT["lower"]
+
+            Outputs:
+            
+
+            
+            Assumptions:
+
+        '''
+
+        # Unpack inputs 
+        Airfoil = self.Airfoil.DAT
+
+        # Assign inputs
+        datax = Airfoil["datax"]
+        datay = Airfoil["datay"]
+        
+        # Get total lenght of .dat coordinates
+        length=len(datax)
+
+        # Find coordinate to split upper from lower surface
+        NULL = datax.tolist().index(0)
+
+        if datay[NULL] != 0.:
+             quit("Non zero y value at x = 0 (y value = " + str(datax[NULL]) + " at split x coordinate of .dat file. Check .dat file or dismissal of first lines in input.")
+
+        xx_pre0 = datax[0:NULL+1]
+        yy_pre0 = datay[0:NULL+1]
+        
+        xx_pre = xx_pre0
+        yy_pre = yy_pre0
+
+
+        xx_suc = datax[NULL:length+1]
+
+
+        yy_suc = datay[NULL:length+1]
+
+        # # Uncomment to debug dat file
+        # print("Suction Side")
+        # print(xx_suc)
+        # print(yy_suc)
+
+        # print("Presure Side")
+        # print(xx_pre)
+        # print(yy_pre)
+
+        # derive max trialing edge coordinate x
+        xte     = max(xx_suc)
+        yte_suc = yy_suc[len(yy_suc)-1]
+        #print(yte_suc)
+
+        # Draw a droop nose
+        if len(self.LeadingEdgeDevice.PARSEC) != 0:
+            LE_device      = self.LeadingEdgeDevice.PARSEC
+            droop_nose_set = [LE_device["delta_s"], LE_device["cs_c"], 
+                              LE_device["d_cs_up"], LE_device["d_cs_low"], 
+                              LE_device['w_con_seal']]
+            xx_pre,xx_suc,yy_pre,yy_suc = self.deploy_simple_flap(xx_pre,xx_suc,yy_pre,yy_suc,droop_nose_set,'droop')
+
+        # Draw a flap
+        if len(self.TrailingEdgeDevice.PARSEC) != 0:  
+            TE_device = self.TrailingEdgeDevice.PARSEC
+            if self.TrailingEdgeDevice.type == 'Plain':
+                flap_data = [TE_device["delta_f"], TE_device["cf_c"], 
+                             TE_device["d_cf_up"], TE_device["d_cf_low"], 
+                             TE_device['w_con_seal']]
+                xx_no_fl_pre,xx_no_fl_suc,yy_no_fl_pre,yy_no_fl_suc = self.deploy_simple_flap(xx_pre,xx_suc,yy_pre,yy_suc,flap_data,'flap')                
+                xx_fl_pre = []
+                xx_fl_suc = []
+                yy_fl_pre = []
+                yy_fl_suc = []
+                flap_cut1 = []
+                flap_cut2 = []
+            elif self.TrailingEdgeDevice.type == 'Slotted':
+                flap_setting = [TE_device["delta_f"], TE_device["x_gap"], TE_device["y_gap"]] 
+                flap_data    = [TE_device["cf_c"],TE_device["ce_c"],TE_device["csr_c"],
+                                TE_device["clip_ext"],TE_device["r_le_flap"],
+                                TE_device["tc_shr_tip"],TE_device["w_conic"]]
+                flap_data.append(xte)
+                flap_data.append(yte_suc)
+                xx_no_fl_suc, yy_no_fl_suc, xx_no_fl_pre, yy_no_fl_pre, xx_fl_suc, yy_fl_suc, xx_fl_pre, yy_fl_pre, flap_cut1, flap_cut2 = self.compute_flap(xx_suc,yy_suc,xx_pre,yy_pre,flap_data)
+                #print(flap_cut1[1])
+                xx_fl_suc, yy_fl_suc, xx_fl_pre, yy_fl_pre = self.deploy_flap(flap_cut1[0], flap_cut1[1], xx_fl_suc, yy_fl_suc, xx_fl_pre, yy_fl_pre, flap_setting)
+        else:
+            xx_no_fl_suc = xx_suc
+            yy_no_fl_suc = yy_suc
+            xx_no_fl_pre = xx_pre
+            yy_no_fl_pre = yy_pre
+            xx_fl_pre = []
+            xx_fl_suc = []
+            yy_fl_pre = []
+            yy_fl_suc = []
+            flap_cut1 = []
+            flap_cut2 = []
+
+
+        # Output airfoiil data
+        self.output_airfoil(xx_no_fl_pre,xx_no_fl_suc,yy_no_fl_pre,yy_no_fl_suc,[],[],xte,xx_fl_suc, yy_fl_suc, xx_fl_pre, yy_fl_pre, flap_cut1, flap_cut2)
+
+
+        return
 
     def deploy_simple_flap(self,xx_pre,xx_suc,yy_pre,yy_suc,flap_set,flap_index):
         ''' Deploys a simple trailing edge flap or a droop nose based on a given chord ratio and deflection
@@ -347,13 +459,13 @@ class Segment():
             elif xx_suc[i] <= (cs_c-d_cs_up):
                 xx_suc_for.append(xx_suc[i])
                 yy_suc_for.append(yy_suc[i])
-
-            if xx_pre[i] >= cs_c:
+        for i in range(len(xx_pre)):
+            if xx_pre[i] >= (cs_c+d_cs_low/2):            # Problem with botom side gap
                 xx_pre_aft.append(xx_pre[i])
                 yy_pre_aft.append(yy_pre[i])
-            elif xx_pre[i] <= (cs_c-d_cs_low):
+            elif xx_pre[i] <= (cs_c-d_cs_low/2):
                 xx_pre_for.append(xx_pre[i])
-                yy_pre_for.append(yy_pre[i])                        
+                yy_pre_for.append(yy_pre[i])                  
 
         # Rotate the flap
 
@@ -443,14 +555,12 @@ class Segment():
 
 
 
-    def deploy_flap(self,xx_no_fl_suc, yy_no_fl_suc, xx_fl_suc, yy_fl_suc, xx_fl_pre, yy_fl_pre, flap_setting):
+    def deploy_flap(self,flap_cut1_x, flap_cut1_y, xx_fl_suc, yy_fl_suc, xx_fl_pre, yy_fl_pre, flap_setting):
         '''Deploys the flap according to the gap size and the deflection angle
         
             Inputs:
-            xx_no_fl_suc - main airfoil suction side x-coordinates
-            yy_no_fl_suc - main airfoil suction side y-coordinates
-            xx_no_fl_pre - main airfoil pressure side x-coordinates
-            yy_no_fl_pre - main airfoil pressure side y-coordinates
+            flap_cut_x   - main airfoil cutout cordinates x
+            flap_cut_y   - main airfoil cutout cordinates y
             xx_fl_suc    - flap airfoil suction side x-coordinates
             yy_fl_suc    - flap airfoil suction side y-coordinates
             xx_fl_pre    - flap airfoil pressure side x-coordinates
@@ -480,8 +590,8 @@ class Segment():
         # Rotate the flap around the leading edge
         XLE = np.min(xx_fl_suc)
         YLE = yy_fl_suc[np.argmin(xx_fl_suc)]
-        XTE = np.max(xx_no_fl_suc)                                  # shroud lip TE x-coordinate
-        YTE = yy_no_fl_suc[np.argmax(xx_no_fl_suc)]                 # shroud lip TE y-coordinate
+        XTE = np.max(flap_cut1_x)                                  # shroud lip TE x-coordinate
+        YTE = flap_cut1_y[np.argmax(flap_cut1_x)]                 # shroud lip TE y-coordinate
 
         xx_fl_suc_norm = xx_fl_suc - XLE
         yy_fl_suc_norm = yy_fl_suc - YLE
@@ -489,12 +599,14 @@ class Segment():
         yy_fl_pre_norm = yy_fl_pre - YLE
 
         xx_fl_suc_rot = xx_fl_suc_norm * np.cos(df) + yy_fl_suc_norm * np.sin(df) + XTE - x_gap
-        yy_fl_suc_rot = -xx_fl_suc_norm * np.sin(df) + yy_fl_suc_norm * np.cos(df) + YTE 
+        yy_fl_suc_rot = -xx_fl_suc_norm * np.sin(df) + yy_fl_suc_norm * np.cos(df) 
         xx_fl_pre_rot = xx_fl_pre_norm * np.cos(df) + yy_fl_pre_norm * np.sin(df) + XTE - x_gap
-    
-        y_gap_tot = y_gap + np.abs(np.max(yy_fl_suc_rot)) - np.abs(YLE)
-        yy_fl_suc_rot -= y_gap_tot
-        yy_fl_pre_rot = -xx_fl_pre_norm * np.sin(df) + yy_fl_pre_norm * np.cos(df) + YTE - y_gap_tot
+
+        # Why this strange calculation of the offset for the y gap?
+        #y_gap_tot = y_gap + np.abs(np.max(yy_fl_suc_rot)) - np.abs(YLE)
+        y_gap_tot = YTE - y_gap
+        yy_fl_suc_rot =  yy_fl_suc_rot + y_gap_tot
+        yy_fl_pre_rot = -xx_fl_pre_norm * np.sin(df) + yy_fl_pre_norm * np.cos(df) + y_gap_tot
 
 
 
@@ -762,7 +874,9 @@ class Segment():
                 pc_func.ppoint_Pointwise(fpath1[3], xx_fl_pre, yy_fl_pre)             
 
         # Draw airfoil contour with the flap, if it was defined
-        plt.figure()
+        plotwidth=6.3
+        plothight=plotwidth*0.4
+        plt.figure(figsize=(plotwidth,plothight))
         plt.plot(xx_suc,yy_suc,'r',xx_pre,yy_pre,'b', linewidth=2)
         if len(self.TrailingEdgeDevice.PARSEC) != 0:
             if self.TrailingEdgeDevice.type == 'Slotted':
@@ -776,12 +890,14 @@ class Segment():
         #plt.yticks([])
         plt.xticks(np.arange(0,1.4,0.1))
         plt.gca().axis('equal')
-        plt.title("Airfoil geometry")
+        plt.title("Generated high lift geometry")
 
         # Make room for title automatically
-        plt.tight_layout()
+        #plt.tight_layout()
+        # plt.ylim(bottom=0.0, top=0.025)
+        # plt.xlim(left=-0.1, right=1.1)
         plt.savefig(os.path.join('parsec_airfoil.pdf'))
-        plt.savefig(os.path.join('parsec_airfoil.png'))
+        plt.savefig(os.path.join('parsec_airfoil.png'),bbox_inches = 'tight')
 
         # Show the plot
         if self.plot_airfoil is True:
