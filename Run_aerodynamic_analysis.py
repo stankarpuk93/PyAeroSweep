@@ -37,6 +37,7 @@ import numpy as np
 from Methods.Mesh.mesh_pre_process_2D     import mesh_pre_process_2D
 from Methods.Mesh.mesh_pre_process_3D     import WingMeshPreProcess 
 from Methods.Solver                       import run_SU2
+from Utility                              import utility
 
 
 def run_aerodynamic_analysis(Input):
@@ -63,10 +64,13 @@ def run_aerodynamic_analysis(Input):
     Geometry   = Input.Geometry
     Freestream = Input.Freestream
     Mesh       = Input.Mesh
+
+    # create/override results folder
+    utility.overwrite_folder(Solver.output_dir)
  
     # Run the airfoil/wing generation script in a separate directory
     if Geometry.generate is True:
-        file_path = os.path.join(Solver.working_dir, 'Geometry_files/')
+        file_path = os.path.join(Solver.output_dir, 'Geometry_files/')
         if os.path.exists(file_path):
             shutil.rmtree(file_path)
         os.mkdir(file_path)
@@ -77,6 +81,8 @@ def run_aerodynamic_analysis(Input):
                 Geometry.Segments[i].create_PARSEC_airfoil()
             elif len(Geometry.Segments[i].Airfoil.CST) != 0:
                 Geometry.Segments[i].create_CST_airfoil()
+            elif len(Geometry.Segments[i].Airfoil.DAT) != 0:
+                Geometry.Segments[i].create_DAT_airfoil()
 
 
         # Create a wing using pygeo if a 3D case is defined 
@@ -88,25 +94,29 @@ def run_aerodynamic_analysis(Input):
     if Mesh.meshing is True:
 
         # Calculate mesh step size based on Y+
-        Mesh.calculate_initstepsize(max(Freestream.Mach), min(Freestream.Altitude), Geometry.reference_values["Length"], Mesh.Yplus)
+        Mesh.delta_s, update_airfoil_mesh_settings = Mesh.calculate_initstepsize(max(Freestream.Mach), min(Freestream.Altitude), Geometry.reference_values["Length"], Mesh)
 
-        # Assign a flag for an inviscid solver
-        if Solver.turbulence_model == 'Inviscid':
-            Inviscid_flag = True
-        else:
-            Inviscid_flag = False
+        Mesh.airfoil_mesh_settings.update(update_airfoil_mesh_settings)
+
+        if Solver.name != 'TAU':
+            # Assign a flag for an inviscid solver
+            if Solver.turbulence_model == 'Inviscid':
+                Inviscid_flag = True
+            else:
+                Inviscid_flag = False
 
         # Update the Glyph script depending on the geometry 
         if  Solver.dimensions == '2d':
-            mesh_pre_process_2D(Solver.working_dir,Geometry,Mesh)
+            mesh_pre_process_2D(Solver.output_dir,Geometry,Mesh)
+
             if  Geometry.Segments[0].TrailingEdgeDevice.type == 'Slotted': 
                 # Update the Glyph script - Slotted flap airfoil                               
                 from Methods.Mesh.glyph_updater_flapped   import update_glyph_script_fl    
-                update_glyph_script_fl(Mesh,Solver.working_dir) 
+                update_glyph_script_fl(Mesh,Solver.working_dir,Solver.name) 
             else:
                 # Update the Glyph script - clean Airfoil or one with a plain flap 
                 from Methods.Mesh.glyph_updater_clean     import update_glyph_script_cl
-                update_glyph_script_cl(Mesh,Solver.working_dir)
+                update_glyph_script_cl(Mesh,Solver.working_dir,Solver.name)
 
         elif Solver.dimensions == '3d':
             wing_meshing = WingMeshPreProcess()
@@ -126,11 +136,57 @@ def run_aerodynamic_analysis(Input):
             p = subprocess.call('./pointwise ' + '-b ' + full_glyph_path, shell = True, stdin=subprocess.PIPE)
 
 
-    # Run CFD solution
-    run_SU2.solve(Solver,Freestream,Mesh,Geometry)
     
+    if Solver.name == 'SU2':
+        # Run CFD solution
+        print("Solver = " + Solver.name)
+        run_SU2.solve(Solver,Freestream,Mesh,Geometry)
+        print("Analysis completed")
+        print("Results in Folder" + Solver.output_dir)
 
-    print("Analysis completed")
+
+    elif Solver.name == 'TAU':
+        # Create TAU input
+        print("Solver = " + Solver.name)
+        print("No analysis conducted")
+
+        # Create Tau job folder structure
+        os.mkdir(Solver.output_dir+"/results")
+        os.mkdir(Solver.output_dir+"/para")
+        os.mkdir(Solver.output_dir+"/grids")
+        os.mkdir(Solver.output_dir+"/grids/Dual")
+        os.mkdir(Solver.output_dir+"/log")
+
+        # copy para file to TAU folder sturcture
+        shutil.copy(Solver.working_dir+"/"+Solver.config_file, Solver.output_dir+"/para")
+
+        # move grid file to TAU folder structure
+        shutil.move(Solver.output_dir+"/"+Mesh.filename+".grid", Solver.output_dir+"/grids" )
+
+        # remove faulty Pointwise .bmap file
+        os.remove(Solver.output_dir+"/" + Mesh.filename + ".bmap")
+
+        # copy Python file to TAU folder structure for backup only
+        shutil.copy(Solver.input_file, Solver.output_dir)
+
+        # copy TAU Python file to TAU folder structure
+        shutil.copy(Solver.TAUPY_file, Solver.output_dir+"/para") 
+
+        if Solver.solver_machine_name == 'Galileo':
+             # copy Galileo run script to TAU folder structure
+            shutil.copy(Solver.dir_PyAeroSweep+"/TAU/run_TAU_job_Galileo.sh", Solver.output_dir+"/para" )
+
+        elif Solver.solver_machine_name == 'Phoenix':
+            # copy Phoenix .job script to TAU folder structure
+            shutil.copy(Solver.working_dir+"/run_TAUPY_job_Phoenix.job", Solver.output_dir+"/para" )
+        
+        else: 
+            print("No runscript configured for 'solver_machine_name' = " + Solver.solver_machine_name )
+
+        
+        print("Outputs in Folder" + Solver.output_dir)
+
+    
 
 
     return
