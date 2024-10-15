@@ -8,7 +8,7 @@ MeshOperatingsystem: "Unix"
 PointwisePath:  "/home/doktorand/Fidelity/Pointwise/Pointwise2022.1"
 # Set path to Outputs Directory
 #OutputDirectory: "/home/christoffer/galileo.data0_Carstensen"
-OutputDirectory: "/home/doktorand/Hiwi_Narunat/PyAeroSweep/Test_Cases_SU2/Clean_airfoil"
+OutputDirectory: "/home/doktorand/Hiwi_Narunat/PyAeroSweep/Test_Cases_SU2"
 # Set Utilised Processor Cores
 UtilisedCpuCores: 4     # Physical cores only 
 

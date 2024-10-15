@@ -11,37 +11,37 @@ pw::Application clearModified
 
 # import airfoil components
 set _TMP(mode_1) [pw::Application begin DatabaseImport]
-  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Software/PyAeroSweep-Stan-V3/PyAeroSweep/Test_Cases/Mesh_and_Run/Geometry_files/main_airfoil_upper_fixed.dat
+  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Hiwi_Narunat/PyAeroSweep/Test_Cases_SU2/Mesh_and_Run/output_MAR/Geometry_files/main_airfoil_upper_fixed.dat
   $_TMP(mode_1) read
   $_TMP(mode_1) convert
 $_TMP(mode_1) end
 
 set _TMP(mode_1) [pw::Application begin DatabaseImport]
-  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Software/PyAeroSweep-Stan-V3/PyAeroSweep/Test_Cases/Mesh_and_Run/Geometry_files/main_airfoil_lower_fixed.dat
+  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Hiwi_Narunat/PyAeroSweep/Test_Cases_SU2/Mesh_and_Run/output_MAR/Geometry_files/main_airfoil_lower_fixed.dat
   $_TMP(mode_1) read
   $_TMP(mode_1) convert
 $_TMP(mode_1) end
 
 set _TMP(mode_1) [pw::Application begin DatabaseImport]
-  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Software/PyAeroSweep-Stan-V3/PyAeroSweep/Test_Cases/Mesh_and_Run/Geometry_files/main_airfoil_cut1_fixed.dat
+  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Hiwi_Narunat/PyAeroSweep/Test_Cases_SU2/Mesh_and_Run/output_MAR/Geometry_files/main_airfoil_cut1_fixed.dat
   $_TMP(mode_1) read
   $_TMP(mode_1) convert
 $_TMP(mode_1) end
 
 set _TMP(mode_1) [pw::Application begin DatabaseImport]
-  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Software/PyAeroSweep-Stan-V3/PyAeroSweep/Test_Cases/Mesh_and_Run/Geometry_files/main_airfoil_cut2_fixed.dat
+  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Hiwi_Narunat/PyAeroSweep/Test_Cases_SU2/Mesh_and_Run/output_MAR/Geometry_files/main_airfoil_cut2_fixed.dat
   $_TMP(mode_1) read
   $_TMP(mode_1) convert
 $_TMP(mode_1) end
 
 set _TMP(mode_1) [pw::Application begin DatabaseImport]
-  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Software/PyAeroSweep-Stan-V3/PyAeroSweep/Test_Cases/Mesh_and_Run/Geometry_files/flap_airfoil_lower_fixed.dat
+  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Hiwi_Narunat/PyAeroSweep/Test_Cases_SU2/Mesh_and_Run/output_MAR/Geometry_files/flap_airfoil_lower_fixed.dat
   $_TMP(mode_1) read
   $_TMP(mode_1) convert
 $_TMP(mode_1) end
 
 set _TMP(mode_1) [pw::Application begin DatabaseImport]
-  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Software/PyAeroSweep-Stan-V3/PyAeroSweep/Test_Cases/Mesh_and_Run/Geometry_files/flap_airfoil_upper_fixed.dat
+  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Hiwi_Narunat/PyAeroSweep/Test_Cases_SU2/Mesh_and_Run/output_MAR/Geometry_files/flap_airfoil_upper_fixed.dat
   $_TMP(mode_1) read
   $_TMP(mode_1) convert
 $_TMP(mode_1) end
@@ -426,9 +426,9 @@ set _TMP(mode_1) [pw::Application begin UnstructuredSolver [list $_DM(1)]]
   unset _TMP(PW_2)
   $_TMP(PW_3) setName wall
   $_TMP(PW_3) setConditionType Wall
-  $_TMP(PW_3) setValue 4.9080049524228e-06
-  $_DM(1) setUnstructuredSolverAttribute TRexMaximumLayers 100
-  $_DM(1) setUnstructuredSolverAttribute TRexFullLayers 60
+  $_TMP(PW_3) setValue 5.770548344287181e-06
+  $_DM(1) setUnstructuredSolverAttribute TRexMaximumLayers 69
+  $_DM(1) setUnstructuredSolverAttribute TRexFullLayers 69
   $_DM(1) setUnstructuredSolverAttribute TRexGrowthRate 1.1
   $_DM(1) setUnstructuredSolverAttribute TRexGrowthRate 1.1
   $_DM(1) setUnstructuredSolverAttribute TRexPushAttributes True
@@ -509,12 +509,150 @@ set _DM(1) [pw::GridEntity getByName dom-1]
 set _DM(2) [pw::GridEntity getByName dom-2]
 set _DM(3) [pw::GridEntity getByName dom-3]
 set _TMP(mode_1) [pw::Application begin CaeExport [pw::Entity sort [list $_DM(1) $_DM(2) $_DM(3)]]]
-  $_TMP(mode_1) initialize -strict -type CAE /home/doktorand/Software/PyAeroSweep-Stan-V3/PyAeroSweep/Test_Cases/Mesh_and_Run/su2meshEx.su2
+  $_TMP(mode_1) initialize -strict -type CAE /home/doktorand/Hiwi_Narunat/PyAeroSweep/Test_Cases_SU2/Mesh_and_Run/output_MAR/su2meshEx.su2
   $_TMP(mode_1) setAttribute FilePrecision Double
   $_TMP(mode_1) verify
   $_TMP(mode_1) write
 $_TMP(mode_1) end
 unset _TMP(mode_1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  pw::Application save /home/doktorand/Hiwi_Narunat/PyAeroSweep/Test_Cases_SU2/Mesh_and_Run/output_MAR/su2meshEx.su2.pw
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

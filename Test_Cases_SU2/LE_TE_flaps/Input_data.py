@@ -12,7 +12,7 @@ from Run_aerodynamic_analysis import run_aerodynamic_analysis
 
 def Input_data():
 
-    working_dir = r"/home/doktorand/Software/PyAeroSweep-Stan-V3/PyAeroSweep/Test_Cases/LE_TE_flaps" 
+    working_dir = r"/home/doktorand/Hiwi_Narunat/PyAeroSweep/Test_Cases_SU2/LE_TE_flaps" 
 
 # ------------------------------- SOLVER SETTINGS ----------------------------------------------------------- #
 #
@@ -20,6 +20,7 @@ def Input_data():
     Solver_settings = Solver()
 
     Solver_settings.working_dir = working_dir
+    Solver_settings.output_dir = working_dir + "/output_LETE"
 
     Solver_settings.name = 'SU2'                 # SU2 or Fluent
 
@@ -141,7 +142,7 @@ def Input_data():
 
     # Defined the OS in which Pointwise is used
     # WINDOWS or Linux
-    Mesh_data.operating_system = 'Linux'
+    Mesh_data.operating_system = 'Unix'
 
     # Pointwise tclsh directory used in Windows
     Mesh_data.tclsh_directory =  r"/home/doktorand/Fidelity/Pointwise/Pointwise2022.1" 
@@ -164,7 +165,8 @@ def Input_data():
         "TE_spacing"             : 0.0005,                      # Airfoil trailing edge spacing
         "flap_cluster"           : 0.005,
         "connector dimensions"   : [200, 200, 8],     #         "connector_dimensions": [200, 120, 150, 150, 70, 25, 8, 8],
-        "number of normal cells" : 230
+        "number of normal cells" : 230,
+        "Initial_trex_layer_scaler" : 1
     }
 
 

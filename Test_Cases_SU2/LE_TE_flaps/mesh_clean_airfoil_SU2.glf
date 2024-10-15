@@ -11,13 +11,13 @@ pw::Application clearModified
 
 # import airfoil components
 set _TMP(mode_1) [pw::Application begin DatabaseImport]
-  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Software/PyAeroSweep-Stan-V3/PyAeroSweep/Test_Cases/LE_TE_flaps/Geometry_files/main_airfoil_upper_1.dat
+  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Hiwi_Narunat/PyAeroSweep/Test_Cases_SU2/LE_TE_flaps/output_LETE/Geometry_files/main_airfoil_upper_1.dat
   $_TMP(mode_1) read
   $_TMP(mode_1) convert
 $_TMP(mode_1) end
 
 set _TMP(mode_1) [pw::Application begin DatabaseImport]
-  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Software/PyAeroSweep-Stan-V3/PyAeroSweep/Test_Cases/LE_TE_flaps/Geometry_files/main_airfoil_lower_1.dat
+  $_TMP(mode_1) initialize -strict -type Automatic /home/doktorand/Hiwi_Narunat/PyAeroSweep/Test_Cases_SU2/LE_TE_flaps/output_LETE/Geometry_files/main_airfoil_lower_1.dat
   $_TMP(mode_1) read
   $_TMP(mode_1) convert
 $_TMP(mode_1) end
@@ -136,7 +136,7 @@ $_TMP(mode_1) end
 
 set _DM(1) [pw::GridEntity getByName dom-1]
 set _TMP(mode_1) [pw::Application begin CaeExport [pw::Entity sort [list $_DM(1)]]]
-  $_TMP(mode_1) initialize -strict -type CAE /home/doktorand/Software/PyAeroSweep-Stan-V3/PyAeroSweep/Test_Cases/LE_TE_flaps/su2meshEx.su2
+  $_TMP(mode_1) initialize -strict -type CAE /home/doktorand/Hiwi_Narunat/PyAeroSweep/Test_Cases_SU2/LE_TE_flaps/output_LETE/su2meshEx.su2
   $_TMP(mode_1) setAttribute FilePrecision Double
   $_TMP(mode_1) verify
   $_TMP(mode_1) write
@@ -146,3 +146,44 @@ $_TMP(mode_1) end
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  pw::Application save /home/doktorand/Hiwi_Narunat/PyAeroSweep/Test_Cases_SU2/LE_TE_flaps/output_LETE/su2meshEx.su2.pw

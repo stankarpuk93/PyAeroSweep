@@ -11,7 +11,7 @@ from Run_aerodynamic_analysis import run_aerodynamic_analysis
 
 def Input_data():
 
-    working_dir   = r"/home/doktorand/Software/PyAeroSweep-Stan-V3/PyAeroSweep/Test_Cases/Mesh_and_Run" 
+    working_dir   = r"/home/doktorand/Hiwi_Narunat/PyAeroSweep/Test_Cases_SU2/Mesh_and_Run" 
 
 # ------------------------------- SOLVER SETTINGS ----------------------------------------------------------- #
 #
@@ -19,6 +19,7 @@ def Input_data():
     Solver_settings = Solver()
 
     Solver_settings.working_dir = working_dir
+    Solver_settings.output_dir = working_dir + "/output_MAR"
 
     Solver_settings.name = 'SU2'                 # SU2 or Fluent
 
@@ -55,9 +56,9 @@ def Input_data():
 # ------------------------------- FREESTREAM SETTINGS ------------------------------------------------------- #
 #
     Freestream = Data()
-    Freestream.Mach             = np.array([0.21,0.25])
-    Freestream.Altitude         = np.array([0,2000])                 # in meters
-    Freestream.Angle_of_attack  = np.array([0.0,3.0,5.0])               # in degrees
+    Freestream.Mach             = np.array([0.21])
+    Freestream.Altitude         = np.array([0])                 # in meters
+    Freestream.Angle_of_attack  = np.array([0.0])               # in degrees
 
 
 
@@ -119,7 +120,7 @@ def Input_data():
 
     # Defined the OS in which Pointwise is used
     # WINDOWS or Linux
-    Mesh_data.operating_system = 'Linux'
+    Mesh_data.operating_system = 'Unix'
 
     # Pointwise tclsh directory used in Windows
     Mesh_data.tclsh_directory = r"/home/doktorand/Fidelity/Pointwise/Pointwise2022.1" 
@@ -156,7 +157,8 @@ def Input_data():
         "Full TREX layers"               : 60,
         "TREX growth rate"               : 1.1,
         "near-field boundary decay 2"    : 0.75,
-        "near-field boundary decay 1"    : 0.85
+        "near-field boundary decay 1"    : 0.85,
+        "Initial_trex_layer_scaler" : 1
     }
 
 
