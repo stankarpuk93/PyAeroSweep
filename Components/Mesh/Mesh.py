@@ -79,7 +79,7 @@ class Mesh():
         }
 
 
-    def calculate_initstepsize(self,M,altitude,L,Yplus):
+    def calculate_initstepsize(self,M,altitude,L,Mesh):
 
         ''' Calculate the first mesh step size based on Y+
     
@@ -88,6 +88,8 @@ class Mesh():
             altitude - cruise altitude
             L        - reference length [m]
             Yplus    - Desired Y+ value
+            Yplus_scaler - additional scaler to reduce initstepsize to account for over velocitys compare to flat plate
+            Trex_groth_rate - Groth rate applied to inflation layer
 
 
         Outputs:
@@ -96,7 +98,12 @@ class Mesh():
         Assumptions:
 
         '''
+        Yplus_scaler = Mesh.airfoil_mesh_settings["Initial_trex_layer_scaler"]
 
+        if Mesh.structured==False:
+            Trex_groth_rate = Mesh.airfoil_mesh_settings["TREX growth rate"]
+        
+        Yplus = Mesh.Yplus
 
         # Constants for standard atmosphere model
         TSL         = 288.16        # Sea-level temperature (K)
@@ -152,9 +159,31 @@ class Mesh():
         Ufric = math.sqrt(tau_wall / rho)
 
         # Calculate initial step size (delta_s)
-        self.delta_s = (Yplus * µ) / (Ufric * rho)
+        self.delta_s = (Yplus * µ) / (Ufric * rho) * 1/Yplus_scaler
 
-        return self.delta_s 
+        if Mesh.structured==False:
+            # estimate boundary layer thickness
+            delta_99 = 0.38 * L/(Rex**(1/5))
+        
+            # Calculate nessary trex layers to resolve boundary layer for given groth rate
+            N_MinLayer = math.log(-((delta_99/self.delta_s)*(1-Trex_groth_rate)-1), Trex_groth_rate)
+
+        
+            # Round layers to integer
+            self.N_MinLayerRound = math.ceil(N_MinLayer)
+            self.N_MaxLayerRound = math.ceil(N_MinLayer)
+
+
+            airfoil_mesh_settings = {"Max TREX layers" : self.N_MaxLayerRound,
+                                    "Full TREX layers": self.N_MinLayerRound}
+        else:
+            airfoil_mesh_settings = {"Max TREX layers" : "nan Structured mesh",
+                                    "Full TREX layers": "nan Structured mesh"}
+
+
+
+        #Mesh.airfoil_mesh_settings.update(update_airfoil_mesh_settings)
+        return self.delta_s,airfoil_mesh_settings
     
 
 
