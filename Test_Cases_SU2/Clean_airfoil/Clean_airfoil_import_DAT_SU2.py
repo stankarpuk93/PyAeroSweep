@@ -28,7 +28,7 @@ with open('config.yaml', 'r') as file:
 def Input_data():
 
     # get location location of input and .glf and .cfg file
-    working_dir   = os.path.dirname(__file__)
+    working_dir   = parent_dir2 + "/" + os.path.dirname(__file__)
 
     # Define output folder location
     output_dir_global = config['OutputDirectory']
@@ -91,7 +91,7 @@ def Input_data():
 #
     Geometry_data = Geometry()
 
-    airfoil_file_path = r"/home/christoffer/Data/Airfoil_geometry_files/section3.dat"
+    airfoil_file_path = r"/home/doktorand/Hiwi_Narunat/PyAeroSweep/Test_Cases_SU2/Clean_airfoil/Test_Airfoil/NACA_24012.dat"
 
     # Geometry to analyze
 

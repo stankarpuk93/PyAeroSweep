@@ -28,7 +28,7 @@ with open('config.yaml', 'r') as file:
 def Input_data():
 
     # get location location of input and .glf and .cfg file
-    working_dir   = os.path.dirname(__file__)
+    working_dir   = parent_dir2 + "/" + os.path.dirname(__file__)
 
     # Define output folder location
     output_dir_global = config['OutputDirectory']
@@ -167,7 +167,8 @@ def Input_data():
         "TE_spacing"             : 0.0005,                      # Airfoil trailing edge spacing
         "flap_cluster"           : 0.005,
         "connector dimensions"   : [200, 200, 8],     #         "connector_dimensions": [200, 120, 150, 150, 70, 25, 8, 8],
-        "number of normal cells" : 230
+        "number of normal cells" : 230,
+        "Initial_trex_layer_scaler" : 1,
     }
 
 
