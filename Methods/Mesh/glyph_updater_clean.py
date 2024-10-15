@@ -6,7 +6,7 @@
 
 import os
 
-def update_glyph_script_cl(Mesh,working_dir):
+def update_glyph_script_cl(Mesh,working_dir,solvername):
 
     '''The file updates the Glyph script for a clean airfoil
     
@@ -33,11 +33,16 @@ def update_glyph_script_cl(Mesh,working_dir):
     stop_at_height_2       = Mesh.update_glyph_data["stop_at_height_2"]
     run_iterations_1       = Mesh.update_glyph_data["run_iterations_1"]
     run_iterations_2       = Mesh.update_glyph_data["run_iterations_2"]
-    su2meshed_file         = Mesh.update_glyph_data["su2meshed_file"]
+    meshed_file            = Mesh.update_glyph_data["meshed_file"]
 
 
     # Assign new values to a template
-    lines_to_update = [14, 20, 46, 49, 52, 59, 62, 68, 71, 80, 99, 100, 101, 102, 139]             # 15 updates in total (16th update is written below, for line 96)
+    if solvername == 'SU2':
+        lines_to_update = [14, 20, 46, 49, 52, 59, 62, 68, 71, 80, 99, 100, 101, 102, 139]             # 15 updates in total (16th update is written below, for line 96)
+    elif solvername == 'TAU':
+        lines_to_update = [14, 20, 46, 49, 52, 59, 62, 68, 71, 80, 99, 100, 101, 102, 183]             # 15 updates in total (16th update is written below, for line 96)
+    else:
+        lines_to_update = [14, 20, 46, 49, 52, 59, 62, 68, 71, 80, 99, 100, 101, 102, 139]             # 15 updates in total (16th update is written below, for line 96)
     new_values = [
         f"  $_TMP(mode_1) initialize -strict -type Automatic {upper_surface_filename}",
         f"  $_TMP(mode_1) initialize -strict -type Automatic {lower_surface_filename}",
@@ -53,7 +58,7 @@ def update_glyph_script_cl(Mesh,working_dir):
         f"  $_DM(1) setExtrusionSolverAttribute StopAtHeight {stop_at_height_2}",
         f"  $_TMP(mode_1) run {run_iterations_1}",
         f"  $_TMP(mode_1) run {run_iterations_2}",
-        f"  $_TMP(mode_1) initialize -strict -type CAE {su2meshed_file}"
+        f"  $_TMP(mode_1) initialize -strict -type CAE {meshed_file}"
     ]
 
     # Read the entire content of the Glyph script
@@ -67,6 +72,7 @@ def update_glyph_script_cl(Mesh,working_dir):
         if 0 < line_number <= len(glyph_lines) and i < len(new_values):
             glyph_lines[line_number - 1] = new_values[i] + '\n'  # Line numbers are 1-based
             glyph_lines[97] = f"  $_DM(1) setExtrusionSolverAttribute NormalInitialStepSize {Mesh.delta_s}\n"
+            glyph_lines[188] = f"  pw::Application save {meshed_file}.pw\n"
 
     # Write the updated content back to the Glyph script file
     with open(glyph_file, 'w') as updated_glyph_script:
