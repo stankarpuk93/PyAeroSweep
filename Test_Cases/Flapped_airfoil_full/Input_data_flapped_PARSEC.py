@@ -10,7 +10,7 @@ from Run_aerodynamic_analysis import run_aerodynamic_analysis
 
 def Input_data():
 
-    working_dir   = r"/home/doktorand/Software/PyAeroSweep-Stan-V3/PyAeroSweep/Test_Cases/Flapped_airfoil_full"  
+    working_dir   = r"/home/doktorand/Hiwi_Narunat/PyAeroSweep/Test_Cases/Flapped_airfoil_full"  
 
 # ------------------------------- SOLVER SETTINGS ----------------------------------------------------------- #
 #
@@ -18,6 +18,7 @@ def Input_data():
     Solver_settings = Solver()
 
     Solver_settings.working_dir = working_dir
+    Solver_settings.output_dir = working_dir + "/output_PARSEC"
 
     Solver_settings.name = 'SU2'                 # SU2 or Fluent
 
@@ -154,7 +155,7 @@ def Input_data():
 
     # Defined the OS in which Pointwise is used
     # WINDOWS or Linux
-    Mesh_data.operating_system = 'Linux'
+    Mesh_data.operating_system = 'Unix'
 
     # Pointwise tclsh directory used in Windows
     Mesh_data.tclsh_directory = r"/home/doktorand/Fidelity/Pointwise/Pointwise2022.1" 
@@ -191,7 +192,8 @@ def Input_data():
         "Full TREX layers"               : 60,
         "TREX growth rate"               : 1.1,
         "near-field boundary decay 2"    : 0.75,
-        "near-field boundary decay 1"    : 0.85
+        "near-field boundary decay 1"    : 0.85,
+        "Initial_trex_layer_scaler"      : 1
     }
 
 

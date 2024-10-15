@@ -28,7 +28,7 @@ with open('config.yaml', 'r') as file:
 def Input_data():
 
     # get location location of input and .glf and .cfg file
-    working_dir   = os.path.dirname(__file__)
+    working_dir   = parent_dir2 + "/" + os.path.dirname(__file__)
 
     # Define output folder location
     output_dir_global = config['OutputDirectory']
@@ -216,7 +216,8 @@ def Input_data():
         "Full TREX layers"               : 60,
         "TREX growth rate"               : 1.1,
         "near-field boundary decay 2"    : 0.75,
-        "near-field boundary decay 1"    : 0.85
+        "near-field boundary decay 1"    : 0.85,
+        "Initial_trex_layer_scaler"      : 1
     }
 
 
