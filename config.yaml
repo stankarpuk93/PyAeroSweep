@@ -5,10 +5,10 @@
 
 # Set path to Pointwise install
 MeshOperatingsystem: "Unix"
-PointwisePath:  "/usr/local/Fidelity/Pointwise/Pointwise2022.1.2"
+PointwisePath:  "/home/doktorand/Fidelity/Pointwise/Pointwise2022.1"
 # Set path to Outputs Directory
 #OutputDirectory: "/home/christoffer/galileo.data0_Carstensen"
-OutputDirectory: ""
+OutputDirectory: "/home/doktorand/Hiwi_Narunat/PyAeroSweep/Test_Cases_SU2/Clean_airfoil"
 # Set Utilised Processor Cores
 UtilisedCpuCores: 4     # Physical cores only 
 
