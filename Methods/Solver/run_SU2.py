@@ -81,7 +81,7 @@ def solve(self,Freestream,Mesh,Geometry):
                         new_direct  = 'Case_alt' + str("{:.2f}".format(Freestream.Altitude[i])) + '_Mach' + \
                                                     str("{:.2f}".format(Freestream.Mach[j])) + '_AoA' + \
                                                         str("{:.2f}".format(Freestream.Angle_of_attack[k]))
-                        file_direct = os.path.join(self.working_dir, new_direct)
+                        file_direct = os.path.join(self.output_dir, new_direct)
                         filename1 = os.path.join(file_direct, filename)
 
                         os.chdir(file_direct)
@@ -98,7 +98,7 @@ def solve(self,Freestream,Mesh,Geometry):
                         Cl[i,j,k],Cd[i,j,k],Cm[i,j,k] = read_results('SU2_output.log')
 
             # Write data into an Excel file 
-            os.chdir(self.working_dir)
+            os.chdir(self.output_dir)
             sheetname = 'Altitude ' + str(Freestream.Altitude[i]) + 'm'
             worksheet = workbook.add_worksheet(name=sheetname)
 
@@ -173,21 +173,21 @@ def run_SU2_config(self,Alt,Mach,AoA,Ref_values,Mesh,k):
         else:    
             new_direct  = 'Case_alt' + str("{:.2f}".format(Alt)) + '_Mach' + str("{:.2f}".format(Mach)) + '_AoA' + str("{:.2f}".format(AoA[k]))
         filename    = new_direct + '.cfg'
-        file_direct = os.path.join(self.working_dir, new_direct)
+        file_direct = os.path.join(self.output_dir, new_direct)
 
         if os.path.exists(file_direct) and os.path.isdir(file_direct):
             shutil.rmtree(file_direct)
         os.mkdir(file_direct)
 
-        os.chdir(self.working_dir)
+        os.chdir(self.output_dir)
             
-        shutil.copyfile(os.path.join(os.getcwd()+'/'+self.config_file), file_direct+'/'+filename) 
+        shutil.copyfile(os.path.join(self.working_dir+'/'+self.config_file), file_direct+'/'+filename) 
 
         # Copy the mesh file
         if Mesh.operating_system == "WINDOWS":
-            shutil.copy(self.working_dir + '\\' + Mesh.filename, file_direct + '\\' + Mesh.filename)                               # copies the mesh file from the reference folder to the target one
+            shutil.copy(self.output_dir + '\\' + Mesh.filename, file_direct + '\\' + Mesh.filename)                               # copies the mesh file from the reference folder to the target one
         else:
-            shutil.copy(self.working_dir + '/' + Mesh.filename, file_direct + '/' + Mesh.filename)         
+            shutil.copy(self.output_dir + '/' + Mesh.filename, file_direct + '/' + Mesh.filename)         
 
         # Copy the restart file
         if self.warmstart == 'YES':
@@ -195,7 +195,7 @@ def run_SU2_config(self,Alt,Mach,AoA,Ref_values,Mesh,k):
                 prev_direct  = 'Case_alt' + str("{:.2f}".format(Alt)) + '_Mach' + str("{:.2f}".format(Mach)) + '_AoA_' + str("{:.2f}".format(abs(AoA[k-1])))
             else:    
                 prev_direct  = 'Case_alt' + str("{:.2f}".format(Alt)) + '_Mach' + str("{:.2f}".format(Mach)) + '_AoA' + str("{:.2f}".format(AoA[k-1]))
-            prev_file_direct = os.path.join(self.working_dir, prev_direct)
+            prev_file_direct = os.path.join(self.output_dir, prev_direct)
             shutil.copyfile(prev_file_direct+'/restart.dat', file_direct+'/solution_flow.dat')        
 
 
