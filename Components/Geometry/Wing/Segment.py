@@ -452,6 +452,20 @@ class Segment():
         xx_pre_ds  = []
         yy_pre_ds  = []
 
+        # for i in range(len(xx_suc)):
+        #     if xx_suc[i] >= cs_c:
+        #         xx_suc_aft.append(xx_suc[i])
+        #         yy_suc_aft.append(yy_suc[i])
+        #     elif xx_suc[i] <= (cs_c-d_cs_up):
+        #         xx_suc_for.append(xx_suc[i])
+        #         yy_suc_for.append(yy_suc[i])
+        # for i in range(len(xx_pre)):
+        #     if xx_pre[i] >= (cs_c+d_cs_low/2):            # Problem with botom side gap
+        #         xx_pre_aft.append(xx_pre[i])
+        #         yy_pre_aft.append(yy_pre[i])
+        #     elif xx_pre[i] <= (cs_c-d_cs_low/2):
+        #         xx_pre_for.append(xx_pre[i])
+        #         yy_pre_for.append(yy_pre[i])                  
         for i in range(len(xx_suc)):
             if xx_suc[i] >= cs_c:
                 xx_suc_aft.append(xx_suc[i])
@@ -459,13 +473,13 @@ class Segment():
             elif xx_suc[i] <= (cs_c-d_cs_up):
                 xx_suc_for.append(xx_suc[i])
                 yy_suc_for.append(yy_suc[i])
-        for i in range(len(xx_pre)):
-            if xx_pre[i] >= (cs_c+d_cs_low/2):            # Problem with botom side gap
+
+            if xx_pre[i] >= cs_c:
                 xx_pre_aft.append(xx_pre[i])
                 yy_pre_aft.append(yy_pre[i])
-            elif xx_pre[i] <= (cs_c-d_cs_low/2):
+            elif xx_pre[i] <= (cs_c-d_cs_low):
                 xx_pre_for.append(xx_pre[i])
-                yy_pre_for.append(yy_pre[i])                  
+                yy_pre_for.append(yy_pre[i])    
 
         # Rotate the flap
 
