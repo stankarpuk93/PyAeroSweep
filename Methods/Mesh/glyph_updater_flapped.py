@@ -6,7 +6,7 @@
 
 import os
 
-def update_glyph_script_fl(Mesh,working_dir):
+def update_glyph_script_fl(Mesh,working_dir,solvername):
 
     '''The file updates the Glyph script for a flapped airfoil
     
@@ -62,15 +62,29 @@ def update_glyph_script_fl(Mesh,working_dir):
     growthrate_433          = Mesh.update_glyph_data["growthrate_433"]
     BoundaryDecay_435       = Mesh.update_glyph_data["BoundaryDecay_435"]
     far_field_connector_dim = Mesh.update_glyph_data["far_field_connector_dim"]
-    su2meshed_file          = Mesh.update_glyph_data["su2meshed_file"]
+    meshed_file             = Mesh.update_glyph_data["meshed_file"]
 
 
+
+    if solvername == 'SU2':
+        lines_to_update = [ 14, 20, 26, 32, 38, 44, 98, 101, 104, 107, 110, 113, 116, 119, 127, 130, 137, 140, 146, 149, 156, 159,
+                       165, 172, 178, 184, 192, 195, 201, 204, 211, 214, 228, 229, 245, 255, 280, 287, 288, 289, 298, 299,
+                       300, 313, 332, 359, 384, 430, 431, 433, 435, 512 ]             
+                    # 52 updates in total
+    elif solvername == 'TAU':
+        lines_to_update = [ 14, 20, 26, 32, 38, 44, 98, 101, 104, 107, 110, 113, 116, 119, 127, 130, 137, 140, 146, 149, 156, 159,
+                       165, 172, 178, 184, 192, 195, 201, 204, 211, 214, 228, 229, 245, 255, 280, 287, 288, 289, 298, 299,
+                       300, 313, 332, 359, 384, 430, 431, 433, 435, 597 ]             
+                    # 52 updates in total
+ 
+    else:
+        lines_to_update = [ 14, 20, 26, 32, 38, 44, 98, 101, 104, 107, 110, 113, 116, 119, 127, 130, 137, 140, 146, 149, 156, 159,
+                       165, 172, 178, 184, 192, 195, 201, 204, 211, 214, 228, 229, 245, 255, 280, 287, 288, 289, 298, 299,
+                       300, 313, 332, 359, 384, 430, 431, 433, 435, 512 ]             
+                    # 52 updates in total
+ 
 
     
-    lines_to_update = [ 14, 20, 26, 32, 38, 44, 98, 101, 104, 107, 110, 113, 116, 119, 127, 130, 137, 140, 146, 149, 156, 159,
-                       165, 172, 178, 184, 192, 195, 201, 204, 211, 214, 228, 229, 245, 255, 280, 287, 288, 289, 298, 299,
-                       300, 313, 332, 359, 384, 430, 431, 432, 435, 512 ]             
-                    # 52 updates in total 
    
     new_values = [
         f"  $_TMP(mode_1) initialize -strict -type Automatic {upper_surface_filename}",
@@ -124,7 +138,7 @@ def update_glyph_script_fl(Mesh,working_dir):
         f"  $_DM(1) setUnstructuredSolverAttribute TRexFullLayers {fulllayers_431}",
         f"  $_DM(1) setUnstructuredSolverAttribute TRexGrowthRate {growthrate_433}",
         f"  $_DM(1) setUnstructuredSolverAttribute BoundaryDecay {BoundaryDecay_435}",
-        f"  $_TMP(mode_1) initialize -strict -type CAE {su2meshed_file}"
+        f"  $_TMP(mode_1) initialize -strict -type CAE {meshed_file}"
     ]
 
     # Read the entire content of the Glyph script
@@ -138,6 +152,7 @@ def update_glyph_script_fl(Mesh,working_dir):
         if 0 < line_number <= len(glyph_lines) and i < len(new_values):
             glyph_lines[line_number - 1] = new_values[i] + '\n'  # Line numbers are 1-based
             glyph_lines[428] = f"  $_TMP(PW_3) setValue {Mesh.delta_s}\n"
+            glyph_lines[603] = f"  pw::Application save {meshed_file}.pw\n"
 
 
     # Write the updated content back to the Glyph script file
