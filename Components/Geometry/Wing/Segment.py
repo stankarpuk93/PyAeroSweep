@@ -613,7 +613,7 @@ class Segment():
         yy_fl_pre_norm = yy_fl_pre - YLE
 
         xx_fl_suc_rot = xx_fl_suc_norm * np.cos(df) + yy_fl_suc_norm * np.sin(df) + XTE - x_gap
-        yy_fl_suc_rot = -xx_fl_suc_norm * np.sin(df) + yy_fl_suc_norm * np.cos(df) 
+        yy_fl_suc_rot = -xx_fl_suc_norm * np.sin(df) + yy_fl_suc_norm * np.cos(df) + YTE 
         xx_fl_pre_rot = xx_fl_pre_norm * np.cos(df) + yy_fl_pre_norm * np.sin(df) + XTE - x_gap
 
         # Why this strange calculation of the offset for the y gap?
