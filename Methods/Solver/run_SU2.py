@@ -36,8 +36,8 @@ def solve(self,Freestream,Mesh,Geometry):
             2. Reference axes:
                 2D:     X - horizontal (chordwise)
                         Y - vertical
-            7. Standard atmosphere in SI units is used
-            8. Boundary conditions name requirements:
+            3. Standard atmosphere in SI units is used
+            4. Boundary conditions name requirements:
                 far-field    - 'far-field'
                 body surface - 'wall'
 

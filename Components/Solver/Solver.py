@@ -8,7 +8,7 @@
 # ----------------------------------------------------------------------
 #  Imports
 # ----------------------------------------------------------------------
-
+import os
 
 
 
@@ -17,6 +17,8 @@ class Solver():
 
     def __init__(self):
         
+        self.working_dir = os.getcwd()
+
         self.processors     = 2
         self.monitor        = "DRAG"
         self.tolerance      = 1e-5
@@ -24,6 +26,11 @@ class Solver():
         self.save_frequency = 100 
         self.warmstart      = 'NO'
 
+        # Xfoil default values
+        self.e_n = 9                        # The factor N for the e^N method
+
+        self.free_transition = False
+        self.x_transition    = [0.0, 0.0]
 
 
     def run_solver(self,Freestream,Mesh,Geometry):

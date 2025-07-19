@@ -30,13 +30,14 @@ Prerequisites:
 # ----------------------------------------------------------------------
 #   Generic Imports
 # ----------------------------------------------------------------------
+import sys
 import os
 import shutil
 import subprocess
 import numpy as np
 from Methods.Mesh.mesh_pre_process_2D     import mesh_pre_process_2D
-from Methods.Mesh.mesh_pre_process_3D     import WingMeshPreProcess 
-from Methods.Solver                       import run_SU2
+from Methods.Mesh.mesh_pre_process_3D     import WingMeshPreProcess                
+from Methods.Solver                       import run_SU2, run_Xfoil
 
 
 def run_aerodynamic_analysis(Input):
@@ -127,7 +128,12 @@ def run_aerodynamic_analysis(Input):
 
 
     # Run CFD solution
-    run_SU2.solve(Solver,Freestream,Mesh,Geometry)
+    if Solver.name == 'SU2':
+        run_SU2.solve(Solver,Freestream,Mesh,Geometry)
+    elif Solver.name == 'Xfoil':
+        run_Xfoil(Solver,Freestream,Mesh,Geometry)
+    else:
+        sys.exit("ERROR: Set the right solver name in the Input setting")
     
 
     print("Analysis completed")

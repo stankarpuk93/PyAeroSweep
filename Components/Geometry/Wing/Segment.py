@@ -739,6 +739,7 @@ class Segment():
         # Use parsecexport to save coordinate file of the original airfoil
         airfoil_num = random.randint(1, 100)
         fpath       = 'main_airfoil_merged_' + str(airfoil_num) + '.dat'
+        self.Airfoil.files['main']   = str(airfoil_num) + '.dat'
         self.Airfoil.files['merged'] = fpath
 
         if len(cf_pre) > 0:
