@@ -16,9 +16,8 @@ import os
 class Solver():
 
     def __init__(self):
-        
-        self.working_dir = os.getcwd()
 
+        self.dimensions     = '2d' 
         self.processors     = 2
         self.monitor        = "DRAG"
         self.tolerance      = 1e-5

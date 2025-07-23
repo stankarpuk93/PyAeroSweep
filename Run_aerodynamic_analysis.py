@@ -66,8 +66,8 @@ def run_aerodynamic_analysis(Input):
     Mesh       = Input.Mesh
  
     # Run the airfoil/wing generation script in a separate directory
+    file_path = os.path.join(Solver.working_dir, 'Geometry_files/')
     if Geometry.generate is True:
-        file_path = os.path.join(Solver.working_dir, 'Geometry_files/')
         if os.path.exists(file_path):
             shutil.rmtree(file_path)
         os.mkdir(file_path)
@@ -131,7 +131,7 @@ def run_aerodynamic_analysis(Input):
     if Solver.name == 'SU2':
         run_SU2.solve(Solver,Freestream,Mesh,Geometry)
     elif Solver.name == 'Xfoil':
-        run_Xfoil(Solver,Freestream,Mesh,Geometry)
+        run_Xfoil.solve(Solver,Freestream,Mesh,Geometry,file_path)
     else:
         sys.exit("ERROR: Set the right solver name in the Input setting")
     

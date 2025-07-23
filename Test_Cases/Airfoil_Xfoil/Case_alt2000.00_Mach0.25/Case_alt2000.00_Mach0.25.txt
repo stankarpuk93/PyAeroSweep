@@ -1,0 +1,34 @@
+
+LOAD main_airfoil_merged_31.dat
+PPAR
+N 160 
+
+P 1.0 
+ 
+T 0.15 
+
+R 0.2 
+
+XT 1.0 1.0 
+
+XB 1.0 1.0 
+
+
+OPER
+VISC 12708196.15495854
+VPAR
+N 9           ! Set Ncrit (e.g., 9 for default, 4 for early transition)
+XTR
+0.3
+0.3
+
+Mach
+0.25
+ITER 200
+PACC
+polar.dat
+
+ASeq 0.0 5.0 1.6666666666666667
+dump
+
+

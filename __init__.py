@@ -3,6 +3,8 @@
 # Import directories
 # -----------------------------------------
 
-from .run_SU2   import *
-from .run_Xfoil import *
+from . 	import Components
+from . 	import Data
+from .  import Methods
+from .  import Test_Cases 
 

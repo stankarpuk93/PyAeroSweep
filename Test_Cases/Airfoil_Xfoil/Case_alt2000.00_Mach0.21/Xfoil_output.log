@@ -1,0 +1,476 @@
+
+ ===================================================
+  XFOIL Version 6.99
+  Copyright (C) 2000   Mark Drela, Harold Youngren
+
+  This software comes with ABSOLUTELY NO WARRANTY,
+    subject to the GNU General Public License.
+
+  Caveat computor
+ ===================================================
+
+ File  xfoil.def  not found
+
+ File OPEN error.  Nonexistent file:  -n  
+ *** LOAD NOT COMPLETED ***
+
+   QUIT    Exit program
+
+  .OPER    Direct operating point(s)
+  .MDES    Complex mapping design routine
+  .QDES    Surface speed design routine
+  .GDES    Geometry design routine
+
+   SAVE f  Write airfoil to labeled coordinate file
+   PSAV f  Write airfoil to plain coordinate file
+   ISAV f  Write airfoil to ISES coordinate file
+   MSAV f  Write airfoil to MSES coordinate file
+   REVE    Reverse written-airfoil node ordering
+   DELI i  Change written-airfoil file delimiters
+
+   LOAD f  Read buffer airfoil from coordinate file
+   NACA i  Set NACA 4,5-digit airfoil and buffer airfoil
+   INTE    Set buffer airfoil by interpolating two airfoils
+   NORM    Buffer airfoil normalization toggle
+   HALF    Halve the number of points in buffer airfoil
+   XYCM rr Change CM reference location, currently  0.25000 0.00000
+
+   BEND    Display structural properties of current airfoil
+
+   PCOP    Set current-airfoil panel nodes directly from buffer airfoil points
+   PANE    Set current-airfoil panel nodes ( 160 ) based on curvature
+  .PPAR    Show/change paneling
+
+  .PLOP    Plotting options
+
+   WDEF f  Write  current-settings file
+   RDEF f  Reread current-settings file
+   NAME s  Specify new airfoil name
+   NINC    Increment name version number
+
+   Z       Zoom    | (available in all menus)
+   U       Unzoom  | 
+
+ XFOIL   c>  
+ XFOIL   c>  
+ Labeled airfoil file.  Name:  Airfoil 31                                      
+
+ Number of input coordinate points: 121
+ Counterclockwise ordering
+ Max thickness =     0.108497  at x =   0.448
+ Max camber    =     0.014292  at x =   0.815
+
+  LE  x,y  =  -0.00000  -0.00000  |   Chord =   1.00000
+  TE  x,y  =   1.00000   0.00000  |
+
+ Current airfoil nodes set from buffer airfoil nodes ( 121 )
+
+ XFOIL   c>  
+    Present paneling parameters...
+  N  i   Number of panel nodes       160
+  P  r   Panel bunching parameter    1.000
+  T  r   TE/LE panel density ratio   0.150
+  R  r   Refined area/LE  panel density ratio   0.200
+  XT rr  Top    side refined area x/c limits    1.000 1.000
+  XB rr  Bottom side refined area x/c limits    1.000 1.000
+  Z oom
+  U nzoom
+  H ardcopy
+
+Change what ? (<cr> if nothing else)   c>  
+Change what ? (<cr> if nothing else)   c>  
+ Blunt trailing edge.  Gap =  0.00400
+
+ Maximum panel corner angle = 11.230   at  i,x,y  =  80   0.0000   0.0002
+
+    Present paneling parameters...
+  N  i   Number of panel nodes       160
+  P  r   Panel bunching parameter    1.000
+  T  r   TE/LE panel density ratio   0.150
+  R  r   Refined area/LE  panel density ratio   0.200
+  XT rr  Top    side refined area x/c limits    1.000 1.000
+  XB rr  Bottom side refined area x/c limits    1.000 1.000
+  Z oom
+  U nzoom
+  H ardcopy
+
+Change what ? (<cr> if nothing else)   c>  
+Change what ? (<cr> if nothing else)   c>  
+ Blunt trailing edge.  Gap =  0.00400
+
+ Maximum panel corner angle = 11.230   at  i,x,y  =  80   0.0000   0.0002
+
+    Present paneling parameters...
+  N  i   Number of panel nodes       160
+  P  r   Panel bunching parameter    1.000
+  T  r   TE/LE panel density ratio   0.150
+  R  r   Refined area/LE  panel density ratio   0.200
+  XT rr  Top    side refined area x/c limits    1.000 1.000
+  XB rr  Bottom side refined area x/c limits    1.000 1.000
+  Z oom
+  U nzoom
+  H ardcopy
+
+Change what ? (<cr> if nothing else)   c>  
+Change what ? (<cr> if nothing else)   c>  
+ Blunt trailing edge.  Gap =  0.00400
+
+ Maximum panel corner angle = 11.230   at  i,x,y  =  80   0.0000   0.0002
+
+    Present paneling parameters...
+  N  i   Number of panel nodes       160
+  P  r   Panel bunching parameter    1.000
+  T  r   TE/LE panel density ratio   0.150
+  R  r   Refined area/LE  panel density ratio   0.200
+  XT rr  Top    side refined area x/c limits    1.000 1.000
+  XB rr  Bottom side refined area x/c limits    1.000 1.000
+  Z oom
+  U nzoom
+  H ardcopy
+
+Change what ? (<cr> if nothing else)   c>  
+Change what ? (<cr> if nothing else)   c>  
+ Blunt trailing edge.  Gap =  0.00400
+
+ Maximum panel corner angle = 11.230   at  i,x,y  =  80   0.0000   0.0002
+
+    Present paneling parameters...
+  N  i   Number of panel nodes       160
+  P  r   Panel bunching parameter    1.000
+  T  r   TE/LE panel density ratio   0.150
+  R  r   Refined area/LE  panel density ratio   0.200
+  XT rr  Top    side refined area x/c limits    1.000 1.000
+  XB rr  Bottom side refined area x/c limits    1.000 1.000
+  Z oom
+  U nzoom
+  H ardcopy
+
+Change what ? (<cr> if nothing else)   c>  
+Change what ? (<cr> if nothing else)   c>  
+ Blunt trailing edge.  Gap =  0.00400
+
+ Maximum panel corner angle = 11.230   at  i,x,y  =  80   0.0000   0.0002
+
+    Present paneling parameters...
+  N  i   Number of panel nodes       160
+  P  r   Panel bunching parameter    1.000
+  T  r   TE/LE panel density ratio   0.150
+  R  r   Refined area/LE  panel density ratio   0.200
+  XT rr  Top    side refined area x/c limits    1.000 1.000
+  XB rr  Bottom side refined area x/c limits    1.000 1.000
+  Z oom
+  U nzoom
+  H ardcopy
+
+Change what ? (<cr> if nothing else)   c>  
+Change what ? (<cr> if nothing else)   c>  
+ Blunt trailing edge.  Gap =  0.00400
+
+ Maximum panel corner angle = 11.230   at  i,x,y  =  80   0.0000   0.0002
+
+    Present paneling parameters...
+  N  i   Number of panel nodes       160
+  P  r   Panel bunching parameter    1.000
+  T  r   TE/LE panel density ratio   0.150
+  R  r   Refined area/LE  panel density ratio   0.200
+  XT rr  Top    side refined area x/c limits    1.000 1.000
+  XB rr  Bottom side refined area x/c limits    1.000 1.000
+  Z oom
+  U nzoom
+  H ardcopy
+
+Change what ? (<cr> if nothing else)   c>  
+ XFOIL   c>  
+.OPERi   c>  
+ M  =    0.0000
+ Re =  0.1067E+08
+
+.OPERv   c>  
+ Xtr/c     =  1.0000    top    side
+ Xtr/c     =  1.0000    bottom side
+ NcritT    =    9.00   ( 0.070 % turb. level )
+ NcritB    =    9.00   ( 0.070 % turb. level )
+ Vacc      =  0.0100
+ WakeL/c   =   1.000
+
+ Klag  =  5.6000     Uxwt  =    1.00       Kdl =  0.9000
+ A     =  6.7000     B     =  0.7500       KCt = 0.01485
+ CtiniK=  1.8000     CtiniX=  3.3000
+
+..VPAR   c>  
+..VPAR   c>  
+Enter top    side Xtrip/c   r>  
+Enter bottom side Xtrip/c   r>  
+..VPAR   c>  
+.OPERv   c>  
+ Currently...
+
+ M  =    0.0000
+
+Enter Mach number   r>  
+ Sonic Cp =    -14.75      Sonic Q/Qinf =     4.366
+
+
+.OPERv   c>  
+.OPERv   c>  
+ Polar  1 newly created for accumulation
+ Airfoil archived with polar: Airfoil 31                                      
+
+Enter  polar save filename  OR  <return> for no file   s>  
+ New polar save file available
+
+Enter  polar dump filename  OR  <return> for no file   s>  
+ Polar dump file will NOT be written
+
+ Polar accumulation enabled
+
+.OPERva   c>   Calculating unit vorticity distributions ...
+ Calculating wake trajectory ...
+ Calculating source influence matrix ...
+
+ Solving BL system ...
+
+ Initializing BL ...
+    side            1  ...
+    side            2  ...
+
+ Side 1 forced transition at x/c =  0.3000   34
+ Side 2 forced transition at x/c =  0.3000   31
+
+   1   rms: 0.5054E-01   max: -.4888E+00   D at   82  1
+       a =  0.000      CL =  0.3463
+      Cm = -0.0918     CD =  0.00564   =>   CDf =  0.00459    CDp =  0.00105
+
+ Side 1 forced transition at x/c =  0.3000   34
+ Side 2 forced transition at x/c =  0.3000   31
+
+   2   rms: 0.1219E-01   max: -.7212E-01   D at   82  1
+       a =  0.000      CL =  0.3339
+      Cm = -0.0889     CD =  0.00570   =>   CDf =  0.00463    CDp =  0.00107
+
+ Side 1 forced transition at x/c =  0.3000   34
+ Side 2 forced transition at x/c =  0.3000   31
+
+   3   rms: 0.1759E-03   max: -.1042E-02   D at   82  1
+       a =  0.000      CL =  0.3337
+      Cm = -0.0888     CD =  0.00570   =>   CDf =  0.00463    CDp =  0.00107
+
+ Side 1 forced transition at x/c =  0.3000   34
+ Side 2 forced transition at x/c =  0.3000   31
+
+   4   rms: 0.5433E-06   max: -.2102E-05   C at   80  2
+       a =  0.000      CL =  0.3337
+      Cm = -0.0888     CD =  0.00570   =>   CDf =  0.00463    CDp =  0.00107
+      9.000    2.6231   0.005703   0.000000   0.000000   0.000000    0.3000     #
+
+ Point added to stored polar  1
+ Point written to save file  polar.dat                                       
+ Dump file unspecified or not available
+ Calculating wake trajectory ...
+ Calculating source influence matrix ...
+
+ Solving BL system ...
+
+ Side 1 forced transition at x/c =  0.3000   34
+ Side 2 forced transition at x/c =  0.3000   31
+
+   1   rms: 0.2868E+00   max: -.5295E+00   n at   30  2   RLX: 0.737
+       a =  1.667      CL =  0.4823
+      Cm = -0.0909     CD =  0.00575   =>   CDf =  0.00461    CDp =  0.00114
+
+ Side 1  free  transition at x/c =  0.1469   25
+ Side 2 forced transition at x/c =  0.3000   30
+
+   2   rms: 0.9414E-01   max: -.6939E+00   D at   25  1   RLX: 0.721
+       a =  1.667      CL =  0.5159
+      Cm = -0.0907     CD =  0.00659   =>   CDf =  0.00508    CDp =  0.00151
+
+ Side 1  free  transition at x/c =  0.1160   23
+ Side 2 forced transition at x/c =  0.3000   29
+
+   3   rms: 0.4192E-01   max: 0.9050E+00   C at   23  1
+       a =  1.667      CL =  0.5291
+      Cm = -0.0906     CD =  0.00666   =>   CDf =  0.00521    CDp =  0.00145
+
+ Side 1  free  transition at x/c =  0.1064   23
+ Side 2 forced transition at x/c =  0.3000   29
+
+   4   rms: 0.2211E-02   max: 0.3179E-01   D at   23  1
+       a =  1.667      CL =  0.5289
+      Cm = -0.0906     CD =  0.00669   =>   CDf =  0.00524    CDp =  0.00145
+
+ Side 1  free  transition at x/c =  0.1074   23
+ Side 2 forced transition at x/c =  0.3000   29
+
+   5   rms: 0.5525E-04   max: -.7991E-03   D at   23  1
+       a =  1.667      CL =  0.5289
+      Cm = -0.0906     CD =  0.00669   =>   CDf =  0.00524    CDp =  0.00145
+      9.000    2.7966   0.006687   0.000000   0.000000   0.000000    0.1074     #
+
+ Point added to stored polar  1
+ Point written to save file  polar.dat                                       
+ Dump file unspecified or not available
+ Calculating wake trajectory ...
+ Calculating source influence matrix ...
+
+ Solving BL system ...
+
+ Side 1  free  transition at x/c =  0.1074   23
+ Side 2 forced transition at x/c =  0.3000   29
+
+   1   rms: 0.4786E+00   max: -.4645E+01   D at   23  1   RLX: 0.108
+       a =  3.333      CL =  0.5494
+      Cm = -0.0907     CD =  0.00682   =>   CDf =  0.00523    CDp =  0.00158
+
+ Side 1  free  transition at x/c =  0.0944   22
+ Side 2 forced transition at x/c =  0.3000   29
+
+   2   rms: 0.4040E+00   max: -.3747E+01   D at   22  1   RLX: 0.133
+       a =  3.333      CL =  0.5724
+      Cm = -0.0909     CD =  0.00692   =>   CDf =  0.00528    CDp =  0.00164
+
+ Side 1  free  transition at x/c =  0.0799   21
+ Side 2 forced transition at x/c =  0.3000   29
+
+   3   rms: 0.3659E+00   max: -.3211E+01   D at   21  1   RLX: 0.156
+       a =  3.333      CL =  0.5955
+      Cm = -0.0910     CD =  0.00704   =>   CDf =  0.00533    CDp =  0.00171
+
+ Side 1  free  transition at x/c =  0.0674   20
+ Side 2 forced transition at x/c =  0.3000   29
+
+   4   rms: 0.2532E+00   max: -.1912E+01   D at   20  1   RLX: 0.262
+       a =  3.333      CL =  0.6288
+      Cm = -0.0913     CD =  0.00718   =>   CDf =  0.00534    CDp =  0.00184
+
+ Side 1  free  transition at x/c =  0.0524   20
+ Side 2 forced transition at x/c =  0.3000   28
+
+   5   rms: 0.1673E+00   max: -.7604E+00   D at   20  1   RLX: 0.658
+       a =  3.333      CL =  0.6912
+      Cm = -0.0917     CD =  0.00743   =>   CDf =  0.00544    CDp =  0.00199
+
+ Side 1  free  transition at x/c =  0.0374   18
+ Side 2 forced transition at x/c =  0.3000   28
+
+   6   rms: 0.5822E-01   max: 0.5505E+00   C at   18  1
+       a =  3.333      CL =  0.7238
+      Cm = -0.0919     CD =  0.00756   =>   CDf =  0.00544    CDp =  0.00212
+
+ Side 1  free  transition at x/c =  0.0303   18
+ Side 2 forced transition at x/c =  0.3000   27
+
+   7   rms: 0.2608E-02   max: -.2351E-01   D at    3  1
+       a =  3.333      CL =  0.7238
+      Cm = -0.0919     CD =  0.00755   =>   CDf =  0.00554    CDp =  0.00201
+
+ Side 1  free  transition at x/c =  0.0302   18
+ Side 2 forced transition at x/c =  0.3000   27
+At line 135 of file ../src/userio.f (unit = 5, file = 'stdin')
+Fortran runtime error: End of file
+
+Error termination. Backtrace:
+#0  0x7e5f26e23960 in ???
+#1  0x7e5f26e244d9 in ???
+#2  0x7e5f26e2510f in ???
+#3  0x7e5f2707817b in ???
+#4  0x7e5f27078752 in ???
+#5  0x7e5f27074f1b in ???
+#6  0x7e5f27079e3c in ???
+#7  0x7e5f2707ae55 in ???
+#8  0x60047327a9f1 in ???
+#9  0x6004731e013a in ???
+#10  0x6004731d6758 in ???
+#11  0x7e5f26a29d8f in __libc_start_call_main
+	at ../sysdeps/nptl/libc_start_call_main.h:58
+#12  0x7e5f26a29e3f in __libc_start_main_impl
+	at ../csu/libc-start.c:392
+#13  0x6004731d6784 in ???
+#14  0xffffffffffffffff in ???
+
+   8   rms: 0.2279E-03   max: -.2179E-02   D at    4  1
+       a =  3.333      CL =  0.7238
+      Cm = -0.0919     CD =  0.00755   =>   CDf =  0.00554    CDp =  0.00201
+
+ Side 1  free  transition at x/c =  0.0302   18
+ Side 2 forced transition at x/c =  0.3000   27
+
+   9   rms: 0.1724E-06   max: -.2268E-05   C at   18  1
+       a =  3.333      CL =  0.7238
+      Cm = -0.0919     CD =  0.00755   =>   CDf =  0.00554    CDp =  0.00201
+      9.000    3.2118   0.007552   0.000000   0.000000   0.000000    0.0302     #
+
+ Point added to stored polar  1
+ Point written to save file  polar.dat                                       
+ Dump file unspecified or not available
+ Calculating wake trajectory ...
+ Calculating source influence matrix ...
+
+ Solving BL system ...
+
+ Side 1  free  transition at x/c =  0.0302   18
+ Side 2 forced transition at x/c =  0.3000   27
+
+   1   rms: 0.2920E+00   max: 0.2086E+01   C at   18  1   RLX: 0.458
+       a =  5.000      CL =  0.8132
+      Cm = -0.0924     CD =  0.00785   =>   CDf =  0.00546    CDp =  0.00239
+
+ Side 1  free  transition at x/c =  0.0204   18
+ Side 2 forced transition at x/c =  0.3000   26
+
+   2   rms: 0.1150E+01   max: 0.1955E+02   D at    2  1   RLX: 0.053
+       a =  5.000      CL =  0.8186
+      Cm = -0.0924     CD =  0.00797   =>   CDf =  0.00560    CDp =  0.00238
+
+ Side 1  free  transition at x/c =  0.0196   18
+ Side 2 forced transition at x/c =  0.3000   26
+
+   3   rms: 0.1663E+00   max: -.1166E+01   D at   18  1   RLX: 0.429
+       a =  5.000      CL =  0.8608
+      Cm = -0.0924     CD =  0.00820   =>   CDf =  0.00560    CDp =  0.00260
+
+ Side 1  free  transition at x/c =  0.0162   17
+ Side 2 forced transition at x/c =  0.3000   26
+
+   4   rms: 0.9055E-01   max: -.7480E+00   D at   17  1   RLX: 0.668
+       a =  5.000      CL =  0.8985
+      Cm = -0.0925     CD =  0.00836   =>   CDf =  0.00562    CDp =  0.00274
+
+ Side 1  free  transition at x/c =  0.0134   17
+ Side 2 forced transition at x/c =  0.3000   26
+
+   5   rms: 0.3001E-01   max: 0.2102E+00   n at   16  1
+       a =  5.000      CL =  0.9173
+      Cm = -0.0925     CD =  0.00847   =>   CDf =  0.00564    CDp =  0.00283
+
+ Side 1  free  transition at x/c =  0.0125   16
+ Side 2 forced transition at x/c =  0.3000   26
+
+   6   rms: 0.6689E-02   max: -.1134E+00   C at   16  1
+       a =  5.000      CL =  0.9174
+      Cm = -0.0925     CD =  0.00844   =>   CDf =  0.00564    CDp =  0.00280
+
+ Side 1  free  transition at x/c =  0.0128   16
+ Side 2 forced transition at x/c =  0.3000   26
+
+   7   rms: 0.1152E-03   max: -.2289E-02   D at   16  1
+       a =  5.000      CL =  0.9174
+      Cm = -0.0925     CD =  0.00844   =>   CDf =  0.00564    CDp =  0.00280
+
+ Side 1  free  transition at x/c =  0.0128   16
+ Side 2 forced transition at x/c =  0.3000   26
+
+   8   rms: 0.1489E-06   max: -.2322E-05   D at   16  1
+       a =  5.000      CL =  0.9174
+      Cm = -0.0925     CD =  0.00844   =>   CDf =  0.00564    CDp =  0.00280
+      9.000    3.7931   0.008444   0.000000   0.000000   0.000000    0.0128     #
+
+ Point added to stored polar  1
+ Point written to save file  polar.dat                                       
+ Dump file unspecified or not available
+
+.OPERva   c>  
+ Enter filename:  main_airfoil_merged_31.bl                                                       
+
+.OPERva   c>  
+ XFOIL   c>  

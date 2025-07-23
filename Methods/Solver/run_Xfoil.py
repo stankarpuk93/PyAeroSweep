@@ -8,7 +8,7 @@ import xlsxwriter
 
 from Methods.Atmosphere.standard_atmosphere import standard_atmosphere
 
-def solve(self,Freestream,Mesh,Geometry,Solver):
+def solve(self,Freestream,Mesh,Geometry,airfoil_filepath):
 
         ''' Runs the Xfoil aerodynamic analysis sweep for low-speed airfoils
 
@@ -54,36 +54,31 @@ def solve(self,Freestream,Mesh,Geometry,Solver):
         # Initialize the workbook
         workbook  = xlsxwriter.Workbook('arrays.xlsx')
 
-        warstart_set = self.warmstart
         for i in range(len_Alt):
             for j in range(len_Mach):
-                for k in range(len_AoA): 
 
-                        # Run the solution
+                # Run the solution
 
-                        # Create an Xfoil
-                        filename = run_Xfoil_config(self,Freestream.Altitude[i],Freestream.Mach[j], \
-                                                    Freestream.Angle_of_attack,Geometry,Mesh,Solver)
+                # Create an Xfoil
+                filename = run_Xfoil_config(self,Freestream.Altitude[i],Freestream.Mach[j], \
+                                         Freestream.Angle_of_attack,Geometry,Mesh,airfoil_filepath)
 
-                        # Run SU2
-                        new_direct  = 'Case_alt' + str("{:.2f}".format(Freestream.Altitude[i])) + '_Mach' + \
-                                                    str("{:.2f}".format(Freestream.Mach[j])) + '_AoA' + \
-                                                        str("{:.2f}".format(Freestream.Angle_of_attack[k]))
-                        file_direct = os.path.join(self.working_dir, new_direct)
-                        filename1 = os.path.join(file_direct, filename)
+                # Run Xfoil
+                new_direct  = 'Case_alt' + str("{:.2f}".format(Freestream.Altitude[i])) + '_Mach' + \
+                                                    str("{:.2f}".format(Freestream.Mach[j])) 
+                file_direct = os.path.join(self.working_dir, new_direct)
+                filename1 = os.path.join(file_direct, filename)
 
-                        os.chdir(file_direct)
+                os.chdir(file_direct)
 
-                        print('Running Solution ' + filename)
-                        with open('SU2_output.log', 'w') as f:
-                            #subprocess.call(['SU2_CFD', filename], stdout= f, stderr= None, stdin=subprocess.PIPE)
-                            subprocess.call(['mpiexec', '-n',str(self.processors),'SU2_CFD', filename], stdout= f, stderr= None, stdin=subprocess.PIPE)
+                print('Running Solution ' + filename)
+                with open('Xfoil_output.log', 'w') as f:
+                    subprocess.run(["xvfb-run", "-a", "xfoil", "-n"], stdin=open(filename, "r"), stdout= f, stderr= None)
 
-                        #run_SU2(self.processors,filename1)
-                        print('Solution ' + filename + ' Completed')
+                print('Solution ' + filename + ' Completed')
 
-                        # Read results
-                        Cl[i,j,k],Cd[i,j,k],Cm[i,j,k] = read_results('SU2_output.log')
+                # Read results
+                Cl[i,j,k],Cd[i,j,k],Cm[i,j,k] = read_results('polad.dat')
 
             # Write data into an Excel file 
             os.chdir(self.working_dir)
@@ -123,7 +118,7 @@ def solve(self,Freestream,Mesh,Geometry,Solver):
 
 
 
-def run_Xfoil_config(self,Alt,Mach,AoA,num_AoA,Ref_values,Geometry,Mesh,Solver):
+def run_Xfoil_config(self,Alt,Mach,AoA,Geometry,Mesh,airfoil_filepath):
 
         ''' Creates a 2D case Xfoil config file for airfoils
         
@@ -165,7 +160,7 @@ def run_Xfoil_config(self,Alt,Mach,AoA,num_AoA,Ref_values,Geometry,Mesh,Solver):
         V_ref   = Mach * a_ref
 
         # Calculate Reynoldes number
-        Re = rho_ref * V_ref * Ref_values["Length"] / mu_ref               # Reynolcs number based on unit length
+        Re = rho_ref * V_ref * Geometry.reference_values["Length"] / mu_ref               # Reynolcs number based on unit length
 
         # Create run directories and copy the case file there
         new_direct  = 'Case_alt' + str("{:.2f}".format(Alt)) + '_Mach' + str("{:.2f}".format(Mach))
@@ -178,8 +173,12 @@ def run_Xfoil_config(self,Alt,Mach,AoA,num_AoA,Ref_values,Geometry,Mesh,Solver):
         os.mkdir(file_direct)
 
         os.chdir(self.working_dir)
+
+        airfoil_file_xfoil = Geometry.Segments['section_1'].Airfoil['files']['merged']
             
-        shutil.copyfile(os.path.join(os.getcwd()+'/'+self.config_file), file_direct+'/'+filename) 
+        shutil.copyfile(os.path.join(airfoil_filepath+'/'+  \
+                            Geometry.Segments['section_1'].Airfoil['files']['merged']), \
+                                file_direct+'/'+ airfoil_file_xfoil) 
 
         os.chdir(file_direct)
             
@@ -199,48 +198,44 @@ def run_Xfoil_config(self,Alt,Mach,AoA,num_AoA,Ref_values,Geometry,Mesh,Solver):
         ALFA 0.0 10.0 1.0  ! Alpha sweep (0° to 10°, step 1°)
         """
 
-        # Generate XFOIL commands
-        xfoil_commands1 = f"""
-        LOAD {airfoil_file}
-        PPAR
-        N {Nnodes}
-        P {bunching}
-        T {te_ratio}
-        R {refined_ratio}
-        XT {x_ref_top}
-        XB {x_ref_bot}
-        \n                  ! Exit PPAR (empty line)
-        OPER
-        """
-
-        xfoil_commands2 = f"""
-        VISC {Re}
-        VPAR
-        N {Ncrit}           ! Set Ncrit (e.g., 9 for default, 4 for early transition)
-        XTR
-        {transition}
-        """
-
-        xfoil_commands3 = f"""
-        ITER {max_iter}
-        PACC
-        {output_polar}
-        ALFA {AoA[0]} {AoA[-1]} {num_AoA}
-
-        """
-
-
         with open(filename, 'w') as f:
+            # Generate XFOIL commands
+            xfoil_commands1 = f"""
+LOAD {airfoil_file_xfoil }
+PPAR
+N {Nnodes} \n
+P {bunching} \n 
+T {te_ratio} \n
+R {refined_ratio} \n
+XT {x_ref_top} \n
+XB {x_ref_bot} \n\n
+OPER
+"""
+
             f.write(xfoil_commands1)
 
-            if Solver.viscous is True:
-                # Define transition location
-                if self.free_transition  is False:
-                    transition = f"T {self.x_transition[0]} {self.x_transition[1]}"   
-                else:
-                    transition = f"X X"
+            if self.viscous is True:
+                xfoil_commands2 = f"""VISC {Re}
+VPAR
+N {Ncrit}           ! Set Ncrit (e.g., 9 for default, 4 for early transition)
+XTR
+{self.x_transition[0]}
+{self.x_transition[1]}
+
+Mach
+{Mach}
+"""
 
                 f.write(xfoil_commands2)
+
+            xfoil_commands3 = f"""ITER {max_iter}
+PACC
+{output_polar}\n
+ASeq {AoA[0]} {AoA[-1]} {(AoA[-1] - AoA[0])/len(AoA)}
+dump
+
+
+"""
 
             f.write(xfoil_commands3)
 
@@ -270,7 +265,7 @@ def launch_Xfoil(processors,filename):
     f = open('Xfoil_output.log', 'w')
 
     #subprocess.run(["xfoil.exe"], stdin=open("xfoil_input.txt", "r"), text=True)
-    subprocess.run(["xfoil.exe"], stdin=open("xfoil_input.txt", "r"), stdout= f, stderr= None, stdin=subprocess.PIPE)
+    subprocess.run(["xfoil.exe"], stdin=open("xfoil_input.txt", "r"), stdout= f, stderr= None)
 
     f.close()    
 
@@ -283,7 +278,7 @@ def read_results(output_file):
     ''' Read output Xfoil results 
             
             Inputs:
-                output_file     - SU2 log file with output
+                output_file     - Xfoil polar file with airfoil aerodynamic outputs
 
             Outputs:
                 Cl, Cd, Cm
@@ -292,7 +287,7 @@ def read_results(output_file):
 
     '''
 
-        # Read results 
+    # Read results 
     with open(output_file, 'r') as f:
         last_line = f.readlines()[-37]
 

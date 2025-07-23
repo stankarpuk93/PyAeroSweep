@@ -12,10 +12,13 @@ from Run_aerodynamic_analysis import run_aerodynamic_analysis
 
 def Input_data():
 
+
 # ------------------------------- SOLVER SETTINGS ----------------------------------------------------------- #
 #
 
     Solver_settings = Solver()
+
+    Solver_settings.working_dir = os.path.dirname(os.path.abspath(__file__))        # A standard line to get the file directory
 
     Solver_settings.name = 'Xfoil'                # SU2 or Xfoil
 
@@ -34,9 +37,9 @@ def Input_data():
 #
     Freestream = Data()
     Freestream.Mach             = np.array([0.21,0.25])
-    Freestream.Altitude         = np.array([0,2000])                 # in meters
-    Freestream.Angle_of_attack  = np.array([0.0,3.0,5.0])               # in degrees
-
+    Freestream.Altitude         = np.array([0,2000])                    # in meters
+    Freestream.Angle_of_attack  = np.array([0.0,3.0,5.0])               # in degrees. 
+                                                                        # For Xfoil, make sure to put equally spaced values
 
 
 
