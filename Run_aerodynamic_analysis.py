@@ -75,9 +75,9 @@ def run_aerodynamic_analysis(Input):
         num_segm = len(Geometry.Segments.keys())
         for i in range(num_segm):
             if len(Geometry.Segments[i].Airfoil.PARSEC) != 0:
-                Geometry.Segments[i].create_PARSEC_airfoil()
+                airfoil_points = Geometry.Segments[i].create_PARSEC_airfoil()
             elif len(Geometry.Segments[i].Airfoil.CST) != 0:
-                Geometry.Segments[i].create_CST_airfoil()
+                airfoil_points = Geometry.Segments[i].create_CST_airfoil()
 
 
         # Create a wing using pygeo if a 3D case is defined 

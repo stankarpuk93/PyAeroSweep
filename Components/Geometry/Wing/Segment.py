@@ -46,12 +46,13 @@ class Segment():
         self.tag = 'segment'
         self.spanwise_location   = 0.0
         self.incidence           = 0.0
-        self.chord               = 0.0
+        self.chord               = 1.0
         self.dihedral            = 0.0
         self.leading_edge_sweep  = 0.0
         self.rotate              = False
         self.Airfoil             = Data()
 
+        self.write_airfoil      = True                  # default for all high-fidelity CFD analyses
         self.plot_airfoil       = False
 
         # Airfoil definition constants based on the PARSEC method
@@ -152,13 +153,18 @@ class Segment():
 
 
         # Output airfoiil data
-        self.output_airfoil(xx_no_fl_pre,xx_no_fl_suc,yy_no_fl_pre,yy_no_fl_suc,[],[],xte,xx_fl_suc, yy_fl_suc, xx_fl_pre, yy_fl_pre, flap_cut1, flap_cut2)
+        if self.write_airfoil is True:
+            self.output_airfoil(xx_no_fl_pre,xx_no_fl_suc,yy_no_fl_pre,yy_no_fl_suc,[],[],xte,xx_fl_suc, yy_fl_suc, xx_fl_pre, yy_fl_pre, flap_cut1, flap_cut2)
 
-
+        # Pack outputs
+        airfoil_points = self.pack_airfoil_points(xx_no_fl_suc,yy_no_fl_suc,xx_no_fl_pre,
+                            yy_no_fl_pre,xx_fl_suc,yy_fl_suc,xx_fl_pre,
+                            yy_fl_pre,flap_cut1,flap_cut2)
+        
         mpi4py.MPI.Finalize()
 
 
-        return        
+        return airfoil_points       
 
 
 
@@ -273,7 +279,8 @@ class Segment():
                 flap_data.append(xte)
                 flap_data.append(yte_suc)
                 xx_no_fl_suc, yy_no_fl_suc, xx_no_fl_pre, yy_no_fl_pre, xx_fl_suc, yy_fl_suc, xx_fl_pre, yy_fl_pre, flap_cut1, flap_cut2 = self.compute_flap(xx_suc,yy_suc,xx_pre,yy_pre,flap_data)
-                xx_fl_suc, yy_fl_suc, xx_fl_pre, yy_fl_pre = self.deploy_flap(xx_no_fl_suc, yy_no_fl_suc, xx_fl_suc, yy_fl_suc, xx_fl_pre, yy_fl_pre, flap_setting)
+                xx_fl_suc, yy_fl_suc, xx_fl_pre, yy_fl_pre = self.deploy_flap(xx_no_fl_suc, yy_no_fl_suc, xx_fl_suc, yy_fl_suc, 
+                                                                              xx_fl_pre, yy_fl_pre, flap_setting)
         else:
             xx_no_fl_suc = xx_suc
             yy_no_fl_suc = yy_suc
@@ -288,11 +295,16 @@ class Segment():
 
 
         # Output airfoiil data
-        self.output_airfoil(xx_no_fl_pre,xx_no_fl_suc,yy_no_fl_pre,yy_no_fl_suc,cf_pre,cf_suc,xte,xx_fl_suc, yy_fl_suc, xx_fl_pre, yy_fl_pre, flap_cut1, flap_cut2)
+        if self.write_airfoil is True:  
+            self.output_airfoil(xx_no_fl_pre,xx_no_fl_suc,yy_no_fl_pre,yy_no_fl_suc,cf_pre,
+                                cf_suc,xte,xx_fl_suc, yy_fl_suc, xx_fl_pre, yy_fl_pre, flap_cut1, flap_cut2)
 
+        # Pack outputs
+        airfoil_points = self.pack_airfoil_points(xx_no_fl_suc,yy_no_fl_suc,xx_no_fl_pre,
+                            yy_no_fl_pre,xx_fl_suc,yy_fl_suc,xx_fl_pre,
+                            yy_fl_pre,flap_cut1,flap_cut2)
 
-
-        return
+        return airfoil_points
 
     def deploy_simple_flap(self,xx_pre,xx_suc,yy_pre,yy_suc,flap_set,flap_index):
         ''' Deploys a simple trailing edge flap or a droop nose based on a given chord ratio and deflection
@@ -712,9 +724,8 @@ class Segment():
 
 
 
-
-
-    def output_airfoil(self,xx_pre,xx_suc,yy_pre,yy_suc,cf_pre,cf_suc,xte,xx_fl_suc,yy_fl_suc,xx_fl_pre,yy_fl_pre, flap_cut1, flap_cut2):
+    def output_airfoil(self,xx_pre,xx_suc,yy_pre,yy_suc,cf_pre,cf_suc,
+                       xte,xx_fl_suc,yy_fl_suc,xx_fl_pre,yy_fl_pre, flap_cut1, flap_cut2):
 
         '''Outputs an airfoil in data and image formats
         
@@ -762,32 +773,32 @@ class Segment():
                 pc_func.ppoint_Pointwise(fpath1[2], xx_fl_suc, yy_fl_suc) 
                 pc_func.ppoint_Pointwise(fpath1[3], xx_fl_pre, yy_fl_pre)             
 
+
+
         # Draw airfoil contour with the flap, if it was defined
-        plt.figure()
-        plt.plot(xx_suc,yy_suc,'r',xx_pre,yy_pre,'b', linewidth=2)
-        if len(self.TrailingEdgeDevice.PARSEC) != 0:
-            if self.TrailingEdgeDevice.type == 'Slotted':
-                plt.plot(flap_cut1[0,:],flap_cut1[1,:])
-                plt.plot(flap_cut2[0,:],flap_cut2[1,:])
-                plt.plot(xx_fl_suc,yy_fl_suc,'g')
-                plt.plot(xx_fl_pre,yy_fl_pre,'k')
-
-        plt.grid(True)
-        plt.xlim([0,1])
-        #plt.yticks([])
-        plt.xticks(np.arange(0,1.4,0.1))
-        plt.gca().axis('equal')
-        plt.title("Airfoil geometry")
-
-        # Make room for title automatically
-        plt.tight_layout()
-        plt.savefig(os.path.join('parsec_airfoil.pdf'))
-        plt.savefig(os.path.join('parsec_airfoil.png'))
-
-        # Show the plot
         if self.plot_airfoil is True:
-            plt.show()
+            
+            plt.figure()
+            plt.plot(xx_suc,yy_suc,'r',xx_pre,yy_pre,'b', linewidth=2)
+            if len(self.TrailingEdgeDevice.PARSEC) != 0:
+                if self.TrailingEdgeDevice.type == 'Slotted':
+                    plt.plot(flap_cut1[0,:],flap_cut1[1,:])
+                    plt.plot(flap_cut2[0,:],flap_cut2[1,:])
+                    plt.plot(xx_fl_suc,yy_fl_suc,'g')
+                    plt.plot(xx_fl_pre,yy_fl_pre,'k')
 
+            plt.grid(True)
+            plt.xlim([0,1])
+            #plt.yticks([])
+            plt.xticks(np.arange(0,1.4,0.1))
+            plt.gca().axis('equal')
+            plt.title("Airfoil geometry")
+
+            # Make room for title automatically
+            plt.tight_layout()
+            plt.savefig(os.path.join('parsec_airfoil.pdf'))
+            plt.savefig(os.path.join('parsec_airfoil.png')) 
+ 
 
         return
     
@@ -835,3 +846,23 @@ class Segment():
             self.type   = 'Droop'
             self.files  = {}
             self.PARSEC = {}
+
+
+    def pack_airfoil_points(self,xx_no_fl_suc,yy_no_fl_suc,xx_no_fl_pre,
+                            yy_no_fl_pre,xx_fl_suc,yy_fl_suc,xx_fl_pre,
+                            yy_fl_pre,flap_cut1,flap_cut2):
+
+        # Pack outputs
+        airfoil_points = Data()
+        airfoil_points.xx_no_fl_suc = xx_no_fl_suc
+        airfoil_points.yy_no_fl_suc = yy_no_fl_suc
+        airfoil_points.xx_no_fl_pre = xx_no_fl_pre
+        airfoil_points.yy_no_fl_pre = yy_no_fl_pre
+        airfoil_points.xx_fl_suc    = xx_fl_suc
+        airfoil_points.yy_fl_suc    = yy_fl_suc
+        airfoil_points.xx_fl_pre    = xx_fl_pre
+        airfoil_points.yy_fl_pre    = yy_fl_pre
+        airfoil_points.flap_cut1    = flap_cut1
+        airfoil_points.flap_cut2    = flap_cut2
+
+        return airfoil_points

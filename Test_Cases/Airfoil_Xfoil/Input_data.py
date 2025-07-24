@@ -1,6 +1,12 @@
 
 import os
+import random
 import numpy as np
+import matplotlib.pyplot as plt
+
+from smt.sampling_methods  import LHS
+
+# Import internal libraries
 from Core.Data                          import Data
 from Components.Solver                  import Solver
 from Components.Geometry                import Geometry
@@ -10,7 +16,7 @@ from Components.Mesh                    import Mesh
 from Run_aerodynamic_analysis import run_aerodynamic_analysis
 
 
-def Input_data():
+def Input_data(x):
 
 
 # ------------------------------- SOLVER SETTINGS ----------------------------------------------------------- #
@@ -25,20 +31,20 @@ def Input_data():
     Solver_settings.viscous = True                # Viscous or inviscid solutions
 
     Solver_settings.free_transition = False
-    Solver_settings.x_transition    = [0.3, 0.3]
+    Solver_settings.x_transition    = [0.01, 0.01]
 
     # Convergence criteria 
     Solver_settings.max_iterations = 200
 
-    Solver_settings.e_n = 9                       # The factor N for the e^N method
+    Solver_settings.e_n = 1                       # The factor N for the e^N method
 
 
 # ------------------------------- FREESTREAM SETTINGS ------------------------------------------------------- #
 #
     Freestream = Data()
-    Freestream.Mach             = np.array([0.21,0.25])
-    Freestream.Altitude         = np.array([0,2000])                    # in meters
-    Freestream.Angle_of_attack  = np.array([0.0,3.0,5.0])               # in degrees. 
+    Freestream.Mach             = np.array([0.1])
+    Freestream.Altitude         = np.array([0])                    # in meters
+    Freestream.Angle_of_attack  = np.array([0.0])               # in degrees. 
                                                                         # For Xfoil, make sure to put equally spaced values
 
 
@@ -64,34 +70,34 @@ def Input_data():
 
     # Reference values
     Geometry_data.reference_values = {
-        "Length" : 2.62,
+        "Length" : 1.0,
         "Point"  : [0.25*2.62,0,0]              # reference point about which the moment is taken
     }
 
     segment = Segment()
     segment.tag                = 'section_1'
     segment.spanwise_location  = 0 
-    segment.chord              = 2.62
+    segment.chord              = 1.0
     segment.Airfoil.files      = {
         "upper" : "main_airfoil_upper_1.dat",        # Upper airfoil surface (used for Pointwise meshing)
         "lower" : "main_airfoil_lower_1.dat"         # Lower airfoil surface (used for Pointwise meshing)
     }
     segment.Airfoil.PARSEC     = {
-                                    "rle"        : 0.0084,                      # Main airfoil LE radius
-                                    "x_pre"      : 0.458080577545180,           # x-location of the crest on the pressure side
-                                    "y_pre"      : -0.04553160030118,           # y-location of the crest on the pressure side  
-                                    "d2ydx2_pre" : 0.554845554794938,           # curvature of the crest on the pressure side  
-                                    "th_pre"     : -9.649803736,                # trailing edge angle on the pressure side [deg]
-                                    "x_suc"      : 0.46036604,                  # x-location of the crest on the suction side 
-                                    "y_suc"      : 0.06302395539,               # y-location of the crest on the suction side
-                                    "d2ydx2_suc" : -0.361421420,                # curvature of the crest on the suction side
-                                    "th_suc"     : -12.391677695858,            # trailing edge angle on the suction side [deg]
+                                    "rle"        : x[0],                      # Main airfoil LE radius
+                                    "x_pre"      : x[1],           # x-location of the crest on the pressure side
+                                    "y_pre"      : x[2],           # y-location of the crest on the pressure side  
+                                    "d2ydx2_pre" : x[3],           # curvature of the crest on the pressure side  
+                                    "th_pre"     : x[4],                # trailing edge angle on the pressure side [deg]
+                                    "x_suc"      : x[5],                  # x-location of the crest on the suction side 
+                                    "y_suc"      : x[6],               # y-location of the crest on the suction side
+                                    "d2ydx2_suc" : x[7],                # curvature of the crest on the suction side
+                                    "th_suc"     : x[8],            # trailing edge angle on the suction side [deg]
                                     "yte upper" : 0.002,
                                     "yte lower" : -0.002
     }
     Geometry_data.Segments.append(segment)
 
-    segment.plot_airfoil = True
+    segment.plot_airfoil = False
 
 
 # ------------------------------- MESH SETTINGS ---------------------------------------------------------------- #
@@ -105,10 +111,10 @@ def Input_data():
     Mesh_data.airfoil_mesh_settings = {
         "clustering_coefficient" : 1.0,           # a spacing coefficient that defines LE and TE clustering          
         "LETE_spacing"           : 0.15,          # LE/TE panel density ratio
-        "connector dimensions"   : 160,           # in this case, a total number of panel nodes in Xfoil
+        "connector dimensions"   : 200,           # in this case, a total number of panel nodes in Xfoil
         "LE_spacing"             : 0.2,           # defines density at the leadinge edge 
-        "refine_xc_top"          : [1, 1],        # defines a region where the mesh is refined. [1, 1] means 'disabled'
-        "refine_xc_bottom"       : [1, 1]         # defines a region where the mesh is refined. [1, 1] means 'disabled'    
+        "refine_xc_top"          : [0.1, 0.5],        # defines a region where the mesh is refined. [1, 1] means 'disabled'
+        "refine_xc_bottom"       : [0.1, 0.5]         # defines a region where the mesh is refined. [1, 1] means 'disabled'    
     }
 
 
@@ -127,5 +133,70 @@ def Input_data():
 
 if __name__ == '__main__':
 
-    Input = Input_data()
-    run_aerodynamic_analysis(Input)
+    plot_airfoils = False
+    n_samples = 5      # number of traning samples
+
+    # ranges of PARSEC parameters
+    PARSEC_airfoil_bounds = np.array([
+        [0.008, 0.01],      # r_LE
+        [0.35,  0.50],      # x_pre
+        [-0.06, -0.04],      # y_pre
+        [-0.15  , 0.6],      # d2ydx2_pre
+        [10.0, -10.0],      # th_pre
+        [0.3 , 0.50],       # x_suc
+        [0.04, 0.08],        # y_suc
+        [-0.4, -0.1],       # d2ydx2_suc
+        [-12.0, 10.0]       # th_suc
+    ])
+
+    # Define an airfoil database using Latin Hypercube
+    sampling  = LHS(xlimits = PARSEC_airfoil_bounds, criterion = "maximin", random_state  =42)
+    X_samples = sampling(n_samples) 
+
+    # Plot all arifoils into one sample plot to visualize the dataset
+    plt.figure()
+    for x in X_samples:
+        section = Segment()
+        section.Airfoil.PARSEC  = {
+                                    "rle"        : x[0],                      # Main airfoil LE radius
+                                    "x_pre"      : x[1],           # x-location of the crest on the pressure side
+                                    "y_pre"      : x[2],           # y-location of the crest on the pressure side  
+                                    "d2ydx2_pre" : x[3],           # curvature of the crest on the pressure side  
+                                    "th_pre"     : x[4],                # trailing edge angle on the pressure side [deg]
+                                    "x_suc"      : x[5],                  # x-location of the crest on the suction side 
+                                    "y_suc"      : x[6],               # y-location of the crest on the suction side
+                                    "d2ydx2_suc" : x[7],                # curvature of the crest on the suction side
+                                    "th_suc"     : x[8],            # trailing edge angle on the suction side [deg]
+                                    "yte upper" : 0.002,
+                                    "yte lower" : -0.002
+        }
+        section.write_airfoil = False
+
+        airfoil_points = section.create_PARSEC_airfoil()
+
+        if plot_airfoils is True:
+            airfoil_X = np.concatenate((airfoil_points.xx_no_fl_suc[::-1][:-1], airfoil_points.xx_no_fl_pre[::-1]), axis=0)
+            airfoil_Y = np.concatenate((airfoil_points.yy_no_fl_suc[::-1][:-1], airfoil_points.yy_no_fl_pre[::-1]), axis=0)
+
+            random_color = (random.random(), random.random(), random.random())
+
+            plt.plot(airfoil_X, airfoil_Y, color=random_color, linewidth=0.5)
+
+            plt.grid(True)
+            plt.xlim([0,1])
+            #plt.yticks([])
+            plt.xticks(np.arange(0,1.4,0.1))
+            plt.gca().axis('equal')
+            #plt.title("Airfoil geometry")
+
+        Input = Input_data(x)
+        run_aerodynamic_analysis(Input)
+        print('case converged')
+
+    if plot_airfoils is True:
+        plt.show()
+
+
+    print('Solution completed')
+
+

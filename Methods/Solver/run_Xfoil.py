@@ -67,7 +67,7 @@ def solve(self,Freestream,Mesh,Geometry,airfoil_filepath):
                 new_direct  = 'Case_alt' + str("{:.2f}".format(Freestream.Altitude[i])) + '_Mach' + \
                                                     str("{:.2f}".format(Freestream.Mach[j])) 
                 file_direct = os.path.join(self.working_dir, new_direct)
-                filename1 = os.path.join(file_direct, filename)
+                filename1   = os.path.join(file_direct, filename)
 
                 os.chdir(file_direct)
 
@@ -78,7 +78,7 @@ def solve(self,Freestream,Mesh,Geometry,airfoil_filepath):
                 print('Solution ' + filename + ' Completed')
 
                 # Read results
-                Cl[i,j,k],Cd[i,j,k],Cm[i,j,k] = read_results('polad.dat')
+                Cl[i,j,:],Cd[i,j,:],Cm[i,j,:] = read_results('polar.dat',len_AoA)
 
             # Write data into an Excel file 
             os.chdir(self.working_dir)
@@ -109,8 +109,11 @@ def solve(self,Freestream,Mesh,Geometry,airfoil_filepath):
 
         workbook.close()
 
+        print('CL:')
         print(Cl)
+        print('CD:')
         print(Cd)
+        print('CM:')
         print(Cm)
 
 
@@ -148,8 +151,8 @@ def run_Xfoil_config(self,Alt,Mach,AoA,Geometry,Mesh,airfoil_filepath):
         bunching      = Mesh.airfoil_mesh_settings["clustering_coefficient"]
         te_ratio      = Mesh.airfoil_mesh_settings["LETE_spacing"]
         refined_ratio = Mesh.airfoil_mesh_settings["LE_spacing"]
-        x_ref_top     = " ".join([f"{num}.0" for num in Mesh.airfoil_mesh_settings["refine_xc_top"]])
-        x_ref_bot     = " ".join([f"{num}.0" for num in Mesh.airfoil_mesh_settings["refine_xc_bottom"]])
+        x_ref_top     = " ".join([f"{num}" for num in Mesh.airfoil_mesh_settings["refine_xc_top"]])
+        x_ref_bot     = " ".join([f"{num}" for num in Mesh.airfoil_mesh_settings["refine_xc_bottom"]])
         airfoil_file  = Geometry.Segments[0].Airfoil.files['main'] 
 
 
@@ -160,7 +163,7 @@ def run_Xfoil_config(self,Alt,Mach,AoA,Geometry,Mesh,airfoil_filepath):
         V_ref   = Mach * a_ref
 
         # Calculate Reynoldes number
-        Re = rho_ref * V_ref * Geometry.reference_values["Length"] / mu_ref               # Reynolcs number based on unit length
+        Re = rho_ref * V_ref * Geometry.reference_values["Length"] / mu_ref               # Reynolds number based on unit length
 
         # Create run directories and copy the case file there
         new_direct  = 'Case_alt' + str("{:.2f}".format(Alt)) + '_Mach' + str("{:.2f}".format(Mach))
@@ -183,6 +186,10 @@ def run_Xfoil_config(self,Alt,Mach,AoA,Geometry,Mesh,airfoil_filepath):
         os.chdir(file_direct)
             
         # Create a config file for Xfoil
+        if len(AoA) == 1:
+            AoA_exec = f'ALFA {AoA[0]}'
+        else:
+            AoA_exec = f'ASeq {AoA[0]} {AoA[-1]} {(AoA[-1] - AoA[0])/(len(AoA)-1)}'
 
         xfoil_commands = f"""
         NACA 2412
@@ -231,10 +238,10 @@ Mach
             xfoil_commands3 = f"""ITER {max_iter}
 PACC
 {output_polar}\n
-ASeq {AoA[0]} {AoA[-1]} {(AoA[-1] - AoA[0])/len(AoA)}
+{AoA_exec}
 dump
 
-
+QUIT
 """
 
             f.write(xfoil_commands3)
@@ -274,7 +281,7 @@ def launch_Xfoil(processors,filename):
     return
 
 
-def read_results(output_file):
+def read_results(output_file,len_AoA):
     ''' Read output Xfoil results 
             
             Inputs:
@@ -287,15 +294,26 @@ def read_results(output_file):
 
     '''
 
+    Cl = np.zeros(len_AoA)
+    Cd = np.zeros(len_AoA)
+    Cm = np.zeros(len_AoA)
+
     # Read results 
     with open(output_file, 'r') as f:
-        last_line = f.readlines()[-37]
+        lines = f.readlines()[12:]
 
-    results_array = last_line.split('|')
+    data_lines = [line.strip() for line in lines if line.strip() and not line.startswith('---')]
 
-    Cl = float(results_array[-4])
-    Cd = float(results_array[-5])
-    Cm = float(results_array[-3])
+    i = 0
+    for line in data_lines:
+
+        parts = line.split()
+
+        Cl[i] = float(parts[1])
+        Cd[i] = float(parts[2])
+        Cm[i] = float(parts[4])
+
+        i += 1
 
 
     return Cl, Cd, Cm
